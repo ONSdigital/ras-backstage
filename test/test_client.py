@@ -14,9 +14,9 @@ class TestClient(TestCase):
     config = ras_config.make(config_data)
 
     def create_app(self):
-        app = create_app(self.config)
-        configure_logger(app.config)
-        return app
+        self.app = create_app(self.config)
+        configure_logger(self.app.config)
+        return self.app
 
     def get_info(self, expected_status=200):
         response = self.client.open('/info', method='GET')
