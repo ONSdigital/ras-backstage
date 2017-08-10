@@ -1,3 +1,6 @@
+from json import loads
+from pathlib import Path
+
 import structlog
 from flask import jsonify
 from flask_cors import CORS
@@ -14,6 +17,11 @@ def create_app(config):
     # create and configure the Flask app
     app = Flask(__name__)
     app.config.from_ras_config(config)
+
+    if Path('git_info').exists():
+        with open('git_info') as io:
+            service_metadata = loads(io.read())
+            app.config['METADATA'] = service_metadata
 
     @app.errorhandler(Exception)
     def handle_error(error):
