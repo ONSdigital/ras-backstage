@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+import json
 from unittest.mock import patch, MagicMock
 
 from test.test_client import TestClient
@@ -23,7 +24,7 @@ class TestController(TestClient):
                 'port': '4321'
             }
         }
-        response = self.client.open('/backstage-api/v1/mock-service/a', method='GET')
+        response = self.client.get('/backstage-api/v1/mock-service/a')
         self.assertEqual(response.status_code, 200)
 
         mock.request.assert_called_once()
@@ -43,7 +44,7 @@ class TestController(TestClient):
                 'port': '4321'
             }
         }
-        self.client.open('/backstage-api/v1/mock-service/path/to/endpoint/', method='GET')
+        self.client.get('/backstage-api/v1/mock-service/path/to/endpoint/')
 
         mock.request.assert_called_once()
         call_args = mock.request.call_args[1]
@@ -60,7 +61,7 @@ class TestController(TestClient):
                 'port': '4321'
             }
         }
-        self.client.open('/backstage-api/v1/mock-service/path/to/endpoint/?a=1&b=2&a=3', method='GET')
+        self.client.get('/backstage-api/v1/mock-service/path/to/endpoint/?a=1&b=2&a=3')
 
         mock.request.assert_called_once()
         call_args = mock.request.call_args[1]
@@ -79,14 +80,13 @@ class TestController(TestClient):
                 'port': '4321'
             }
         }
-        self.client.open('/backstage-api/v1/mock-service/path/to/endpoint/?a=1&b=2&a=3', method='POST')
+        mock_body = dict(foo='bar')
+        self.client.post('/backstage-api/v1/mock-service/path/to/endpoint/?a=1&b=2&a=3', data=json.dumps(mock_body))
 
         mock.request.assert_called_once()
         call_args = mock.request.call_args[1]
-        self.assertIn('url', call_args)
-        self.assertEqual(call_args['url'], 'httpx://1.2.3.4:4321/path/to/endpoint/')
-        self.assertIn('params', call_args)
-        self.assertDictEqual(call_args['params'], {'a': ['1', '3'], 'b': '2'})
+        self.assertIn('data', call_args)
+        self.assertDictEqual(json.loads(call_args['data']), mock_body)
 
     def test_proxy_endpoint_proxies_a_post_request(self):
         pass
