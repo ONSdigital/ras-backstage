@@ -69,8 +69,24 @@ class TestController(TestClient):
         self.assertIn('params', call_args)
         self.assertDictEqual(call_args['params'], {'a': ['1', '3'], 'b': '2'})
 
-    def test_proxy_endpoint_proxies_post_body(self):
-        pass
+    @patch('ras_backstage.controllers.controller.requests')
+    def test_proxy_endpoint_proxies_post_body(self, mock):
+        mock.request = MagicMock()
+        self.app.config.dependency = {
+            'mock-service': {
+                'scheme': 'httpx',
+                'host': '1.2.3.4',
+                'port': '4321'
+            }
+        }
+        self.client.open('/backstage-api/v1/mock-service/path/to/endpoint/?a=1&b=2&a=3', method='POST')
+
+        mock.request.assert_called_once()
+        call_args = mock.request.call_args[1]
+        self.assertIn('url', call_args)
+        self.assertEqual(call_args['url'], 'httpx://1.2.3.4:4321/path/to/endpoint/')
+        self.assertIn('params', call_args)
+        self.assertDictEqual(call_args['params'], {'a': ['1', '3'], 'b': '2'})
 
     def test_proxy_endpoint_proxies_a_post_request(self):
         pass

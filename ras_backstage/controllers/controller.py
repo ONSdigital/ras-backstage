@@ -1,5 +1,3 @@
-from collections import defaultdict
-
 import requests
 from flask import make_response, jsonify, current_app
 from ras_common_utils.ras_error.ras_error import RasError
@@ -42,12 +40,9 @@ def proxy_request(request, service, url):
 
     proxy_url = build_url(service, service_config, url)
 
-    # Convert the params to the required format for requests
-    params = defaultdict(list)
-    # First create a dictionary of lists
-    for k, v in request.args.items(multi=True):
-        params[k].append(v)
-    # Then turn dictionary list values of length 1 into scalars
+    # Convert the params to the required format for requests by turning into a dict with list values
+    params = request.args.to_dict(flat=False)
+    # then turn list values of length 1 into scalars
     params = {k: v[0] if len(v) == 1 else v for k, v in params.items()}
 
     req = requests.request(method=request.method,
