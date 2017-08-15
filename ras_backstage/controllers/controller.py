@@ -47,17 +47,9 @@ def proxy_request(request, service, url):
     # then turn list values of length 1 into scalars
     params = {k: v[0] if len(v) == 1 else v for k, v in params.items()}
 
-    log.debug("---- Making request ----")
-    log.debug("method = {}".format(request.method))
-    log.debug("url = {}".format(proxy_url))
-    log.debug("headers = {}".format(request.headers))
-    log.debug("data = {}".format(request.data))
-    log.debug("params = {}".format(params))
-    log.debug("-------------------------")
-
     req = requests.request(method=request.method,
                            url=proxy_url,
-                           headers=request.headers,
+                           # headers=request.headers,
                            stream=True,
                            data=request.data or None,
                            params=params or None)
