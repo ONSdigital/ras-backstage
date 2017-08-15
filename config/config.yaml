@@ -8,6 +8,30 @@ service:
     LOG_LEVEL: debug
 
 dependencies:
+    case-service:
+        scheme: http
+        host: localhost
+        port: 8001
+    collection-exercise-service:
+        scheme: http
+        host: localhost
+        port: 8002
+    collection-instrument-service:
+        scheme: http
+        host: localhost
+        port: 8003
+    survey-service:
+        scheme: http
+        host: localhost
+        port: 8004
+    secure-message-service:
+        scheme: http
+        host: localhost
+        port: 8005
+    party-service:
+        scheme: http
+        host: localhost
+        port: 8006
     oauth2-service:
         scheme: http
         host: localhost
@@ -15,10 +39,5 @@ dependencies:
         authorization_endpoint: "/web/authorize/"
         token_endpoint: "/api/v1/tokens/"
         admin_endpoint: "/api/account/create"
-        activate_endpoint: "/api/account/activate"
         client_id: "ons@ons.gov"
         client_secret: "password"
-    dummy-service:
-      scheme: http
-      host: localhost
-      port: 5000
