@@ -5,7 +5,7 @@ service:
     HOST: 0.0.0.0
     PORT: 8080
     DEBUG: True
-    LOG_LEVEL: info
+    LOG_LEVEL: debug
 
 dependencies:
     case-service:
