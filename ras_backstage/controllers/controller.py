@@ -59,8 +59,8 @@ def proxy_request(request, service, url):
                            url=proxy_url,
                            headers=request.headers,
                            stream=True,
-                           data=request.data,
-                           params=params)
+                           data=request.data or None,
+                           params=params or None)
 
     log.info("Returned from downstream service with status code {}.".format(req.status_code))
     # TODO: consider wrapping exceptions and returning a 502
