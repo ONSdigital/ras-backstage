@@ -152,7 +152,8 @@ class TestController(TestClient):
                 'port': '4321'
             }
         }
-        response = self.client.get('/backstage-api/v1/mock-service/a', headers={'bar': 'baz'})
+        response = self.client.get('/backstage-api/v1/mock-service/a',
+                                   headers={'bar': 'baz', 'Authorization': 'wibble'})
         self.assertEqual(response.status_code, 200)
 
         mock.request.assert_called_once()
@@ -160,7 +161,8 @@ class TestController(TestClient):
         self.assertIn('method', call_args)
         self.assertEqual(call_args['method'], 'GET')
         self.assertIn('headers', call_args)
-        self.assertEqual(call_args['headers'].get('bar'), 'baz')
+        self.assertEqual(call_args['headers'].get('Authorization'), 'wibble')
+        self.assertEqual(call_args['headers'].get('bar'), None)
 
     @patch('ras_backstage.controllers.controller.requests')
     def test_proxy_endpoint_proxies_downstream_errors(self, mock):
