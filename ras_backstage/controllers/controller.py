@@ -8,6 +8,12 @@ from ras_backstage.controllers.error_decorator import translate_exceptions
 log = get_logger()
 
 
+PROXY_HEADERS_WHITELIST = [
+    'Accept',
+    'Authorization'
+]
+
+
 def build_url(service_name, config, proxy_path):
     template = '{}://{}:{}/{}'
     try:
@@ -45,9 +51,11 @@ def proxy_request(request, service, url):
     # then turn list values of length 1 into scalars
     params = {k: v[0] if len(v) == 1 else v for k, v in params.items()}
 
+    headers = {k: v for k, v in request.headers.items() if k in PROXY_HEADERS_WHITELIST}
+
     req = requests.request(method=request.method,
                            url=proxy_url,
-                           headers=request.headers,
+                           headers=headers,
                            stream=True,
                            data=request.data,
                            params=params)
