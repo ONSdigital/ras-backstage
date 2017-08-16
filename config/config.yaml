@@ -30,8 +30,8 @@ dependencies:
         port: 8005
     party-service:
         scheme: http
-        host: localhost
-        port: 8006
+        host: ras-party-service-test.apps.devtest.onsclofo.uk
+        port: 80
     oauth2-service:
         scheme: http
         host: localhost

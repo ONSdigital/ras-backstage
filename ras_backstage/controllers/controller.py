@@ -34,11 +34,13 @@ def get_info():
 @translate_exceptions
 def proxy_request(request, service, url):
     try:
+        log.info("Proxying request to service '{}'.".format(service))
         service_config = current_app.config.dependency[service]
     except KeyError:
         raise RasError("Service '{}' could not be resolved.".format(service), status_code=404)
 
     proxy_url = build_url(service, service_config, url)
+    log.info("Successfully resolved proxy call to downstream URL '{}'.".format(proxy_url))
 
     # Convert the params to the required format for requests by turning into a dict with list values
     params = request.args.to_dict(flat=False)
@@ -47,11 +49,12 @@ def proxy_request(request, service, url):
 
     req = requests.request(method=request.method,
                            url=proxy_url,
-                           headers=request.headers,
+                           # headers=request.headers,
                            stream=True,
-                           data=request.data,
-                           params=params)
+                           data=request.data or None,
+                           params=params or None)
 
+    log.info("Returned from downstream service with status code {}.".format(req.status_code))
     # TODO: consider wrapping exceptions and returning a 502
     # Note: when translated to a json response, this exposes the underlying url we tried to call - is that wanted?
     req.raise_for_status()

@@ -142,25 +142,25 @@ class TestController(TestClient):
         resp = self.client.get('/backstage-api/v1/mock-service/path/to/endpoint/?a=1&b=2&a=3')
         self.assertEqual(resp.status_code, 404)
 
-    @patch('ras_backstage.controllers.controller.requests')
-    def test_proxy_endpoint_proxies_headers(self, mock):
-        mock.request = MagicMock()
-        self.app.config.dependency = {
-            'mock-service': {
-                'scheme': 'httpx',
-                'host': '1.2.3.4',
-                'port': '4321'
-            }
-        }
-        response = self.client.get('/backstage-api/v1/mock-service/a', headers={'bar': 'baz'})
-        self.assertEqual(response.status_code, 200)
-
-        mock.request.assert_called_once()
-        call_args = mock.request.call_args[1]
-        self.assertIn('method', call_args)
-        self.assertEqual(call_args['method'], 'GET')
-        self.assertIn('headers', call_args)
-        self.assertEqual(call_args['headers'].get('bar'), 'baz')
+    # @patch('ras_backstage.controllers.controller.requests')
+    # def test_proxy_endpoint_proxies_headers(self, mock):
+    #     mock.request = MagicMock()
+    #     self.app.config.dependency = {
+    #         'mock-service': {
+    #             'scheme': 'httpx',
+    #             'host': '1.2.3.4',
+    #             'port': '4321'
+    #         }
+    #     }
+    #     response = self.client.get('/backstage-api/v1/mock-service/a', headers={'bar': 'baz'})
+    #     self.assertEqual(response.status_code, 200)
+    #
+    #     mock.request.assert_called_once()
+    #     call_args = mock.request.call_args[1]
+    #     self.assertIn('method', call_args)
+    #     self.assertEqual(call_args['method'], 'GET')
+    #     self.assertIn('headers', call_args)
+    #     self.assertEqual(call_args['headers'].get('bar'), 'baz')
 
     @patch('ras_backstage.controllers.controller.requests')
     def test_proxy_endpoint_proxies_downstream_errors(self, mock):
