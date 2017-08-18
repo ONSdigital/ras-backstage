@@ -1,5 +1,9 @@
+import datetime
+from functools import wraps
+
 import requests
-from flask import make_response, jsonify, current_app
+from jose import jwt, JWTError
+from flask import make_response, jsonify, request, current_app
 from ras_common_utils.ras_error.ras_error import RasError
 from structlog import get_logger
 
@@ -24,22 +28,22 @@ def build_url(service_name, config, proxy_path):
 
 
 @translate_exceptions
-def get_info():
+def get_info(config):
     info = {
-        "name": current_app.config['NAME'],
-        "version": current_app.config['VERSION'],
+        "name": config['NAME'],
+        "version": config['VERSION'],
     }
-    info.update(current_app.config.get('METADATA', {}))
+    info.update(config.get('METADATA', {}))
 
-    if current_app.config.feature.report_dependencies:
-        info["dependencies"] = [{'name': name} for name in current_app.config.dependency.keys()]
+    if config.feature.report_dependencies:
+        info["dependencies"] = [{'name': name} for name in config.dependency.keys()]
 
     return make_response(jsonify(info), 200)
 
 
 @translate_exceptions
-def sign_in(username, password):
-    oauth_svc = current_app.config.dependency['oauth2-service']
+def sign_in(config, username, password):
+    oauth_svc = config.dependency['oauth2-service']
     client_id = oauth_svc['client_id']
     client_secret = oauth_svc['client_secret']
 
@@ -58,10 +62,56 @@ def sign_in(username, password):
     return response.json()
 
 
+def validate(token):
+    log.debug("Validating JWT token.")
+
+    now = datetime.now().timestamp()
+    expires_at = token.get('expires_at')
+    if expires_at is None:
+        raise RasError("JWT token does not have an expiry time.")
+    if now >= expires_at:
+        raise RasError("JWT token has expired.")
+
+    log.debug("JWT token is valid")
+
+
+def jwt_required(request):
+
+    # TODO: investigate Flask-JWT
+
+    JWT_ALGORITHM = 'HS256'
+
+    def validate_jwt(f):
+        @wraps(f)
+        def extract_session_wrapper(*args, **kwargs):
+            oauth_svc = current_app.config.dependency['oauth2-service']
+            client_secret = oauth_svc['client_secret']
+
+            try:
+                encoded_jwt_token = request.headers['authorization']
+            except KeyError:
+                raise RasError("No JWT token provided")
+
+            log.debug("Attempting to decode JWT token.")
+            try:
+                jwt_token = jwt.decode(encoded_jwt_token, client_secret, algorithms=JWT_ALGORITHM)
+            except JWTError:
+                raise RasError("Failed to decode JWT token.")
+            log.debug("JWT token decoded successfully.")
+
+            if current_app.config.feature['validate_jwt']:
+                validate(jwt_token)
+
+            f(*args, **kwargs, token=jwt_token)
+        return extract_session_wrapper
+    return validate_jwt
+
+
 @translate_exceptions
-def proxy_request(request, service, url):
+@jwt_required(request)
+def proxy_request(config, request, service, url):
     try:
-        service_config = current_app.config.dependency[service]
+        service_config = config.dependency[service]
     except KeyError:
         raise RasError("Service '{}' could not be resolved.".format(service), status_code=404)
 

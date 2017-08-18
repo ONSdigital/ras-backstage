@@ -6,6 +6,7 @@ service:
     PORT: 8080
     DEBUG: True
     LOG_LEVEL: debug
+    SECRET_KEY: banana
 
 dependencies:
     case-service:
@@ -38,3 +39,6 @@ dependencies:
         port: 8000
         client_id: "ons@ons.gov"
         client_secret: "password"
+
+features:
+    validate_jwt: True
