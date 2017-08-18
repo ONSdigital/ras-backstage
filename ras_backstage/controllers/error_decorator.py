@@ -21,7 +21,11 @@ def translate_exceptions(f):
             log.error(e.to_dict())
             raise
         except HTTPError as e:
-            raise RasError([str(e)])
+            try:
+                detail = e.response.json().get('detail', "No further detail")
+            except Exception:
+                detail = "No further detail"
+            raise RasError([str(e), detail])
         except Exception as e:
             log.error(str(e))
             if current_app.config.feature.translate_exceptions:

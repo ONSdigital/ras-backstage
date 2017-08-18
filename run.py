@@ -9,7 +9,6 @@ from ras_common_utils.ras_config.flask_extended import Flask
 from ras_common_utils.ras_error.ras_error import RasError
 from ras_common_utils.ras_logger.ras_logger import configure_logger
 
-
 logger = structlog.get_logger()
 
 
@@ -50,6 +49,7 @@ if __name__ == '__main__':
 
     app = create_app(config)
     configure_logger(app.config)
+
     logger.debug("Created Flask app.")
     logger.debug("Config is {}".format(app.config))
 

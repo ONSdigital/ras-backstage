@@ -1,10 +1,31 @@
-from flask import Blueprint, Response, stream_with_context, request
+from flask import Blueprint, Response, stream_with_context, request, make_response
+from ras_common_utils.ras_error.ras_error import RasError
 
 from ras_backstage.controllers import controller
 
 backstage_view = Blueprint('backstage_view', __name__)
 
 PROXY_METHODS = ['GET', 'POST', 'PUT', 'DELETE']
+
+
+@backstage_view.route('/sign_in', methods=['POST'])
+def sign_in():
+    errors = []
+    if request.json is None:
+        raise RasError("No JSON supplied in request body.", status_code=400)
+    if 'username' not in request.json:
+        errors.append("username is missing from the JSON body")
+    if 'password' not in request.json:
+        errors.append("password is missing from the JSON body")
+
+    if errors:
+        raise RasError(errors, status_code=400)
+
+    username = request.json.get('username')
+    password = request.json.get('password')
+
+    resp = controller.sign_in(username, password)
+    return make_response(resp, 201)
 
 
 @backstage_view.route('/<string:service>', strict_slashes=False, defaults={'url': ''}, methods=PROXY_METHODS)

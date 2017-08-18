@@ -38,6 +38,27 @@ def get_info():
 
 
 @translate_exceptions
+def sign_in(username, password):
+    oauth_svc = current_app.config.dependency['oauth2-service']
+    client_id = oauth_svc['client_id']
+    client_secret = oauth_svc['client_secret']
+
+    oauth_payload = {
+        'grant_type': 'password',
+        'username': username,
+        'password': password,
+        'client_id': client_id,
+        'client_secret': client_secret
+    }
+
+    oauth_url = '{}://{}:{}/api/v1/tokens/'.format(oauth_svc['scheme'], oauth_svc['host'], oauth_svc['port'])
+    response = requests.post(oauth_url, auth=(client_id, client_secret), json=oauth_payload)
+    response.raise_for_status()
+
+    return response.json()
+
+
+@translate_exceptions
 def proxy_request(request, service, url):
     try:
         service_config = current_app.config.dependency[service]
