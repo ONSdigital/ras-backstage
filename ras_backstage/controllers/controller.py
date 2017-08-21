@@ -2,8 +2,8 @@ import datetime
 from functools import wraps
 
 import requests
+from flask import request, current_app
 from jose import jwt, JWTError
-from flask import make_response, jsonify, request, current_app
 from ras_common_utils.ras_error.ras_error import RasError
 from structlog import get_logger
 
@@ -38,7 +38,7 @@ def get_info(config):
     if config.feature.report_dependencies:
         info["dependencies"] = [{'name': name} for name in config.dependency.keys()]
 
-    return make_response(jsonify(info), 200)
+    return info
 
 
 @translate_exceptions
@@ -77,13 +77,15 @@ def validate(token):
 
 def jwt_required(request):
 
-    # TODO: investigate Flask-JWT
-
     JWT_ALGORITHM = 'HS256'
 
-    def validate_jwt(f):
+    def wrapper(f):
         @wraps(f)
-        def extract_session_wrapper(*args, **kwargs):
+        def decorator(*args, **kwargs):
+
+            if not current_app.config.feature['validate_jwt']:
+                return f(*args, **kwargs)
+
             oauth_svc = current_app.config.dependency['oauth2-service']
             client_secret = oauth_svc['client_secret']
 
@@ -99,16 +101,13 @@ def jwt_required(request):
                 raise RasError("Failed to decode JWT token.")
             log.debug("JWT token decoded successfully.")
 
-            if current_app.config.feature['validate_jwt']:
-                validate(jwt_token)
-
             f(*args, **kwargs, token=jwt_token)
-        return extract_session_wrapper
-    return validate_jwt
+        return decorator
+    return wrapper
 
 
 @translate_exceptions
-@jwt_required(request)
+# @jwt_required(request)
 def proxy_request(config, request, service, url):
     try:
         service_config = config.dependency[service]
