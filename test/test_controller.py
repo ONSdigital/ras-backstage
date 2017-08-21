@@ -153,7 +153,9 @@ class TestController(TestClient):
             }
         }
         response = self.client.get('/backstage-api/v1/mock-service/a',
-                                   headers={'bar': 'baz', 'Authorization': 'wibble'})
+                                   headers={'bar': 'baz',
+                                            'Authorization': 'wibble',
+                                            'Content-Type': 'application/stuff'})
         self.assertEqual(response.status_code, 200)
 
         mock.request.assert_called_once()
@@ -162,6 +164,7 @@ class TestController(TestClient):
         self.assertEqual(call_args['method'], 'GET')
         self.assertIn('headers', call_args)
         self.assertEqual(call_args['headers'].get('Authorization'), 'wibble')
+        self.assertEqual(call_args['headers'].get('Content-Type'), 'application/stuff')
         self.assertEqual(call_args['headers'].get('bar'), None)
 
     @patch('ras_backstage.controllers.controller.requests')
