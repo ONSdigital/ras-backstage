@@ -12,6 +12,7 @@ from ras_backstage.controllers.error_decorator import translate_exceptions
 log = get_logger()
 
 
+JWT_ALGORITHM = 'HS256'
 PROXY_HEADERS_WHITELIST = [
     'Accept',
     'Authorization',
@@ -51,35 +52,44 @@ def sign_in(config, username, password):
     oauth_payload = {
         'grant_type': 'password',
         'username': username,
-        'password': password,
-        'client_id': client_id,
-        'client_secret': client_secret
+        'password': password
     }
 
     oauth_url = '{}://{}:{}/api/v1/tokens/'.format(oauth_svc['scheme'], oauth_svc['host'], oauth_svc['port'])
-    response = requests.post(oauth_url, auth=(client_id, client_secret), json=oauth_payload)
+    payload = '&'.join(["{}={}".format(k, v) for k, v in oauth_payload.items()])
+    response = requests.post(oauth_url,
+                             auth=(client_id, client_secret),
+                             data=payload,
+                             headers={'Content-Type': "application/x-www-form-urlencoded"})
     response.raise_for_status()
+    response_data = response.json()
 
-    return response.json()
+    token_expiry = datetime.datetime.now() + datetime.timedelta(seconds=int(response_data['expires_in']))
+    response_data['expires_at'] = token_expiry.timestamp()
+
+    token = jwt.encode(response_data, client_secret, algorithm=JWT_ALGORITHM)
+
+    return {'token': token}
 
 
-def validate(token):
-    log.debug("Validating JWT token.")
+def validate_jwt(client_secret, encoded_jwt_token):
+    log.debug("Attempting to validate JWT token.")
+    try:
+        jwt_token = jwt.decode(encoded_jwt_token, client_secret, algorithms=JWT_ALGORITHM)
+    except JWTError:
+        raise RasError("Failed to decode JWT token.", status_code=401)
+    
+    now = datetime.datetime.now()
+    expires_at = datetime.datetime.fromtimestamp(jwt_token['expires_at'])
 
-    now = datetime.now().timestamp()
-    expires_at = token.get('expires_at')
-    if expires_at is None:
-        raise RasError("JWT token does not have an expiry time.")
-    if now >= expires_at:
-        raise RasError("JWT token has expired.")
+    if now > expires_at:
+        raise RasError("Token has expired.", status_code=401)
 
-    log.debug("JWT token is valid")
+    log.debug("JWT token validated successfully.")
+    return jwt_token
 
 
 def jwt_required(request):
-
-    JWT_ALGORITHM = 'HS256'
-
     def wrapper(f):
         @wraps(f)
         def decorator(*args, **kwargs):
@@ -93,22 +103,16 @@ def jwt_required(request):
             try:
                 encoded_jwt_token = request.headers['authorization']
             except KeyError:
-                raise RasError("No JWT token provided")
+                raise RasError("No JWT token provided", status_code=401)
 
-            log.debug("Attempting to decode JWT token.")
-            try:
-                jwt_token = jwt.decode(encoded_jwt_token, client_secret, algorithms=JWT_ALGORITHM)
-            except JWTError:
-                raise RasError("Failed to decode JWT token.")
-            log.debug("JWT token decoded successfully.")
-
+            jwt_token = validate_jwt(client_secret, encoded_jwt_token)
             f(*args, **kwargs, token=jwt_token)
         return decorator
     return wrapper
 
 
 @translate_exceptions
-# @jwt_required(request)
+@jwt_required(request)
 def proxy_request(config, request, service, url):
     try:
         service_config = config.dependency[service]
@@ -124,6 +128,7 @@ def proxy_request(config, request, service, url):
 
     headers = {k: v for k, v in request.headers.items() if k in PROXY_HEADERS_WHITELIST}
 
+    # TODO: do we pass through the incoming Authorization header?
     req = requests.request(method=request.method,
                            url=proxy_url,
                            headers=headers,
