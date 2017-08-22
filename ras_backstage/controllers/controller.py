@@ -109,7 +109,7 @@ def jwt_required(request):
                 raise RasError("No JWT token provided", status_code=401)
 
             jwt_token = validate_jwt(client_secret, encoded_jwt_token)
-            f(*args, **kwargs, token=jwt_token)
+            return f(*args, **kwargs, token=jwt_token)
         return decorator
     return wrapper
 
@@ -131,7 +131,6 @@ def proxy_request(config, request, service, url, token=None):
 
     headers = {k: v for k, v in request.headers.items() if k in PROXY_HEADERS_WHITELIST}
 
-    # TODO: do we pass through the incoming Authorization header?
     req = requests.request(method=request.method,
                            url=proxy_url,
                            headers=headers,
