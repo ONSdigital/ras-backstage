@@ -6,7 +6,7 @@ service:
     PORT: 8080
     DEBUG: True
     LOG_LEVEL: debug
-    SECRET_KEY: banana
+    SECRET_KEY: vrwgLNWEffe45thh545yuby
 
 dependencies:
     case-service:

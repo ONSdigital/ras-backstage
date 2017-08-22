@@ -69,7 +69,8 @@ def sign_in(config, username, password):
 
     token = jwt.encode(response_data, client_secret, algorithm=JWT_ALGORITHM)
 
-    return {'token': token}
+    # FIXME: remove hard-coded values
+    return {'token': token, 'party_id': 'BRES', 'role': 'internal'}
 
 
 def validate_jwt(client_secret, encoded_jwt_token):
@@ -78,7 +79,7 @@ def validate_jwt(client_secret, encoded_jwt_token):
         jwt_token = jwt.decode(encoded_jwt_token, client_secret, algorithms=JWT_ALGORITHM)
     except JWTError:
         raise RasError("Failed to decode JWT token.", status_code=401)
-    
+
     now = datetime.datetime.now()
     expires_at = datetime.datetime.fromtimestamp(jwt_token['expires_at'])
 
