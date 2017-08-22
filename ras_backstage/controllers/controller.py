@@ -66,11 +66,13 @@ def sign_in(config, username, password):
 
     token_expiry = datetime.datetime.now() + datetime.timedelta(seconds=int(response_data['expires_in']))
     response_data['expires_at'] = token_expiry.timestamp()
+    # FIXME: remove hard-coded values
+    response_data['party_id'] = 'BRES'
+    response_data['role'] = 'internal'
 
     token = jwt.encode(response_data, client_secret, algorithm=JWT_ALGORITHM)
 
-    # FIXME: remove hard-coded values
-    return {'token': token, 'party_id': 'BRES', 'role': 'internal'}
+    return {'token': token}
 
 
 def validate_jwt(client_secret, encoded_jwt_token):
@@ -114,7 +116,7 @@ def jwt_required(request):
 
 @translate_exceptions
 @jwt_required(request)
-def proxy_request(config, request, service, url):
+def proxy_request(config, request, service, url, token=None):
     try:
         service_config = config.dependency[service]
     except KeyError:
