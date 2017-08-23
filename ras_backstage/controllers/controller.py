@@ -70,15 +70,17 @@ def sign_in(config, username, password):
     response_data['party_id'] = 'BRES'
     response_data['role'] = 'internal'
 
-    token = jwt.encode(response_data, client_secret, algorithm=JWT_ALGORITHM)
+    jwt_secret = config['SECRET_KEY']
+    token = jwt.encode(response_data, jwt_secret, algorithm=JWT_ALGORITHM)
 
     return {'token': token}
 
 
-def validate_jwt(client_secret, encoded_jwt_token):
+def validate_jwt(encoded_jwt_token):
     log.debug("Attempting to validate JWT token.")
     try:
-        jwt_token = jwt.decode(encoded_jwt_token, client_secret, algorithms=JWT_ALGORITHM)
+        jwt_secret = current_app.config['SECRET_KEY']
+        jwt_token = jwt.decode(encoded_jwt_token, jwt_secret, algorithms=JWT_ALGORITHM)
     except JWTError:
         raise RasError("Failed to decode JWT token.", status_code=401)
 
@@ -100,15 +102,12 @@ def jwt_required(request):
             if not current_app.config.feature['validate_jwt']:
                 return f(*args, **kwargs)
 
-            oauth_svc = current_app.config.dependency['oauth2-service']
-            client_secret = oauth_svc['client_secret']
-
             try:
                 encoded_jwt_token = request.headers['authorization']
             except KeyError:
                 raise RasError("No JWT token provided", status_code=401)
 
-            jwt_token = validate_jwt(client_secret, encoded_jwt_token)
+            jwt_token = validate_jwt(encoded_jwt_token)
             return f(*args, **kwargs, token=jwt_token)
         return decorator
     return wrapper

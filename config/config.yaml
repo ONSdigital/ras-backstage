@@ -6,6 +6,7 @@ service:
     PORT: 8080
     DEBUG: True
     LOG_LEVEL: debug
+    SECRET_KEY: vrwgLNWEffe45thh545yuby
 
 dependencies:
     case-service:
@@ -37,7 +38,7 @@ dependencies:
         host: localhost
         port: 8000
         client_id: "ons@ons.gov"
-        client_secret: "vrwgLNWEffe45thh545yuby"
+        client_secret: "password"
 
 features:
     validate_jwt: True
