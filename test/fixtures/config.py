@@ -6,6 +6,7 @@ service:
     HOST: 0.0.0.0
     PORT: 8000
     LOG_LEVEL: error
+    SECRET_KEY: secret
 
 dependencies:
     oauth2-service:
@@ -19,5 +20,7 @@ dependencies:
         client_id: "ons@ons.gov"
         client_secret: "password"
 
+features:
+    validate_jwt: False
 
 """

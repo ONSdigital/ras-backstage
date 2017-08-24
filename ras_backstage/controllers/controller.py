@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 from functools import wraps
 
 import requests
@@ -64,7 +64,7 @@ def sign_in(config, username, password):
     response.raise_for_status()
     response_data = response.json()
 
-    token_expiry = datetime.datetime.now() + datetime.timedelta(seconds=int(response_data['expires_in']))
+    token_expiry = datetime.now() + timedelta(seconds=int(response_data['expires_in']))
     response_data['expires_at'] = token_expiry.timestamp()
     # FIXME: remove hard-coded values
     response_data['party_id'] = 'BRES'
@@ -84,11 +84,12 @@ def validate_jwt(encoded_jwt_token):
     except JWTError:
         raise RasError("Failed to decode JWT token.", status_code=401)
 
-    now = datetime.datetime.now()
-    expires_at = datetime.datetime.fromtimestamp(jwt_token['expires_at'])
-
-    if now > expires_at:
-        raise RasError("Token has expired.", status_code=401)
+    # Commented out because we don't have a requirement for JWT expiry yet...
+    # now = datetime.now()
+    # expires_at = datetime.fromtimestamp(jwt_token['expires_at'])
+    #
+    # if now > expires_at:
+    #     raise RasError("Token has expired.", status_code=401)
 
     log.debug("JWT token validated successfully.")
     return jwt_token
@@ -137,7 +138,6 @@ def proxy_request(config, request, service, url, token=None):
                            data=request.data,
                            params=params)
 
-    # TODO: consider wrapping exceptions and returning a 502
     # Note: when translated to a json response, this exposes the underlying url we tried to call - is that wanted?
     req.raise_for_status()
 
