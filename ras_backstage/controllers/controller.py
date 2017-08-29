@@ -12,7 +12,9 @@ from ras_backstage.controllers.error_decorator import translate_exceptions
 log = get_logger()
 
 
+# TODO: make the JWT encoding algorithm externally configurable
 JWT_ALGORITHM = 'HS256'
+
 PROXY_HEADERS_WHITELIST = [
     'Accept',
     'Authorization',
@@ -108,15 +110,15 @@ def jwt_required(request):
             except KeyError:
                 raise RasError("No JWT token provided", status_code=401)
 
-            jwt_token = validate_jwt(encoded_jwt_token)
-            return f(*args, **kwargs, token=jwt_token)
+            validate_jwt(encoded_jwt_token)
+            return f(*args, **kwargs)
         return decorator
     return wrapper
 
 
 @translate_exceptions
 @jwt_required(request)
-def proxy_request(config, request, service, url, token=None):
+def proxy_request(config, request, service, url):
     try:
         service_config = config.dependency[service]
     except KeyError:
