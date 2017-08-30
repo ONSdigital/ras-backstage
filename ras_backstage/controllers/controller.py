@@ -10,7 +10,8 @@ log = get_logger()
 
 PROXY_HEADERS_WHITELIST = [
     'Accept',
-    'Authorization'
+    'Authorization',
+    'Content-Type'
 ]
 
 
