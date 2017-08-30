@@ -7,6 +7,8 @@ service:
     PORT: 8000
     LOG_LEVEL: error
     SECRET_KEY: secret
+    SECURITY_USER_NAME: dummy_user
+    SECURITY_USER_PASSWORD: dummy_password
 
 dependencies:
     oauth2-service:
@@ -20,7 +22,5 @@ dependencies:
         client_id: "ons@ons.gov"
         client_secret: "password"
 
-features:
-    validate_jwt: False
 
 """

@@ -1,5 +1,6 @@
 from flask import Blueprint, Response, stream_with_context, request, make_response, jsonify, current_app
 from ras_common_utils.ras_error.ras_error import RasError
+from flask_httpauth import HTTPBasicAuth
 from werkzeug.exceptions import BadRequest
 
 from ras_backstage.controllers import controller
@@ -7,6 +8,17 @@ from ras_backstage.controllers import controller
 backstage_view = Blueprint('backstage_view', __name__)
 
 PROXY_METHODS = ['GET', 'POST', 'PUT', 'DELETE']
+
+
+auth = HTTPBasicAuth()
+
+
+@auth.get_password
+def get_pw(username):
+    config_username = current_app.config['SECURITY_USER_NAME']
+    config_password = current_app.config['SECURITY_USER_PASSWORD']
+    if username == config_username:
+        return config_password
 
 
 @backstage_view.route('/sign_in', methods=['POST'])

@@ -116,6 +116,19 @@ def jwt_required(request):
     return wrapper
 
 
+def auth_for_service(service):
+    """
+    Provides the relevant auth parameters for the proxied service.
+    In the case of secure message service, the incoming JWT should be delegated, so return None.
+    For all other services, basic auth should be used, so return a requests-compliant basic auth tuple.
+
+    :param service: the name of the service to be called.
+    :return: either a tuple of the basic auth headers, or None
+    """
+    if not service == 'secure-message-service':
+        return current_app.config['SECURITY_USER_NAME'], current_app.config['SECURITY_USER_PASSWORD']
+
+
 @translate_exceptions
 @jwt_required(request)
 def proxy_request(config, request, service, url):
@@ -136,6 +149,7 @@ def proxy_request(config, request, service, url):
     req = requests.request(method=request.method,
                            url=proxy_url,
                            headers=headers,
+                           auth=auth_for_service(service),
                            stream=True,
                            data=request.data,
                            params=params)
