@@ -16,7 +16,7 @@ The services which can be proxied to are those listed in the 'dependencies' sect
 URLs into this service are routed to the relevant downstream service by inspect the second part of the URL. For example, given the URL `http://localhost:8080/case-service/.../`,
 the 'case-service' part of the URL corresponds to the related configuration file entry. The remainder of the URL is passed through to the downstream service. Thus the routing is performed
 statically based on the service configuration. Note that service configuration is overridden in each deployed environment via environmental variables to configure the scheme, host and port of the
-target downstream service. E.g. if the following environment variables are configured:x
+target downstream service. E.g. if the following environment variables are configured:
 
 ```
 export case-service.scheme=http
