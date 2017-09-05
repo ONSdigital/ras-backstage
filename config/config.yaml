@@ -7,6 +7,8 @@ service:
     DEBUG: True
     LOG_LEVEL: debug
     SECRET_KEY: vrwgLNWEffe45thh545yuby
+    SECURITY_USER_NAME: dummy_user
+    SECURITY_USER_PASSWORD: dummy_password
 
 dependencies:
     case-service:
