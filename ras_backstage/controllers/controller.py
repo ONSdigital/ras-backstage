@@ -132,11 +132,11 @@ def auth_for_service(service):
 @translate_exceptions
 @jwt_required(request)
 def proxy_request(config, request, service, url):
-    log.info("Start request proxying for '{}' service, with path '{}'.".format(service, url))
+    log.info("Start proxy request.", proxy_service=service, path=url)
     try:
         service_config = config.dependency[service]
     except KeyError:
-        raise RasError("Service '{}' could not be resolved.".format(service), status_code=404)
+        raise RasError("Service could not be resolved.".format(service), status_code=404)
 
     proxy_url = build_url(service, service_config, url)
 
@@ -149,7 +149,7 @@ def proxy_request(config, request, service, url):
     log.info("Copying proxied headers.")
     headers = {k: v for k, v in request.headers.items() if k in PROXY_HEADERS_WHITELIST}
 
-    log.info("Proxying to '{}'.".format(proxy_url))
+    log.info("Proxying request.".format(proxy_url), url=proxy_url)
     req = requests.request(method=request.method,
                            url=proxy_url,
                            headers=headers,
@@ -158,7 +158,7 @@ def proxy_request(config, request, service, url):
                            data=request.data,
                            params=params)
 
-    log.info("Response status = {}. Streaming response back to client.".format(req.status_code))
+    log.info("Streaming response back to client.", status=req.status_code)
     # Note: when translated to a json response, this exposes the underlying url we tried to call - is that wanted?
     req.raise_for_status()
 
