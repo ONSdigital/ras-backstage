@@ -1,7 +1,10 @@
+import logging
+from werkzeug.exceptions import BadRequest
+
 from flask import Blueprint, Response, stream_with_context, request, make_response, jsonify, current_app
 from ras_common_utils.ras_error.ras_error import RasError
 from flask_httpauth import HTTPBasicAuth
-from werkzeug.exceptions import BadRequest
+from structlog import wrap_logger
 
 from ras_backstage.controllers import controller
 
@@ -9,6 +12,7 @@ backstage_view = Blueprint('backstage_view', __name__)
 
 PROXY_METHODS = ['GET', 'POST', 'PUT', 'DELETE']
 
+logger = wrap_logger(logging.getLogger(__name__))
 
 auth = HTTPBasicAuth()
 
@@ -23,6 +27,7 @@ def get_pw(username):
 
 @backstage_view.route('/sign_in', methods=['POST'])
 def sign_in():
+
     errors = []
     try:
         body = request.json

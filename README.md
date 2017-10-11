@@ -30,3 +30,11 @@ All attempts to proxy through ras-backstage in this way will encounter JWT prote
 which accepts username and password as JSON body parameters. If the supplied credentials are found on the OAuth2 server using the OAuth 'Resource owner password credentials' flow ( https://tools.ietf.org/html/rfc6749#section-4.3), then sign_in is successful and an encoded JWT is returned
 The JWT may subsequently be used to proxy through to RAS services.
 
+## Configuration
+
+Environment variables available for configuration are listed below:
+
+| Environment Variable            | Description                                        | Default
+|---------------------------------|----------------------------------------------------|-------------------------------
+| NAME                            | Name of application                                | 'ras-backstage'
+| LOGGING_LEVEL                   | Used to set application logging level              | 'INFO'

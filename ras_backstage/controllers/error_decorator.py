@@ -1,12 +1,12 @@
+import logging
 from functools import wraps
 
-import structlog
 from flask import current_app
 from ras_common_utils.ras_error.ras_error import RasError
 from requests import HTTPError
+from structlog import wrap_logger
 
-
-log = structlog.get_logger()
+log = wrap_logger(logging.getLogger(__name__))
 
 
 def translate_exceptions(f):
