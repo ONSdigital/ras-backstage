@@ -30,7 +30,7 @@ class MockResponse:
 
 
 class TestController(TestCase):
-    config_data = yaml.load(test_config)
+    config_data = yaml.safe_load(test_config)
     config = ras_config.make(config_data)
 
     def setUp(self):
