@@ -27,14 +27,14 @@ def get_pw(username):
 
 @backstage_view.route('/sign_in', methods=['POST'])
 def sign_in():
+    logger.info("Sign-in POST request.")
 
     errors = []
     try:
-        body = request.json
+        body = request.get_json(force=True)
     except BadRequest:
-        body = None
-    if body is None:
         raise RasError("No JSON supplied in request body.", status_code=400)
+
     if 'username' not in body:
         errors.append("username is missing from the JSON body.")
     if 'password' not in body:
@@ -43,8 +43,8 @@ def sign_in():
     if errors:
         raise RasError(errors, status_code=400)
 
-    username = request.json.get('username')
-    password = request.json.get('password')
+    username = body.get('username')
+    password = body.get('password')
 
     resp = controller.sign_in(current_app.config, username, password)
     return make_response(jsonify(resp), 201)

@@ -6,6 +6,7 @@ install:
   - pip install codecov
   - pip install coverage
 script:
+  - flake8 . flake8 . --max-line-length 120 --max-complexity 10
   - pytest --cov=ras_backstage --cov-report xml
   - coverage report
 

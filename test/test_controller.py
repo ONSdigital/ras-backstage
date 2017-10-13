@@ -5,11 +5,11 @@ from unittest import TestCase
 from unittest.mock import patch, MagicMock
 
 import yaml
-
 from jose import JWTError
+
+from ras_backstage.logger_config import logger_initial_config
 from ras_common_utils.ras_config import ras_config
 from ras_common_utils.ras_error.ras_error import RasError
-from ras_common_utils.ras_logger.ras_logger import configure_logger
 from run import create_app
 from test.fixtures.config import test_config
 
@@ -35,7 +35,7 @@ class TestController(TestCase):
 
     def setUp(self):
         self.app = create_app(self.config)
-        configure_logger(self.app.config)
+        logger_initial_config(self.app.config)
 
     def get_info(self, expected_status=200):
         response = self.app.test_client().get('/info')
@@ -112,7 +112,8 @@ class TestController(TestCase):
             }
         }
         mock_body = dict(foo='bar')
-        self.app.test_client().post('/backstage-api/v1/mock-service/path/to/endpoint/?a=1&b=2&a=3', data=json.dumps(mock_body))
+        self.app.test_client().post('/backstage-api/v1/mock-service/path/to/endpoint/?a=1&b=2&a=3',
+                                    data=json.dumps(mock_body))
 
         self.assertTrue(mock.call_count == 1)
         call_args = mock.call_args[1]
@@ -131,7 +132,8 @@ class TestController(TestCase):
             }
         }
         mock_body = dict(foo='bar')
-        self.app.test_client().put('/backstage-api/v1/mock-service/path/to/endpoint/?a=1&b=2&a=3', data=json.dumps(mock_body))
+        self.app.test_client().put('/backstage-api/v1/mock-service/path/to/endpoint/?a=1&b=2&a=3',
+                                   data=json.dumps(mock_body))
 
         self.assertTrue(mock.call_count == 1)
         call_args = mock.call_args[1]
@@ -170,9 +172,9 @@ class TestController(TestCase):
             }
         }
         response = self.app.test_client().get('/backstage-api/v1/mock-service/a',
-                                   headers={'bar': 'baz',
-                                            'Authorization': 'wibble',
-                                            'Content-Type': 'application/stuff'})
+                                              headers={'bar': 'baz',
+                                                       'Authorization': 'wibble',
+                                                       'Content-Type': 'application/stuff'})
         self.assertEqual(response.status_code, 200)
 
         self.assertTrue(mock.call_count == 1)
@@ -214,8 +216,8 @@ class TestController(TestCase):
         mock.post.return_value = MockResponse(status_code=201, body={'expires_in': '1'})
         payload = {'username': 'testuser', 'password': 'abcd'}
         response = self.app.test_client().post('/backstage-api/v1/sign_in',
-                                    data=json.dumps(payload),
-                                    content_type='application/json')
+                                               data=json.dumps(payload),
+                                               content_type='application/json')
         self.assertEqual(response.status_code, 201)
 
         self.assertTrue(mock.post.call_count == 1)
@@ -229,6 +231,12 @@ class TestController(TestCase):
         self.assertDictEqual(call_kws['headers'], {'Content-Type': 'application/x-www-form-urlencoded'})
         self.assertIn('data', call_kws)
         self.assertEqual(sorted(call_kws['data']), sorted('password=abcd&grant_type=password&username=testuser'))
+
+    def test_sign_in_called_with_no_json(self):
+        response = self.app.test_client().post('/backstage-api/v1/sign_in',
+                                               content_type='text/plain')
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("No JSON supplied in request body.", response.data.decode())
 
     @patch('ras_backstage.controllers.controller.requests')
     def test_sign_in_generates_a_token(self, mock):

@@ -85,6 +85,7 @@ def validate_jwt(encoded_jwt_token):
         jwt_secret = current_app.config['SECRET_KEY']
         jwt_token = jwt.decode(encoded_jwt_token, jwt_secret, algorithms=JWT_ALGORITHM)
     except JWTError:
+        log.info("Failed to decode JWT token.", jwt=encoded_jwt_token)
         raise RasError("Failed to decode JWT token.", status_code=401)
 
     # Commented out because we don't have a requirement for JWT expiry yet...
@@ -137,6 +138,7 @@ def proxy_request(config, request, service, url):
     try:
         service_config = config.dependency[service]
     except KeyError:
+        log.info("Service could not be resolved.", proxy_service=service, path=url)
         raise RasError("Service could not be resolved.".format(service), status_code=404)
 
     proxy_url = build_url(service, service_config, url)
