@@ -5,7 +5,7 @@ from functools import wraps
 
 from flask import request, current_app
 from jose import jwt, JWTError
-from ras_common_utils.ras_error.ras_error import RasError
+from ras_backstage.exception.exceptions import RasError
 from structlog import wrap_logger
 
 from ras_backstage.controllers.error_decorator import translate_exceptions

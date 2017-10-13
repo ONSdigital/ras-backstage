@@ -6,10 +6,10 @@ from unittest.mock import patch, MagicMock
 
 import yaml
 from jose import JWTError
+from requests import HTTPError
 
 from ras_backstage.logger_config import logger_initial_config
-from ras_common_utils.ras_config import ras_config
-from ras_common_utils.ras_error.ras_error import RasError
+from ras_backstage.ras_config import ras_config
 from run import create_app
 from test.fixtures.config import test_config
 
@@ -23,7 +23,7 @@ class MockResponse:
     def raise_for_status(self):
         status_category = int(self.status_code / 100)
         if status_category != 2:
-            raise RasError(["Mock error"], status_code=self.status_code)
+            raise HTTPError(["Mock error"], response=self)
 
     def json(self):
         return self._body
@@ -197,7 +197,7 @@ class TestController(TestCase):
             }
         }
         response = self.app.test_client().get('/backstage-api/v1/mock-service/a')
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 500)
 
     @patch('ras_backstage.controllers.controller.requests.request')
     def test_proxy_endpoint_raises_for_incorrect_config(self, mock):

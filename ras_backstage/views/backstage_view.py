@@ -2,7 +2,7 @@ import logging
 from werkzeug.exceptions import BadRequest
 
 from flask import Blueprint, Response, stream_with_context, request, make_response, jsonify, current_app
-from ras_common_utils.ras_error.ras_error import RasError
+from ras_backstage.exception.exceptions import RasError
 from flask_httpauth import HTTPBasicAuth
 from structlog import wrap_logger
 

@@ -5,9 +5,9 @@ from pathlib import Path
 from flask import jsonify
 from flask_cors import CORS
 from ras_backstage.logger_config import logger_initial_config
-from ras_common_utils.ras_config import ras_config
-from ras_common_utils.ras_config.flask_extended import Flask
-from ras_common_utils.ras_error.ras_error import RasError
+from ras_backstage.ras_config import ras_config
+from ras_backstage.ras_config.flask_extended import Flask
+from ras_backstage.exception.exceptions import RasError
 from structlog import wrap_logger
 
 logger = wrap_logger(logging.getLogger(__name__))

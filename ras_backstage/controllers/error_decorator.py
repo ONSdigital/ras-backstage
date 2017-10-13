@@ -2,7 +2,7 @@ import logging
 from functools import wraps
 
 from flask import current_app
-from ras_common_utils.ras_error.ras_error import RasError
+from ras_backstage.exception.exceptions import RasError
 from requests import HTTPError
 from structlog import wrap_logger
 

@@ -1,8 +1,8 @@
 import logging
 
-from ras_common_utils.ras_config import ras_config
 from structlog import wrap_logger
 
+from ras_backstage.ras_config import ras_config
 from ras_backstage.logger_config import logger_initial_config
 from run import create_app
 
