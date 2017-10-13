@@ -118,6 +118,6 @@ def make(config_data):
 
 def from_yaml_file(path):
     with open(path) as f:
-        data = yaml.load(f.read())
+        data = yaml.safe_load(f.read())
 
     return make(data)

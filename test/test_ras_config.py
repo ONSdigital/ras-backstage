@@ -103,30 +103,30 @@ class MockGetenv:
 class TestRasConfig(unittest.TestCase):
 
     def test_config_enables_lookup_of_service_info(self):
-        data = yaml.load(CONFIG_FRAGMENT)
+        data = yaml.safe_load(CONFIG_FRAGMENT)
         c = RasConfig(data)
 
         service = c.service
         self.assertEqual(service['name'], "my-service")
 
     def test_get_dependency_returns_corresponding_config_section(self):
-        c = RasConfig(yaml.load(CONFIG_FRAGMENT))
+        c = RasConfig(yaml.safe_load(CONFIG_FRAGMENT))
         ras_postgres = c.dependency('ras-postgres')
         self.assertEqual(ras_postgres['uri'], 'my-database-uri')
 
     def test_get_nonexistent_dependency_raises_exception(self):
-        c = RasConfig(yaml.load(CONFIG_FRAGMENT))
+        c = RasConfig(yaml.safe_load(CONFIG_FRAGMENT))
         with self.assertRaises(RasDependencyError):
             c.dependency('ras-other')
 
     def test_get_dependency_returns_arbitrary_structure(self):
-        c = RasConfig(yaml.load(CONFIG_FRAGMENT))
+        c = RasConfig(yaml.safe_load(CONFIG_FRAGMENT))
         ras_rabbit = c.dependency('ras-rabbit')
         self.assertEqual(ras_rabbit['protocols'], {'amqp': {'host': '0.0.0.0'}, 'other': {'host': '1.2.3.4'}})
 
     @patch('ras_backstage.ras_config.ras_config.getenv', new_callable=MockGetenv)
     def test_config_overrides_values_from_cloudfoundry(self, _):
-        c = ras_config.make(yaml.load(CONFIG_FRAGMENT))
+        c = ras_config.make(yaml.safe_load(CONFIG_FRAGMENT))
         ras_postgres = c.dependency('ras-postgres')
         self.assertEqual(ras_postgres['uri'], 'postgres://overridden')
 
@@ -141,7 +141,7 @@ class TestRasConfig(unittest.TestCase):
 
     @patch('ras_backstage.ras_config.ras_config.getenv', new_callable=MockGetenv)
     def test_config_only_overrides_when_key_present_in_cloudfoundry(self, _):
-        c = ras_config.make(yaml.load(CONFIG_FRAGMENT))
+        c = ras_config.make(yaml.safe_load(CONFIG_FRAGMENT))
         ras_rabbit = c.dependency('ras-rabbit')
         self.assertEqual(ras_rabbit['protocols'], {'amqp': {'host': '0.0.0.0'}, 'other': {'host': '1.2.3.4'}})
 
@@ -156,26 +156,26 @@ class TestRasConfig(unittest.TestCase):
 
     @patch('ras_backstage.ras_config.ras_config.getenv', new_callable=MockGetenv)
     def test_cf_config_falls_back_to_yaml_values(self, _):
-        c = ras_config.make(yaml.load(CONFIG_FRAGMENT))
+        c = ras_config.make(yaml.safe_load(CONFIG_FRAGMENT))
         ras_postgres = c.dependency('ras-postgres')
         self.assertEqual(ras_postgres['schema'], 'my-schema')
 
     @patch('ras_backstage.ras_config.ras_config.getenv', new_callable=MockGetenv)
     def test_feature_flag_coerces_to_boolean(self, _):
-        c = ras_config.make(yaml.load(CONFIG_FRAGMENT))
+        c = ras_config.make(yaml.safe_load(CONFIG_FRAGMENT))
 
         expected_true = c.feature('config-bool-true')
-        self.assertTrue(type(expected_true) is bool)
+        self.assertTrue(isinstance(expected_true, bool))
         self.assertTrue(expected_true)
 
         expected_true = c.feature('config-true-flag')
-        self.assertTrue(type(expected_true) is bool)
+        self.assertTrue(isinstance(expected_true, bool))
         self.assertTrue(expected_true)
 
         expected_false = c.feature('config-false-flag')
-        self.assertTrue(type(expected_false) is bool)
+        self.assertTrue(isinstance(expected_true, bool))
         self.assertFalse(expected_false)
 
         expected_false = c.feature('config-nonexistent-flag')
-        self.assertTrue(type(expected_false) is bool)
+        self.assertTrue(isinstance(expected_true, bool))
         self.assertFalse(expected_false)
