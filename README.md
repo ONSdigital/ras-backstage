@@ -1,6 +1,6 @@
 # ras-backstage
 [![Build Status](https://travis-ci.org/ONSdigital/ras-backstage.svg?branch=master)](https://travis-ci.org/ONSdigital/ras-backstage)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/38f97350260a4819aa64c4a4d19f6d1d)](https://www.codacy.com/app/ONSDigital/ras-backstage)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/38f97350260a4819aa64c4a4d19f6d1d)](https://www.codacy.com/app/ONS/ras-backstage?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ONSdigital/ras-backstage&amp;utm_campaign=Badge_Grade)
 [![codecov](https://codecov.io/gh/ONSdigital/ras-backstage/branch/master/graph/badge.svg)](https://codecov.io/gh/ONSdigital/ras-backstage)
 
 ## Description
