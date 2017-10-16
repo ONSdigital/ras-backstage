@@ -1,11 +1,11 @@
 import logging
 from werkzeug.exceptions import BadRequest
 
-from flask import Blueprint, Response, stream_with_context, request, make_response, jsonify, current_app
-from ras_backstage.exception.exceptions import RasError
+from flask import Blueprint, Response, request, make_response, jsonify, current_app
 from flask_httpauth import HTTPBasicAuth
 from structlog import wrap_logger
 
+from ras_backstage.exception.exceptions import RasError
 from ras_backstage.controllers import controller
 
 backstage_view = Blueprint('backstage_view', __name__)
@@ -54,4 +54,4 @@ def sign_in():
 @backstage_view.route('/<string:service>/<path:url>', methods=PROXY_METHODS)
 def proxy(service, url):
     req = controller.proxy_request(current_app.config, request, service, url)
-    return Response(stream_with_context(req.iter_content()), content_type=req.headers['content-type'])
+    return Response(req.content, status=req.status_code, content_type=req.headers['content-type'])
