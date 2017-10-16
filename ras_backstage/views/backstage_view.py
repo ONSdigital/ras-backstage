@@ -49,4 +49,4 @@ def sign_in():
 @backstage_view.route('/<string:service>/<path:url>', methods=PROXY_METHODS)
 def proxy(service, url):
     req = controller.proxy_request(current_app.config, request, service, url)
-    return Response(req.raw.stream(decode_content=False), content_type=req.headers['content-type'])
+    return Response(req.content, status=req.status_code, content_type=req.headers['content-type'])
