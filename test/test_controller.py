@@ -34,6 +34,10 @@ class TestController(TestClient):
 
     @patch('ras_backstage.controllers.controller.requests')
     def test_proxy_endpoint_proxies_a_get_request(self, mock):
+        response = MagicMock()
+        response.status_code = 200
+        mock.request.return_value = response
+
         self.app.config.dependency = {
             'mock-service': {
                 'scheme': 'httpx',
@@ -145,6 +149,9 @@ class TestController(TestClient):
 
     @patch('ras_backstage.controllers.controller.requests')
     def test_proxy_endpoint_proxies_headers(self, mock):
+        response = MagicMock()
+        response.status_code = 200
+        mock.request.return_value = response
         self.app.config.dependency = {
             'mock-service': {
                 'scheme': 'httpx',
@@ -247,6 +254,10 @@ class TestController(TestClient):
     @patch('ras_backstage.controllers.controller.jwt')
     @patch('ras_backstage.controllers.controller.datetime')
     def test_request_with_valid_jwt_is_proxied(self, mock_datetime, mock_jwt, mock_requests):
+        response = MagicMock()
+        response.status_code = 200
+        mock_requests.request.return_value = response
+
         self.app.config.feature = {'validate_jwt': True}
         mock_datetime.now.return_value = 100
         mock_datetime.fromtimestamp = lambda x: x
@@ -278,6 +289,10 @@ class TestController(TestClient):
     @patch('ras_backstage.controllers.controller.jwt')
     @patch('ras_backstage.controllers.controller.datetime')
     def test_request_with_expired_jwt_still_returns_successfully(self, mock_datetime, mock_jwt, mock_requests):
+        response = MagicMock()
+        response.status_code = 200
+        mock_requests.request.return_value = response
+
         self.app.config.feature = {'validate_jwt': True}
         mock_datetime.now.return_value = 124
         mock_datetime.fromtimestamp = lambda x: x
