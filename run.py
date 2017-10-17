@@ -1,15 +1,16 @@
+import logging
 from json import loads
 from pathlib import Path
 
-import structlog
 from flask import jsonify
 from flask_cors import CORS
-from ras_common_utils.ras_config import ras_config
-from ras_common_utils.ras_config.flask_extended import Flask
-from ras_common_utils.ras_error.ras_error import RasError
-from ras_common_utils.ras_logger.ras_logger import configure_logger
+from ras_backstage.logger_config import logger_initial_config
+from ras_backstage.ras_config import ras_config
+from ras_backstage.ras_config.flask_extended import Flask
+from ras_backstage.exception.exceptions import RasError
+from structlog import wrap_logger
 
-logger = structlog.get_logger()
+logger = wrap_logger(logging.getLogger(__name__))
 
 
 def create_app(config):
@@ -48,7 +49,7 @@ if __name__ == '__main__':
         config = ras_config.from_yaml_file(config_path)
 
     app = create_app(config)
-    configure_logger(app.config)
+    logger_initial_config(app.config)
 
     logger.debug("Created Flask app.")
     logger.debug("Config is {}".format(app.config))
