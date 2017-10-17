@@ -27,7 +27,6 @@ def get_pw(username):
 
 @backstage_view.route('/sign_in', methods=['POST'])
 def sign_in():
-    logger.info("Sign-in POST request.")
 
     errors = []
     try:
