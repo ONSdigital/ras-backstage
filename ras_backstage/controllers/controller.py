@@ -138,7 +138,7 @@ def proxy_request(config, request, service, url):
     try:
         service_config = config.dependency[service]
     except KeyError:
-        log.info("Service could not be resolved.", proxy_service=service, path=url)
+        log.warning("Service could not be resolved.", proxy_service=service, path=url)
         raise RasError("Service could not be resolved.".format(service), status_code=404)
 
     proxy_url = build_url(service, service_config, url)

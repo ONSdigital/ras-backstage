@@ -1,10 +1,11 @@
 import json
 from os import getenv
 
+import logging
 import yaml
-from structlog import get_logger
+from structlog import wrap_logger
 
-log = get_logger()
+log = wrap_logger(logging.getLogger(__name__))
 
 
 def map_dict(d, key_mapper=None, value_mapper=None):
