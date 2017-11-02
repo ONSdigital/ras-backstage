@@ -36,25 +36,37 @@ The JWT may subsequently be used to proxy through to RAS services.
 
 Run the application
 -------------------
-Install dependencies for the application using pip
+Install pipenv
+```bash
+pip install pipenv
 ```
-pip install -r requirements.txt
+
+Use pipenv to create a virtualenv and install dependencies
+```bash
+pipenv install
 ```
+
 Once these have been installed the app can be run from the ras-backstage directory using the following
+```bash
+pipenv run python run.py
 ```
-$ python run.py
+or
+
+```bash
+docker build . -t ras-backstage
+docker run -p 8080:8080 ras-backstage
 ```
 
 Test the application
 --------------------
-Install dependencies for the tests using pip
-```
-pip install -r test-requirements.txt
+Ensure dev dependencies have been installed
+```bash
+pipenv install --dev
 ```
 
-Once these have been installed the tests can be run from the ras-backstage directory using the following
+Run tests with tox
 ```
-$ pytest
+$ pipenv run tox
 ```
 
 Test the response
@@ -62,7 +74,7 @@ Test the response
 
 Now open up a prompt to test out your API using curl
 ```
-$ curl http://127.0.0.1:5050/info
+$ curl http://127.0.0.1:8080/info
 {
   "name": "ras-backstage",
   "version": "0.0.1"

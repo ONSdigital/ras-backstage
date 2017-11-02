@@ -2,16 +2,15 @@ language: python
 python:
   - "3.6"
 install:
-  - pip install -r test-requirements.txt
-  - pip install codecov
-  - pip install coverage
+  - pip install pipenv
+  - pipenv install --dev --deploy
 script:
-  - flake8 . flake8 . --max-line-length 120 --max-complexity 10
-  - pytest --cov=ras_backstage --cov-report xml
-  - coverage report
+  - pipenv run flake8 . flake8 . --max-line-length 120 --max-complexity 10
+  - pipenv run pytest --cov=ras_backstage --cov-report xml
+  - pipenv run coverage report
 
 after_success:
-  - codecov
+  - pipenv run codecov
 
 branches:
   only:
