@@ -1,15 +1,16 @@
+import logging
+import requests
 from datetime import datetime, timedelta
 from functools import wraps
 
-import requests
 from flask import request, current_app
 from jose import jwt, JWTError
-from ras_common_utils.ras_error.ras_error import RasError
-from structlog import get_logger
+from ras_backstage.exception.exceptions import RasError
+from structlog import wrap_logger
 
 from ras_backstage.controllers.error_decorator import translate_exceptions
 
-log = get_logger()
+log = wrap_logger(logging.getLogger(__name__))
 
 
 # TODO: make the JWT encoding algorithm externally configurable
@@ -84,6 +85,7 @@ def validate_jwt(encoded_jwt_token):
         jwt_secret = current_app.config['SECRET_KEY']
         jwt_token = jwt.decode(encoded_jwt_token, jwt_secret, algorithms=JWT_ALGORITHM)
     except JWTError:
+        log.info("Failed to decode JWT token.", jwt=encoded_jwt_token)
         raise RasError("Failed to decode JWT token.", status_code=401)
 
     # Commented out because we don't have a requirement for JWT expiry yet...
@@ -136,6 +138,7 @@ def proxy_request(config, request, service, url):
     try:
         service_config = config.dependency[service]
     except KeyError:
+        log.warning("Service could not be resolved.", proxy_service=service, path=url)
         raise RasError("Service could not be resolved.".format(service), status_code=404)
 
     proxy_url = build_url(service, service_config, url)

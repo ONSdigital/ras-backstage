@@ -1,4 +1,7 @@
 # ras-backstage
+[![Build Status](https://travis-ci.org/ONSdigital/ras-backstage.svg?branch=master)](https://travis-ci.org/ONSdigital/ras-backstage)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/38f97350260a4819aa64c4a4d19f6d1d)](https://www.codacy.com/app/ONS/ras-backstage?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ONSdigital/ras-backstage&amp;utm_campaign=Badge_Grade)
+[![codecov](https://codecov.io/gh/ONSdigital/ras-backstage/branch/master/graph/badge.svg)](https://codecov.io/gh/ONSdigital/ras-backstage)
 
 ## Description
 
@@ -30,3 +33,58 @@ All attempts to proxy through ras-backstage in this way will encounter JWT prote
 which accepts username and password as JSON body parameters. If the supplied credentials are found on the OAuth2 server using the OAuth 'Resource owner password credentials' flow ( https://tools.ietf.org/html/rfc6749#section-4.3), then sign_in is successful and an encoded JWT is returned
 The JWT may subsequently be used to proxy through to RAS services.
 
+
+Run the application
+-------------------
+Install pipenv
+```bash
+pip install pipenv
+```
+
+Use pipenv to create a virtualenv and install dependencies
+```bash
+pipenv install
+```
+
+Once these have been installed the app can be run from the ras-backstage directory using the following
+```bash
+pipenv run python run.py
+```
+or
+
+```bash
+docker build . -t ras-backstage
+docker run -p 8080:8080 ras-backstage
+```
+
+Test the application
+--------------------
+Ensure dev dependencies have been installed
+```bash
+pipenv install --dev
+```
+
+Run tests with tox
+```
+$ pipenv run tox
+```
+
+Test the response
+-----------------
+
+Now open up a prompt to test out your API using curl
+```
+$ curl http://127.0.0.1:8080/info
+{
+  "name": "ras-backstage",
+  "version": "0.0.1"
+}
+```
+## Configuration
+
+Environment variables available for configuration are listed below:
+
+| Environment Variable            | Description                                        | Default
+|---------------------------------|----------------------------------------------------|-------------------------------
+| NAME                            | Name of application                                | 'ras-backstage'
+| LOGGING_LEVEL                   | Used to set application logging level              | 'INFO'
