@@ -23,8 +23,8 @@ auth = HTTPBasicAuth()
 
 api = Api(title='Ras-Backstage', default='info', default_label=None)
 
-secure_messaging_api = Namespace('secure-messaging', path='/secure-messaging')
-sign_in_api = Namespace('sign-in', path='/backstage-api/v1/sign_in')
+sign_in_api = Namespace('sign-in', path='/backstage-api/v1/sign-in')
+secure_messaging_api = Namespace('secure-messaging', path='/backstage-api/v1/secure-message')
 
 api.add_namespace(sign_in_api)
 api.add_namespace(secure_messaging_api)
@@ -39,7 +39,10 @@ def get_pw(username):
 
 
 import ras_backstage.error_handlers  # NOQA # pylint: disable=wrong-import-position
-from ras_backstage.views.backstage_view import SignIn  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.views.sign_in.sign_in import SignIn  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.views.secure_messaging.get_message_list import GetMessagesList  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.views.secure_messaging.get_message import GetMessage  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.views.secure_messaging.remove_unread_label import RemoveUnreadLabel  # NOQA # pylint: disable=wrong-import-position
 
 
 api.init_app(app)
