@@ -13,7 +13,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 parser = reqparse.RequestParser()
 parser.add_argument('message_id', location='args', required=True)
-parser.add_argument('label', location='args', required=True)
+parser.add_argument('is_draft', location='args', required=True)
 
 
 @secure_messaging_api.route('/message')
@@ -25,11 +25,11 @@ class GetMessage(Resource):
     @secure_messaging_api.header('Authorization', 'JWT to pass to secure messaging service', required=True)
     def get(encoded_jwt):
         message_id = request.args.get('message_id')
-        label = request.args.get('label')
-        logger.info('Attempting to retrieve message', message_id=message_id, label=label)
+        is_draft = request.args.get('is_draft')
+        logger.info('Attempting to retrieve message', message_id=message_id, is_draft=is_draft)
 
-        message = secure_messaging_controller.get_message(encoded_jwt, message_id, label)
+        message = secure_messaging_controller.get_message(encoded_jwt, message_id, is_draft)
 
         # Create json response
-        logger.info('Successfully retrieved message', message_id=message_id, label=label)
+        logger.info('Successfully retrieved message', message_id=message_id, is_draft=is_draft)
         return make_response(jsonify(message), 200)

@@ -11,11 +11,11 @@ from ras_backstage.exception.exceptions import ApiError
 logger = wrap_logger(logging.getLogger(__name__))
 
 
-def get_messages_list(encoded_jwt, label="", limit=""):
+def get_messages_list(encoded_jwt, label="", limit=1000):
     logger.debug('Attempting to retrieve the messages list', label=label)
-    url = '{}{}?limit={}'.format(app.config['SECURE_MESSAGING_SERVICE'], 'messages', limit)
+    url = '{}{}'.format(app.config['SECURE_MESSAGING_SERVICE'], 'messages')
     headers = {"Authorization": encoded_jwt}
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, params={"label": label, "limit": limit})
 
     if response.status_code != 200:
         logger.error('Error retrieving the messages list', label=label, status_code=response.status_code)
@@ -25,18 +25,18 @@ def get_messages_list(encoded_jwt, label="", limit=""):
     return json.loads(response.text)
 
 
-def get_message(encoded_jwt, message_id, label):
-    logger.debug('Attempting to retrieve message', message_id=message_id, label=label)
-    endpoint = 'draft/' if label == 'DRAFT' else 'message/'
+def get_message(encoded_jwt, message_id, is_draft):
+    logger.debug('Attempting to retrieve message', message_id=message_id, is_draft=is_draft)
+    endpoint = 'draft/' if is_draft == 'true' else 'message/'
     url = '{}{}{}'.format(app.config['SECURE_MESSAGING_SERVICE'], endpoint, message_id)
     headers = {"Authorization": encoded_jwt}
     response = requests.get(url, headers=headers)
 
     if response.status_code != 200:
-        logger.error('Error retrieving the messages', status_code=response.status_code, message_id=message_id, label=label)
+        logger.error('Error retrieving the messages', status_code=response.status_code, message_id=message_id, is_draft=is_draft)
         raise ApiError(url, response.status_code)
 
-    logger.debug('Successfully retrieved message', message_id=message_id, label=label)
+    logger.debug('Successfully retrieved message', message_id=message_id, is_draft=is_draft)
     return json.loads(response.text)
 
 
