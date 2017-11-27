@@ -56,3 +56,50 @@ def remove_unread_label(encoded_jwt, message_id):
 
     return {"unread_label_removed": unread_label_removed}
 
+
+def send_message(encoded_jwt, message_json):
+    logger.debug('Attempting to send message')
+    headers = {"Authorization": encoded_jwt}
+    url = '{}{}'.format(app.config['SECURE_MESSAGING_SERVICE'], 'message/send')
+    response = requests.post(url, headers=headers, json=message_json)
+
+    if response.status_code != 201:
+        logger.error('Failed to send message')
+        raise ApiError(url, response.status_code)
+
+    message = json.loads(response.text)
+    logger.info('Secure Message sent successfully', message_id=message['msg_id'])
+    return message
+
+
+def save_draft(encoded_jwt, message_json):
+    logger.debug('Attempting to save draft')
+    headers = {"Authorization": encoded_jwt}
+
+    url = '{}{}'.format(app.config['SECURE_MESSAGING_SERVICE'], 'draft/save')
+    response = requests.post(url, headers=headers, json=message_json)
+
+    if response.status_code != 201:
+        logger.error('Failed to save draft')
+        raise ApiError(url, response.status_code)
+
+    message = json.loads(response.text)
+    logger.info('Secure Message draft saved successfully', message_id=message['msg_id'])
+    return message
+
+
+def update_draft(encoded_jwt, message_json):
+    logger.debug('Attempting to update draft')
+    headers = {"Authorization": encoded_jwt}
+
+    url = '{}{}'.format(app.config['SECURE_MESSAGING_SERVICE'], 'draft/{}/modify'.format(message_json['msg_id']))
+    response = requests.put(url, headers=headers, json=message_json)
+
+    if response.status_code != 200:
+        logger.error('Failed to update draft')
+        raise ApiError(url, response.status_code)
+
+    message = json.loads(response.text)
+    logger.info('Secure Message draft updated successfully', message_id=message['msg_id'])
+    return message
+

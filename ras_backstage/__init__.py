@@ -43,6 +43,7 @@ from ras_backstage.views.sign_in.sign_in import SignIn  # NOQA # pylint: disable
 from ras_backstage.views.secure_messaging.get_message_list import GetMessagesList  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.views.secure_messaging.get_message import GetMessage  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.views.secure_messaging.remove_unread_label import RemoveUnreadLabel  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.views.secure_messaging.send_message import SendMessage  # NOQA # pylint: disable=wrong-import-position
 
 
 api.init_app(app)
