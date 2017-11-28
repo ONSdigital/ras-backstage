@@ -97,4 +97,3 @@ def update_draft(encoded_jwt, message_json):
     message = json.loads(response.text)
     logger.info('Secure Message draft updated successfully', message_id=message['msg_id'])
     return message
-

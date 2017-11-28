@@ -1,11 +1,20 @@
 language: python
 python:
   - "3.6"
+
+cache:
+    - pip
+
+env:
+  - APP_SETTINGS=TestingConfig
+
 install:
   - pip install pipenv
   - pipenv install --dev --deploy
+
 script:
-  - pipenv run python run_tests
+  - pipenv run python run_tests.py
+  - pipenv check --style . --max-line-length 160
 
 after_success:
   - pipenv run codecov
