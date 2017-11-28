@@ -22,7 +22,7 @@ sign_in_details = sign_in_api.model('SignInDetails', {
 class SignIn(Resource):
 
     @staticmethod
-    @sign_in_api.expect(sign_in_details, validate=True)
+    # @sign_in_api.expect(sign_in_details, validate=True)
     def post():
         logger.info('Attempting to retrieved sign-in details')
         message_json = request.get_json(force=True)

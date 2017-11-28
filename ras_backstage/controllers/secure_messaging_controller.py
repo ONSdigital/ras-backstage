@@ -49,12 +49,7 @@ def remove_unread_label(encoded_jwt, message_id):
 
     if not response or response.status_code != 200:
         logger.error('Error removing unread message label', status_code=response.status_code, message_id=message_id)
-        unread_label_removed = False
-    else:
-        logger.debug('Successfully removed unread label')
-        unread_label_removed = True
-
-    return {"unread_label_removed": unread_label_removed}
+        raise ApiError(url, response.status_code)
 
 
 def send_message(encoded_jwt, message_json):

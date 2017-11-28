@@ -27,11 +27,7 @@ def sign_in(username, password):
     }
     response = requests.post(url, data=data, headers=headers, auth=app.config['DJANGO_BASIC_AUTH'])
 
-    if response.status_code == 401:
-        logger.debug('Authentication error in oauth2 service')
-        oauth2_error = json.loads(response.text)
-        raise ApiError(url, response.status_code, oauth2_error)
-    elif response.status_code != 201:
+    if response.status_code != 201:
         logger.error('Failed to retrieve OAuth2 token')
         raise ApiError(url, response.status_code)
 

@@ -39,3 +39,8 @@ class DevelopmentConfig(Config):
     DJANGO_CLIENT_SECRET = os.getenv('DJANGO_CLIENT_SECRET', 'testtest')
     DJANGO_BASIC_AUTH = (DJANGO_CLIENT_ID, DJANGO_CLIENT_SECRET)
     JWT_SECRET = os.getenv('JWT_SECRET', 'vrwgLNWEffe45thh545yuby')
+
+
+class TestingConfig(DevelopmentConfig):
+    DEBUG = True
+    Testing = True

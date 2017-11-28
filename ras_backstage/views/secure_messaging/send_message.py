@@ -19,7 +19,7 @@ message_details = secure_messaging_api.model('MessageDetails', {
 })
 
 
-@secure_messaging_api.route('/send')
+@secure_messaging_api.route('/send-message')
 class SendMessage(Resource):
     method_decorators = [get_jwt(request)]
 
@@ -28,16 +28,9 @@ class SendMessage(Resource):
     @secure_messaging_api.header('Authorization', 'JWT to pass to secure messaging service', required=True)
     def post(encoded_jwt):
         message_json = request.get_json(force=True)
-        is_draft = request.args.get('is_draft')
         logger.info('Attempting to send message')
 
-        if not is_draft:
-            message = secure_messaging_controller.send_message(encoded_jwt, message_json)
-        else:
-            if message_json['msg_id']:
-                message = secure_messaging_controller.update_draft(encoded_jwt, message_json)
-            else:
-                message = secure_messaging_controller.save_draft(encoded_jwt, message_json)
+        message = secure_messaging_controller.send_message(encoded_jwt, message_json)
 
         logger.info('Successfully sent message', message_id=message['msg_id'])
-        return make_response(jsonify(message), 200)
+        return make_response(jsonify(message), 201)
