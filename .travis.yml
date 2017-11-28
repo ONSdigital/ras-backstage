@@ -5,9 +5,7 @@ install:
   - pip install pipenv
   - pipenv install --dev --deploy
 script:
-  - pipenv run flake8 . flake8 . --max-line-length 120 --max-complexity 10
-  - pipenv run pytest --cov=ras_backstage --cov-report xml
-  - pipenv run coverage report
+  - pipenv run python run_tests
 
 after_success:
   - pipenv run codecov
