@@ -13,6 +13,9 @@ class TestSignIn(unittest.TestCase):
 
     def setUp(self):
         self.app = app.test_client()
+        self.headers = {
+            'Content-Type': 'application/json',
+        }
         self.posted_form = {
             'username': 'test',
             'password': 'test'
@@ -30,7 +33,7 @@ class TestSignIn(unittest.TestCase):
     def test_sign_in_success(self, mock_request):
         mock_request.post(url_get_token, status_code=201, json=self.oauth2_response)
 
-        response = self.app.post('/backstage-api/v1/sign-in', data=json.dumps(self.posted_form))
+        response = self.app.post('/backstage-api/v1/sign-in', headers=self.headers, data=json.dumps(self.posted_form))
 
         self.assertEqual(response.status_code, 201)
         self.assertTrue('"token"'.encode() in response.data)
@@ -39,7 +42,7 @@ class TestSignIn(unittest.TestCase):
     def test_sign_in_oauth_fail(self, mock_request):
         mock_request.post(url_get_token, status_code=500)
 
-        response = self.app.post('/backstage-api/v1/sign-in', data=json.dumps(self.posted_form))
+        response = self.app.post('/backstage-api/v1/sign-in', headers=self.headers, data=json.dumps(self.posted_form))
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
