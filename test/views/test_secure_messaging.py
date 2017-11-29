@@ -6,16 +6,16 @@ import requests_mock
 from ras_backstage import app
 
 
-url_get_message = '{}{}{}'.format(app.config['SECURE_MESSAGING_SERVICE'], 'message/', 'dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b')
+url_get_message = '{}{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'message/', 'dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b')
 with open('test/test_data/secure_messaging/message.json') as json_data:
     message = json.load(json_data)
-url_get_messages = '{}{}{}'.format(app.config['SECURE_MESSAGING_SERVICE'], 'messages', '?label=INBOX&limit=1000')
+url_get_messages = '{}{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'messages', '?label=INBOX&limit=1000')
 with open('test/test_data/secure_messaging/messages_list.json') as json_data:
     messages_list = json.load(json_data)
-url_remove_unread_label = '{}{}'.format(app.config['SECURE_MESSAGING_SERVICE'], 'message/{}/modify'.format('dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b'))
-url_send_message = '{}{}'.format(app.config['SECURE_MESSAGING_SERVICE'], 'message/send')
-url_save_draft = '{}{}'.format(app.config['SECURE_MESSAGING_SERVICE'], 'draft/save')
-url_modify_draft = '{}{}'.format(app.config['SECURE_MESSAGING_SERVICE'], 'draft/{}/modify'.format('test_msg_id'))
+url_update_label = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'message/{}/modify'.format('dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b'))
+url_send_message = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'message/send')
+url_save_draft = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'draft/save')
+url_modify_draft = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'draft/{}/modify'.format('test_msg_id'))
 
 
 class TestSecureMessaging(unittest.TestCase):
@@ -79,18 +79,20 @@ class TestSecureMessaging(unittest.TestCase):
         self.assertTrue('"status_code": 500'.encode() in response.data)
 
     @requests_mock.mock()
-    def test_remove_unread_label(self, mock_request):
-        mock_request.put(url_remove_unread_label)
+    def test_update_label(self, mock_request):
+        mock_request.put(url_update_label)
+        url = '/backstage-api/v1/secure-message/update-label/dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b'
 
-        response = self.app.put('/backstage-api/v1/secure-message/remove-unread?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b', headers=self.headers)
+        response = self.app.put(url, headers=self.headers, data=json.dumps({"label": 'UNREAD', "action": "remove"}))
 
         self.assertEqual(response.status_code, 200)
 
     @requests_mock.mock()
     def test_remove_unread_label_fail(self, mock_request):
-        mock_request.put(url_remove_unread_label, status_code=500)
+        mock_request.put(url_update_label, status_code=500)
+        url = '/backstage-api/v1/secure-message/update-label/dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b'
 
-        response = self.app.put('/backstage-api/v1/secure-message/remove-unread?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b', headers=self.headers)
+        response = self.app.put(url, headers=self.headers, data=json.dumps({"label": 'UNREAD', "action": "remove"}))
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)

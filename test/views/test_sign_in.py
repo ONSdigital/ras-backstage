@@ -6,7 +6,7 @@ import requests_mock
 from ras_backstage import app
 
 
-url_get_token = app.config['OAUTH_TOKEN_URL']
+url_get_token = '{}{}'.format(app.config['RAS_OAUTH_SERVICE'], 'api/v1/tokens/')
 
 
 class TestSignIn(unittest.TestCase):

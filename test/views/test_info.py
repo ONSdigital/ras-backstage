@@ -13,7 +13,7 @@ class TestInfo(unittest.TestCase):
 
     def test_info_no_git_info(self):
         if Path('git_info').exists():
-            os.remove(Path('git_info').absolute())
+            os.remove('git_info')
 
         response = self.app.get("/info")
 

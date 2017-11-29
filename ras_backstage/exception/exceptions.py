@@ -5,3 +5,7 @@ class ApiError(Exception):
         self.url = url
         self.status_code = status_code
         self.data = data
+
+
+class NoJWTError(Exception):
+    pass

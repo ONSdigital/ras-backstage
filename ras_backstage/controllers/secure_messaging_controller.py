@@ -13,7 +13,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 def get_messages_list(encoded_jwt, label="", limit=1000):
     logger.debug('Attempting to retrieve the messages list', label=label)
-    url = '{}{}'.format(app.config['SECURE_MESSAGING_SERVICE'], 'messages')
+    url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'messages')
     headers = {"Authorization": encoded_jwt}
     response = requests.get(url, headers=headers, params={"label": label, "limit": limit})
 
@@ -28,7 +28,7 @@ def get_messages_list(encoded_jwt, label="", limit=1000):
 def get_message(encoded_jwt, message_id, is_draft):
     logger.debug('Attempting to retrieve message', message_id=message_id, is_draft=is_draft)
     endpoint = 'draft/' if is_draft == 'true' else 'message/'
-    url = '{}{}{}'.format(app.config['SECURE_MESSAGING_SERVICE'], endpoint, message_id)
+    url = '{}{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], endpoint, message_id)
     headers = {"Authorization": encoded_jwt}
     response = requests.get(url, headers=headers)
 
@@ -40,22 +40,22 @@ def get_message(encoded_jwt, message_id, is_draft):
     return json.loads(response.text)
 
 
-def remove_unread_label(encoded_jwt, message_id):
-    logger.debug('Attempting to remove unread label', message_id=message_id)
-    url = '{}{}'.format(app.config['SECURE_MESSAGING_SERVICE'], 'message/{}/modify'.format(message_id))
+def update_label(encoded_jwt, message_id, label, action):
+    logger.debug('Attempting to update label', message_id=message_id, label=label, action=action)
+    url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'message/{}/modify'.format(message_id))
     headers = {"Authorization": encoded_jwt}
-    data = {"label": 'UNREAD', "action": 'remove'}
+    data = {"label": label, "action": action}
     response = requests.put(url, headers=headers, json=data)
 
     if not response or response.status_code != 200:
-        logger.error('Error removing unread message label', status_code=response.status_code, message_id=message_id)
+        logger.error('Error updating label', status_code=response.status_code, message_id=message_id, label=label, action=action)
         raise ApiError(url, response.status_code)
 
 
 def send_message(encoded_jwt, message_json):
     logger.debug('Attempting to send message')
     headers = {"Authorization": encoded_jwt}
-    url = '{}{}'.format(app.config['SECURE_MESSAGING_SERVICE'], 'message/send')
+    url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'message/send')
     response = requests.post(url, headers=headers, json=message_json)
 
     if response.status_code != 201:
@@ -71,7 +71,7 @@ def save_draft(encoded_jwt, message_json):
     logger.debug('Attempting to save draft')
     headers = {"Authorization": encoded_jwt}
 
-    url = '{}{}'.format(app.config['SECURE_MESSAGING_SERVICE'], 'draft/save')
+    url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'draft/save')
     response = requests.post(url, headers=headers, json=message_json)
 
     if response.status_code != 201:
@@ -87,7 +87,7 @@ def update_draft(encoded_jwt, message_json):
     logger.debug('Attempting to update draft')
     headers = {"Authorization": encoded_jwt}
 
-    url = '{}{}'.format(app.config['SECURE_MESSAGING_SERVICE'], 'draft/{}/modify'.format(message_json['msg_id']))
+    url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'draft/{}/modify'.format(message_json['msg_id']))
     response = requests.put(url, headers=headers, json=message_json)
 
     if response.status_code != 200:

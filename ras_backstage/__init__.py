@@ -27,13 +27,13 @@ api.add_namespace(secure_messaging_api)
 
 
 import ras_backstage.error_handlers  # NOQA # pylint: disable=wrong-import-position
-from ras_backstage.views.info import Info  # NOQA # pylint: disable=wrong-import-position
-from ras_backstage.views.sign_in.sign_in import SignIn  # NOQA # pylint: disable=wrong-import-position
-from ras_backstage.views.secure_messaging.get_message_list import GetMessagesList  # NOQA # pylint: disable=wrong-import-position
-from ras_backstage.views.secure_messaging.get_message import GetMessage  # NOQA # pylint: disable=wrong-import-position
-from ras_backstage.views.secure_messaging.remove_unread_label import RemoveUnreadLabel  # NOQA # pylint: disable=wrong-import-position
-from ras_backstage.views.secure_messaging.send_message import SendMessage  # NOQA # pylint: disable=wrong-import-position
-from ras_backstage.views.secure_messaging.save_draft import SaveDraft  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.Resources.info import Info  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.Resources.sign_in.sign_in import SignIn  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.Resources.secure_messaging.get_message_list import GetMessagesList  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.Resources.secure_messaging.get_message import GetMessage  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.Resources.secure_messaging.update_label import RemoveUnreadLabel  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.Resources.secure_messaging.send_message import SendMessage  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.Resources.secure_messaging.save_draft import SaveDraft  # NOQA # pylint: disable=wrong-import-position
 
 
 api.init_app(app)

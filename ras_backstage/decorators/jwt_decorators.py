@@ -3,6 +3,8 @@ import logging
 
 from structlog import wrap_logger
 
+from ras_backstage.exception.exceptions import NoJWTError
+
 
 logger = wrap_logger(logging.getLogger(__name__))
 
@@ -15,6 +17,6 @@ def get_jwt(request):
             if encoded_jwt_token:
                 return original_function(encoded_jwt_token, *args, **kwargs)
             else:
-                raise Exception
+                raise NoJWTError
         return extract_session_wrapper
     return extract_session
