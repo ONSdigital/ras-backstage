@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "d9ec9c174e8b2c9040351b0c9bc84a4c774d5f483ccd8e8f292003bb86b97017"
+            "sha256": "0ca08557723d520fa24dcfa53615c94fe247ba79331f5538a8cba8ad2d9dbc5f"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -404,27 +404,12 @@
             ],
             "version": "==5.3.1"
         },
-        "tox": {
-            "hashes": [
-                "sha256:8af30fd835a11f3ff8e95176ccba5a4e60779df4d96a9dfefa1a1704af263225",
-                "sha256:752f5ec561c6c08c5ecb167d3b20f4f4ffc158c0ab78855701a75f5cef05f4b8"
-            ],
-            "version": "==2.9.1"
-        },
         "urllib3": {
             "hashes": [
                 "sha256:06330f386d6e4b195fbfc736b297f58c5a892e4440e54d294d7004e3a9bbea1b",
                 "sha256:cc44da8e1145637334317feebd728bd869a35285b93cbb4cca2577da7e62db4f"
             ],
             "version": "==1.22"
-        },
-        "virtualenv": {
-            "hashes": [
-                "sha256:39d88b533b422825d644087a21e78c45cf5af0ef7a99a1fc9fbb7b481e5c85b0",
-                "sha256:02f8102c2436bb03b3ee6dede1919d1dac8a427541652e5ec95171ec8adbc93a"
-            ],
-            "markers": "python_version != '3.2'",
-            "version": "==15.1.0"
         }
     }
 }
