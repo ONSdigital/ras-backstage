@@ -27,7 +27,7 @@ class GetMessagesList(Resource):
     def get(encoded_jwt):
         label = request.args.get('label')
         limit = request.args.get('limit')
-        logger.info('Attempting to retrieve message list', label=label)
+        logger.info('Retrieving message list', label=label)
 
         messages = secure_messaging_controller.get_messages_list(encoded_jwt, label, limit)
 

@@ -29,7 +29,7 @@ class SendMessage(Resource):
                                  'JWT to pass to secure messaging service', required=True)
     def post(encoded_jwt):
         message_json = request.get_json(force=True)
-        logger.info('Attempting to send message')
+        logger.info('Sending message')
 
         message = secure_messaging_controller.send_message(encoded_jwt, message_json)
 

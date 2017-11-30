@@ -24,7 +24,7 @@ class SignIn(Resource):
     @staticmethod
     @sign_in_api.expect(sign_in_details, validate=True)
     def post():
-        logger.info('Attempting to retrieved sign-in details')
+        logger.info('Retrieving sign-in details')
         message_json = request.get_json(force=True)
         username = message_json['username']
         password = message_json['password']

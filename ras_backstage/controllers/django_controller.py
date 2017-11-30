@@ -1,10 +1,10 @@
 import json
 import logging
 
-import requests
 from structlog import wrap_logger
 
 from ras_backstage import app
+from ras_backstage.common.requests_handler import request_handler
 from ras_backstage.exception.exceptions import ApiError
 
 
@@ -25,7 +25,8 @@ def sign_in(username, password):
         'Accept': 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
     }
-    response = requests.post(url, data=data, headers=headers, auth=app.config['DJANGO_BASIC_AUTH'])
+    response = request_handler('POST', url, data=data,
+                               headers=headers, auth=app.config['DJANGO_BASIC_AUTH'])
 
     if response.status_code != 201:
         logger.error('Failed to retrieve OAuth2 token')

@@ -27,7 +27,7 @@ class GetMessage(Resource):
     def get(encoded_jwt):
         message_id = request.args.get('message_id')
         is_draft = request.args.get('is_draft')
-        logger.info('Attempting to retrieve message', message_id=message_id, is_draft=is_draft)
+        logger.info('Retrieving message', message_id=message_id, is_draft=is_draft)
 
         message = secure_messaging_controller.get_message(encoded_jwt, message_id, is_draft)
 

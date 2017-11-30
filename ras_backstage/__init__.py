@@ -13,7 +13,7 @@ app.config.from_object(app_config)
 
 app.url_map.strict_slashes = False
 
-logger_initial_config(service_name='ras-frontstage-api', log_level=app.config['LOGGING_LEVEL'])
+logger_initial_config(service_name='ras-backstage', log_level=app.config['LOGGING_LEVEL'])
 
 CORS(app)
 

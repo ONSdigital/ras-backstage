@@ -29,7 +29,7 @@ class RemoveUnreadLabel(Resource):
         message_json = request.get_json(force=True)
         label = message_json.get('label')
         action = message_json.get('action')
-        logger.info('Attempting to update label', message_id=message_id, label=label, action=action)
+        logger.info('Updating label', message_id=message_id, label=label, action=action)
 
         secure_messaging_controller.update_label(encoded_jwt, message_id, label, action)
 
