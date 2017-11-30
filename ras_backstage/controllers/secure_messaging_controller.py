@@ -17,11 +17,11 @@ def get_messages_list(encoded_jwt, label="", limit=1000):
     headers = {"Authorization": encoded_jwt}
     response = request_handler('GET', url, headers=headers, params={"label": label, "limit": limit})
 
-    # if response.status_code != 200:
-    #     logger.error('Error retrieving the messages list',
-    #                  label=label,
-    #                  status=response.status_code)
-    #     raise ApiError(url, response.status_code)
+    if response.status_code != 200:
+        logger.error('Error retrieving the messages list',
+                     label=label,
+                     status=response.status_code)
+        raise ApiError(url, response.status_code)
 
     logger.debug('Successfully retrieved the messages list', label=label)
     return json.loads(response.text)
