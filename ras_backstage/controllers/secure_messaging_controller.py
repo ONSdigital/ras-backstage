@@ -12,7 +12,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 
 def get_messages_list(encoded_jwt, label="", limit=1000):
-    logger.debug('Attempting to retrieve the messages list', label=label)
+    logger.debug('Retrieving messages list', label=label)
     url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'messages')
     headers = {"Authorization": encoded_jwt}
     response = requests.get(url, headers=headers, params={"label": label, "limit": limit})
@@ -28,7 +28,7 @@ def get_messages_list(encoded_jwt, label="", limit=1000):
 
 
 def get_message(encoded_jwt, message_id, is_draft):
-    logger.debug('Attempting to retrieve message', message_id=message_id, is_draft=is_draft)
+    logger.debug('Retrieving message', message_id=message_id, is_draft=is_draft)
     endpoint = 'draft/' if is_draft == 'true' else 'message/'
     url = '{}{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], endpoint, message_id)
     headers = {"Authorization": encoded_jwt}
@@ -46,7 +46,7 @@ def get_message(encoded_jwt, message_id, is_draft):
 
 
 def update_label(encoded_jwt, message_id, label, action):
-    logger.debug('Attempting to update label', message_id=message_id, label=label, action=action)
+    logger.debug('Updating label', message_id=message_id, label=label, action=action)
     url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'],
                         'message/{}/modify'.format(message_id))
     headers = {"Authorization": encoded_jwt}
@@ -60,7 +60,7 @@ def update_label(encoded_jwt, message_id, label, action):
 
 
 def send_message(encoded_jwt, message_json):
-    logger.debug('Attempting to send message')
+    logger.debug('Sending message')
     headers = {"Authorization": encoded_jwt}
     url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'message/send')
     response = requests.post(url, headers=headers, json=message_json)
@@ -75,7 +75,7 @@ def send_message(encoded_jwt, message_json):
 
 
 def save_draft(encoded_jwt, message_json):
-    logger.debug('Attempting to save draft')
+    logger.debug('Saving draft')
     headers = {"Authorization": encoded_jwt}
 
     url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'draft/save')
@@ -91,7 +91,7 @@ def save_draft(encoded_jwt, message_json):
 
 
 def update_draft(encoded_jwt, message_json):
-    logger.debug('Attempting to update draft')
+    logger.debug('Updating draft')
     headers = {"Authorization": encoded_jwt}
 
     url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'],

@@ -12,7 +12,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 
 def sign_in(username, password):
-    logger.debug('Attempting to retrieve OAuth2 token for sign-in')
+    logger.debug('Retrieving OAuth2 token for sign-in')
     url = '{}{}'.format(app.config['RAS_OAUTH_SERVICE'], 'api/v1/tokens/')
     data = {
         'grant_type': 'password',
