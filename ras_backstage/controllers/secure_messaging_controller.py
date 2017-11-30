@@ -70,7 +70,7 @@ def send_message(encoded_jwt, message_json):
         raise ApiError(url, response.status_code)
 
     message = json.loads(response.text)
-    logger.info('Secure Message sent successfully', message_id=message['msg_id'])
+    logger.debug('Secure Message sent successfully', message_id=message['msg_id'])
     return message
 
 
@@ -86,7 +86,7 @@ def save_draft(encoded_jwt, message_json):
         raise ApiError(url, response.status_code)
 
     message = json.loads(response.text)
-    logger.info('Secure Message draft saved successfully', message_id=message['msg_id'])
+    logger.debug('Secure Message draft saved successfully', message_id=message['msg_id'])
     return message
 
 
@@ -103,5 +103,5 @@ def update_draft(encoded_jwt, message_json):
         raise ApiError(url, response.status_code)
 
     message = json.loads(response.text)
-    logger.info('Secure Message draft updated successfully', message_id=message['msg_id'])
+    logger.debug('Secure Message draft updated successfully', message_id=message['msg_id'])
     return message

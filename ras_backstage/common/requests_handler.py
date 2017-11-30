@@ -1,7 +1,7 @@
 import logging
 
 import requests
-from requests.exceptions import ConnectionError
+from requests.exceptions import RequestException
 from structlog import wrap_logger
 
 from ras_backstage.exception.exceptions import ApiError
@@ -20,9 +20,9 @@ def request_handler(method, url, params=None, auth=None, headers=None, json=None
                                     json=json, data=data)
         else:
             response = requests.get(url, params=params, auth=auth, headers=headers)
-    except ConnectionError as e:
-        logger.error('Failed to connect to external service',
-                     method=method, url=url, exception=str(e))
+    except RequestException as e:
+        logger.exception('Failed to connect to external service',
+                         method=method, url=url, exception=str(e))
         raise ApiError(url)
 
     return response
