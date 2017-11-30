@@ -25,7 +25,8 @@ class SaveDraft(Resource):
 
     @staticmethod
     @secure_messaging_api.expect(draft_details, validate=True)
-    @secure_messaging_api.header('Authorization', 'JWT to pass to secure messaging service', required=True)
+    @secure_messaging_api.header('Authorization',
+                                 'JWT to pass to secure messaging service', required=True)
     def post(encoded_jwt):
         message_json = request.get_json(force=True)
         logger.info('Attempting to save draft')
@@ -45,7 +46,8 @@ class SaveDraft(Resource):
 
     @staticmethod
     @secure_messaging_api.expect(existing_draft_details, validate=True)
-    @secure_messaging_api.header('Authorization', 'JWT to pass to secure messaging service', required=True)
+    @secure_messaging_api.header('Authorization',
+                                 'JWT to pass to secure messaging service', required=True)
     def put(encoded_jwt):
         message_json = request.get_json(force=True)
         logger.info('Attempting to update draft')

@@ -18,7 +18,9 @@ def get_messages_list(encoded_jwt, label="", limit=1000):
     response = requests.get(url, headers=headers, params={"label": label, "limit": limit})
 
     if response.status_code != 200:
-        logger.error('Error retrieving the messages list', label=label, status_code=response.status_code)
+        logger.error('Error retrieving the messages list',
+                     label=label,
+                     status=response.status_code)
         raise ApiError(url, response.status_code)
 
     logger.debug('Successfully retrieved the messages list', label=label)
@@ -33,7 +35,10 @@ def get_message(encoded_jwt, message_id, is_draft):
     response = requests.get(url, headers=headers)
 
     if response.status_code != 200:
-        logger.error('Error retrieving the messages', status_code=response.status_code, message_id=message_id, is_draft=is_draft)
+        logger.error('Error retrieving the messages',
+                     status=response.status_code,
+                     message_id=message_id,
+                     is_draft=is_draft)
         raise ApiError(url, response.status_code)
 
     logger.debug('Successfully retrieved message', message_id=message_id, is_draft=is_draft)
@@ -42,13 +47,15 @@ def get_message(encoded_jwt, message_id, is_draft):
 
 def update_label(encoded_jwt, message_id, label, action):
     logger.debug('Attempting to update label', message_id=message_id, label=label, action=action)
-    url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'message/{}/modify'.format(message_id))
+    url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'],
+                        'message/{}/modify'.format(message_id))
     headers = {"Authorization": encoded_jwt}
     data = {"label": label, "action": action}
     response = requests.put(url, headers=headers, json=data)
 
     if not response or response.status_code != 200:
-        logger.error('Error updating label', status_code=response.status_code, message_id=message_id, label=label, action=action)
+        logger.error('Error updating label', status=response.status_code,
+                     message_id=message_id, label=label, action=action)
         raise ApiError(url, response.status_code)
 
 
@@ -87,7 +94,8 @@ def update_draft(encoded_jwt, message_json):
     logger.debug('Attempting to update draft')
     headers = {"Authorization": encoded_jwt}
 
-    url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'draft/{}/modify'.format(message_json['msg_id']))
+    url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'],
+                        'draft/{}/modify'.format(message_json['msg_id']))
     response = requests.put(url, headers=headers, json=message_json)
 
     if response.status_code != 200:

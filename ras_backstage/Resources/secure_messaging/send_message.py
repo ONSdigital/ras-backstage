@@ -25,7 +25,8 @@ class SendMessage(Resource):
 
     @staticmethod
     @secure_messaging_api.expect(message_details, validate=True)
-    @secure_messaging_api.header('Authorization', 'JWT to pass to secure messaging service', required=True)
+    @secure_messaging_api.header('Authorization',
+                                 'JWT to pass to secure messaging service', required=True)
     def post(encoded_jwt):
         message_json = request.get_json(force=True)
         logger.info('Attempting to send message')

@@ -20,11 +20,14 @@ class Config(object):
     RAS_OAUTH_SERVICE_HOST = os.getenv('RAS_OAUTH_SERVICE_HOST', 'localhost')
     RAS_OAUTH_SERVICE_PORT = os.getenv('RAS_OAUTH_SERVICE_PORT', 8040)
     RAS_OAUTH_SERVICE_PROTOCOL = os.getenv('RAS_OAUTH_SERVICE_PROTOCOL', 'http')
-    RAS_OAUTH_SERVICE = '{}://{}:{}/'.format(RAS_OAUTH_SERVICE_PROTOCOL, RAS_OAUTH_SERVICE_HOST, RAS_OAUTH_SERVICE_PORT)
+    RAS_OAUTH_SERVICE = '{}://{}:{}/'.format(RAS_OAUTH_SERVICE_PROTOCOL,
+                                             RAS_OAUTH_SERVICE_HOST,
+                                             RAS_OAUTH_SERVICE_PORT)
 
     RAS_SECURE_MESSAGING_SERVICE_HOST = os.getenv('RAS_SECURE_MESSAGING_SERVICE_HOST', 'localhost')
     RAS_SECURE_MESSAGING_SERVICE_PORT = os.getenv('RAS_SECURE_MESSAGING_SERVICE_PORT', 5050)
-    RAS_SECURE_MESSAGING_SERVICE_PROTOCOL = os.getenv('RAS_SECURE_MESSAGING_SERVICE_PROTOCOL', 'http')
+    RAS_SECURE_MESSAGING_SERVICE_PROTOCOL = os.getenv('RAS_SECURE_MESSAGING_SERVICE_PROTOCOL',
+                                                      'http')
     RAS_SECURE_MESSAGING_SERVICE = '{}://{}:{}/'.format(RAS_SECURE_MESSAGING_SERVICE_PROTOCOL,
                                                         RAS_SECURE_MESSAGING_SERVICE_HOST,
                                                         RAS_SECURE_MESSAGING_SERVICE_PORT)

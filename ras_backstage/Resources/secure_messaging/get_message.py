@@ -22,7 +22,8 @@ class GetMessage(Resource):
 
     @staticmethod
     @secure_messaging_api.expect(parser)
-    @secure_messaging_api.header('Authorization', 'JWT to pass to secure messaging service', required=True)
+    @secure_messaging_api.header('Authorization',
+                                 'JWT to pass to secure messaging service', required=True)
     def get(encoded_jwt):
         message_id = request.args.get('message_id')
         is_draft = request.args.get('is_draft')

@@ -22,7 +22,8 @@ class GetMessagesList(Resource):
 
     @staticmethod
     @secure_messaging_api.expect(parser)
-    @secure_messaging_api.header('Authorization', 'JWT to pass to secure messaging service', required=True)
+    @secure_messaging_api.header('Authorization',
+                                 'JWT to pass to secure messaging service', required=True)
     def get(encoded_jwt):
         label = request.args.get('label')
         limit = request.args.get('limit')

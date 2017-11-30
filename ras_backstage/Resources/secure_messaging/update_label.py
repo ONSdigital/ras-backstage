@@ -23,7 +23,8 @@ class RemoveUnreadLabel(Resource):
 
     @staticmethod
     @secure_messaging_api.expect(label_details)
-    @secure_messaging_api.header('Authorization', 'JWT to pass to secure messaging service', required=True)
+    @secure_messaging_api.header('Authorization',
+                                 'JWT to pass to secure messaging service', required=True)
     def put(encoded_jwt, message_id):
         message_json = request.get_json(force=True)
         label = message_json.get('label')

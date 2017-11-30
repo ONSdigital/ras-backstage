@@ -17,7 +17,9 @@ class TestLoggerConfig(unittest.TestCase):
         logger = wrap_logger(logging.getLogger())
         logger.error('Test')
         message = l.records[0].msg
-        self.assertTrue('{\n "event": "Test",\n "level": "error",\n "service": "ras-backstage"' in message)
+
+        message_contents = '{\n "event": "Test",\n "level": "error",\n "service": "ras-backstage"'
+        self.assertIn(message_contents, message)
 
     @log_capture()
     def test_indent_type_error(self, l):
@@ -26,7 +28,7 @@ class TestLoggerConfig(unittest.TestCase):
         logger = wrap_logger(logging.getLogger())
         logger.error('Test')
         message = l.records[0].msg
-        self.assertTrue('{"event": "Test", "level": "error", "service": "ras-backstage"' in message)
+        self.assertIn('{"event": "Test", "level": "error", "service": "ras-backstage"', message)
 
     @log_capture()
     def test_indent_value_error(self, l):
@@ -34,4 +36,4 @@ class TestLoggerConfig(unittest.TestCase):
         logger = wrap_logger(logging.getLogger())
         logger.error('Test')
         message = l.records[0].msg
-        self.assertTrue('{"event": "Test", "level": "error", "service": "ras-backstage"' in message)
+        self.assertIn('{"event": "Test", "level": "error", "service": "ras-backstage"', message)
