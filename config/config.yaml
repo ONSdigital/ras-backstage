@@ -3,7 +3,7 @@ service:
     VERSION: 0.0.1
     SCHEME: http
     HOST: 0.0.0.0
-    PORT: 8080
+    PORT: 8001
     DEBUG: True
     LOG_LEVEL: debug
     SECRET_KEY: foo_bar
