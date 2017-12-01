@@ -6,7 +6,7 @@ class Config(object):
     TESTING = False
     NAME = 'ras-backstage'
     VERSION = os.getenv('VERSION', '0.0.1')
-    PORT = os.getenv('PORT', 8083)
+    PORT = os.getenv('PORT', 8001)
     LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'INFO')
     SECURITY_USER_NAME = os.getenv('SECURITY_USER_NAME')
     SECURITY_USER_PASSWORD = os.getenv('SECURITY_USER_PASSWORD')
