@@ -3,7 +3,7 @@ MAINTAINER Joseph Walton <joseph.walton@ons.gov.uk>
 
 WORKDIR /app
 COPY . /app
-EXPOSE 8080
+EXPOSE 5002
 RUN pip3 install pipenv==8.3.1 && pipenv install --deploy --system
 
 ENTRYPOINT ["python3"]
