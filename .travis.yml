@@ -1,13 +1,20 @@
 language: python
 python:
   - "3.6"
+
+cache:
+    - pip
+
+env:
+  - APP_SETTINGS=TestingConfig
+
 install:
   - pip install pipenv
   - pipenv install --dev --deploy
+
 script:
-  - pipenv run flake8 . flake8 . --max-line-length 120 --max-complexity 10
-  - pipenv run pytest --cov=ras_backstage --cov-report xml
-  - pipenv run coverage report
+  - pipenv run python run_tests.py
+  - pipenv check --style . --max-line-length 100
 
 after_success:
   - pipenv run codecov
