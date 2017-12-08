@@ -27,6 +27,15 @@ class TestSurvey(unittest.TestCase):
         self.assertIn('BRUS'.encode(), response.data)
 
     @requests_mock.mock()
+    def test_get_survey_list_no_surveys(self, mock_request):
+        mock_request.get(url_get_survey_list, status_code=204)
+
+        response = self.app.get('/backstage-api/v1/survey/surveys')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('[]'.encode(), response.data)
+
+    @requests_mock.mock()
     def test_get_survey_list_fail(self, mock_request):
         mock_request.get(url_get_survey_list, status_code=500)
 
