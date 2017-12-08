@@ -17,7 +17,7 @@ class Info(Resource):
                 _health_check = json.loads(io.read())
 
         info = {
-            "name": app.config['NAME'],
+            "name": 'ras-backstage',
             "version": app.config['VERSION'],
         }
         info = dict(_health_check, **info)

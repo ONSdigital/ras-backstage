@@ -21,9 +21,11 @@ api = Api(title='Ras-Backstage', default='info', default_label="")
 
 sign_in_api = Namespace('sign-in', path='/backstage-api/v1/sign-in')
 secure_messaging_api = Namespace('secure-messaging', path='/backstage-api/v1/secure-message')
+survey_api = Namespace('survey', path='/backstage-api/v1/survey')
 
 api.add_namespace(sign_in_api)
 api.add_namespace(secure_messaging_api)
+api.add_namespace(survey_api)
 
 
 import ras_backstage.error_handlers  # NOQA # pylint: disable=wrong-import-position
@@ -34,6 +36,7 @@ from ras_backstage.resources.secure_messaging.get_message import GetMessage  # N
 from ras_backstage.resources.secure_messaging.update_label import RemoveUnreadLabel  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.secure_messaging.send_message import SendMessage  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.secure_messaging.save_draft import SaveDraft  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.resources.survey.get_survey_list import GetSurveyList  # NOQA # pylint: disable=wrong-import-position
 
 
 api.init_app(app)
