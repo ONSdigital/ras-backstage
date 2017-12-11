@@ -18,7 +18,7 @@ class GetSurveyList(Resource):
     def get():
         logger.info('Retrieving survey list')
 
-        messages = survey_controller.get_survey_list()
+        survey_list = survey_controller.get_survey_list()
 
         logger.info('Successfully retrieved survey list')
-        return make_response(jsonify(messages), 200)
+        return make_response(jsonify(survey_list), 200)
