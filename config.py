@@ -4,7 +4,6 @@ import os
 class Config(object):
     DEBUG = os.getenv('DEBUG', False)
     TESTING = False
-    NAME = 'ras-backstage'
     VERSION = os.getenv('VERSION', '0.0.1')
     PORT = os.getenv('PORT', 8001)
     LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'INFO')
@@ -31,6 +30,13 @@ class Config(object):
     RAS_SECURE_MESSAGING_SERVICE = '{}://{}:{}/'.format(RAS_SECURE_MESSAGING_SERVICE_PROTOCOL,
                                                         RAS_SECURE_MESSAGING_SERVICE_HOST,
                                                         RAS_SECURE_MESSAGING_SERVICE_PORT)
+
+    RM_SURVEY_SERVICE_HOST = os.getenv('RM_SURVEY_SERVICE_HOST', 'localhost')
+    RM_SURVEY_SERVICE_PORT = os.getenv('RM_SURVEY_SERVICE_PORT', 8080)
+    RM_SURVEY_SERVICE_PROTOCOL = os.getenv('RM_SURVEY_SERVICE_PROTOCOL', 'http')
+    RM_SURVEY_SERVICE = '{}://{}:{}/'.format(RM_SURVEY_SERVICE_PROTOCOL,
+                                             RM_SURVEY_SERVICE_HOST,
+                                             RM_SURVEY_SERVICE_PORT)
 
 
 class DevelopmentConfig(Config):

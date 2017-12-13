@@ -1,3 +1,4 @@
+from json import JSONDecodeError
 import logging
 
 from flask import jsonify
@@ -23,6 +24,19 @@ def api_error_method(error):
     status_code = error.status_code if error.status_code else 500
     logger.error('Error during api call', url=error.url, status_code=error.status_code)
     return jsonify(error_json), status_code
+
+
+@app.errorhandler(JSONDecodeError)
+@api.errorhandler(JSONDecodeError)
+def json_decode_error(error):
+    error_json = {
+        "error": {
+            "message": error.msg,
+            "json": error.doc
+        }
+    }
+    logger.error('Error decoding json object', exc_info=error)
+    return jsonify(error_json), 500
 
 
 @app.errorhandler(NoJWTError)
