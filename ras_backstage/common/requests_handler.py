@@ -25,4 +25,5 @@ def request_handler(method, url, params=None, auth=None, headers=None, json=None
                          method=method, url=url, exception=str(e))
         raise ApiError(url)
 
+    logger.debug('Request response', method=method, url=url, status=response.status_code)
     return response
