@@ -49,7 +49,7 @@ class SaveDraft(Resource):
                                  'JWT to pass to secure messaging service', required=True)
     def put(encoded_jwt):
         message_json = request.get_json(force=True)
-        logger.info('Updating draft')
+        logger.info('Updating draft', message_id=message_json['msg_id'])
 
         message = secure_messaging_controller.update_draft(encoded_jwt, message_json)
 
