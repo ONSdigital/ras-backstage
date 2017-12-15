@@ -13,7 +13,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 def get_survey_list():
     logger.debug('Retrieving survey list')
-    url = '{}{}'.format(app.config['RM_SURVEY_SERVICE'], 'surveys')
+    url = f'{app.config["RM_SURVEY_SERVICE"]}surveys'
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code == 204:
@@ -24,4 +24,17 @@ def get_survey_list():
         raise ApiError(url, response.status_code)
 
     logger.debug('Successfully retrieved the survey list')
+    return json.loads(response.text)
+
+
+def get_survey_by_shortname(short_name):
+    logger.debug('Retrieving survey', short_name=short_name)
+    url = f'{app.config["RM_SURVEY_SERVICE"]}surveys/shortname/{short_name}'
+    response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
+
+    if response.status_code != 200:
+        logger.error('Error retrieving survey', short_name=short_name)
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully retrieved survey', short_name=short_name)
     return json.loads(response.text)
