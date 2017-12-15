@@ -19,9 +19,9 @@ class GetSurveyByShortName(Resource):
         logger.info('Retrieving survey', short_name=short_name)
 
         survey = survey_controller.get_survey_by_shortname(short_name)
-        collection_exercises = collection_exercise_controller.get_collection_exercises_by_survey(survey['id'])
+        ce_list = collection_exercise_controller.get_collection_exercises_by_survey(survey['id'])
 
-        response_json = {"survey": survey, "collection_exercises": collection_exercises}
+        response_json = {"survey": survey, "collection_exercises": ce_list}
 
         logger.info('Successfully retrieved survey', survey_id=survey['id'], short_name=short_name)
         return make_response(jsonify(response_json), 200)
