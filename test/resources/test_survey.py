@@ -1,6 +1,7 @@
 import json
 import unittest
 
+from requests.exceptions import RequestException
 import requests_mock
 
 from ras_backstage import app
@@ -84,6 +85,15 @@ class TestSurvey(unittest.TestCase):
         self.assertIn('"name": "201601"'.encode(), response.data)
 
     @requests_mock.mock()
+    def test_get_survey_by_short_name_survey_connection_error(self, mock_request):
+        mock_request.get(url_get_survey_by_short_name, exc=RequestException)
+
+        response = self.app.get('/backstage-api/v1/survey/shortname/bres')
+
+        self.assertEqual(response.status_code, 500)
+        self.assertIn('"status_code": 500'.encode(), response.data)
+
+    @requests_mock.mock()
     def test_get_survey_by_short_name_survey_fail(self, mock_request):
         mock_request.get(url_get_survey_by_short_name, status_code=500)
 
@@ -101,3 +111,14 @@ class TestSurvey(unittest.TestCase):
 
         self.assertEqual(response.status_code, 500)
         self.assertIn('"status_code": 500'.encode(), response.data)
+
+    @requests_mock.mock()
+    def test_get_survey_by_short_name_ce_empty(self, mock_request):
+        mock_request.get(url_get_survey_by_short_name, json=self.survey)
+        mock_request.get(url_get_collection_exercises, status_code=204)
+
+        response = self.app.get('/backstage-api/v1/survey/shortname/bres')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('"id": "cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87"'.encode(), response.data)
+        self.assertIn('"collection_exercises": []'.encode(), response.data)
