@@ -6,6 +6,7 @@ from flask_restplus import Api, Namespace
 
 from ras_backstage.logger_config import logger_initial_config
 
+
 app = Flask(__name__)
 
 app_config = 'config.{}'.format(os.environ.get('APP_SETTINGS', 'Config'))
@@ -40,6 +41,7 @@ from ras_backstage.resources.secure_messaging.update_label import RemoveUnreadLa
 from ras_backstage.resources.secure_messaging.send_message import SendMessage  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.secure_messaging.save_draft import SaveDraft  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.survey.get_survey_list import GetSurveyList  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.resources.survey.get_survey_by_short_name import GetSurveyByShortName  # NOQA # pylint: disable=wrong-import-position
 
 
 api.init_app(app)
