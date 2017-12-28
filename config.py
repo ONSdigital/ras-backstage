@@ -31,6 +31,15 @@ class Config(object):
                                                         RAS_SECURE_MESSAGING_SERVICE_HOST,
                                                         RAS_SECURE_MESSAGING_SERVICE_PORT)
 
+    RM_COLLECTION_EXERCISE_SERVICE_HOST = os.getenv('RM_COLLECTION_EXERCISE_SERVICE_HOST',
+                                                    'localhost')
+    RM_COLLECTION_EXERCISE_SERVICE_PORT = os.getenv('RM_COLLECTION_EXERCISE_SERVICE_PORT', 8080)
+    RM_COLLECTION_EXERCISE_SERVICE_PROTOCOL = os.getenv('RM_COLLECTION_EXERCISE_SERVICE_PROTOCOL',
+                                                        'http')
+    RM_COLLECTION_EXERCISE_SERVICE = '{}://{}:{}/'.format(RM_COLLECTION_EXERCISE_SERVICE_PROTOCOL,
+                                                          RM_COLLECTION_EXERCISE_SERVICE_HOST,
+                                                          RM_COLLECTION_EXERCISE_SERVICE_PORT)
+
     RAS_PARTY_SERVICE_HOST = os.getenv('RAS_PARTY_SERVICE_HOST', 'localhost')
     RAS_PARTY_SERVICE_PORT = os.getenv('RAS_PARTY_SERVICE_PORT', 8081)
     RAS_PARTY_SERVICE_PROTOCOL = os.getenv('RAS_PARTY_SERVICE_PROTOCOL', 'http')

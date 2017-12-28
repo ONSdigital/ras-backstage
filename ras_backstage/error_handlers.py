@@ -14,14 +14,14 @@ logger = wrap_logger(logging.getLogger(__name__))
 @app.errorhandler(ApiError)
 @api.errorhandler(ApiError)
 def api_error_method(error):
+    status_code = error.status_code if error.status_code else 500
     error_json = {
         "error": {
             "url": error.url,
-            "status_code": error.status_code,
+            "status_code": status_code,
             "data": error.data
         }
     }
-    status_code = error.status_code if error.status_code else 500
     logger.error('Error during api call', url=error.url, status_code=error.status_code)
     return jsonify(error_json), status_code
 
