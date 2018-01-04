@@ -45,19 +45,22 @@ class TestCollectionExercise(unittest.TestCase):
         mock_request.get(url_ce, json=collection_exercise)
 
         response = self.app.get("/backstage-api/v1/collection-exercise/test/000000")
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
-        self.assertTrue('"longName": "Business Register and Employment'.encode() in response.data)
-        self.assertTrue('"name": "000000"'.encode() in response.data)
+        self.assertEqual(response_data['survey']['longName'],
+                         'Business Register and Employment Survey')
+        self.assertEqual(response_data['collection_exercise']['name'], '000000')
 
     @requests_mock.mock()
     def test_single_collection_exercise_survey_fail(self, mock_request):
         mock_request.get(url_get_survey_by_short_name, status_code=500)
 
         response = self.app.get("/backstage-api/v1/collection-exercise/test/000000")
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
-        self.assertIn('"status_code": 500'.encode(), response.data)
+        self.assertEqual(response_data['error']['status_code'], 500)
 
     @requests_mock.mock()
     def test_single_collection_exercise_ce_fail(self, mock_request):
@@ -65,9 +68,10 @@ class TestCollectionExercise(unittest.TestCase):
         mock_request.get(url_ces, status_code=500)
 
         response = self.app.get("/backstage-api/v1/collection-exercise/test/000000")
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
-        self.assertIn('"status_code": 500'.encode(), response.data)
+        self.assertEqual(response_data['error']['status_code'], 500)
 
     @requests_mock.mock()
     def test_single_collection_exercise_ce_not_found(self, mock_request):
@@ -75,9 +79,10 @@ class TestCollectionExercise(unittest.TestCase):
         mock_request.get(url_ces, json=[])
 
         response = self.app.get("/backstage-api/v1/collection-exercise/test/000000")
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 404)
-        self.assertIn('"message": "Collection exercise not found"'.encode(), response.data)
+        self.assertEqual(response_data['message'], 'Collection exercise not found')
 
     @requests_mock.mock()
     def test_single_collection_exercise_ces_fail(self, mock_request):
@@ -86,6 +91,7 @@ class TestCollectionExercise(unittest.TestCase):
         mock_request.get(url_ce, status_code=500)
 
         response = self.app.get("/backstage-api/v1/collection-exercise/test/000000")
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
-        self.assertIn('"status_code": 500'.encode(), response.data)
+        self.assertEqual(response_data['error']['status_code'], 500)
