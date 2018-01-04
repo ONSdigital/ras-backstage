@@ -7,10 +7,10 @@ from ras_backstage import app
 
 
 url_get_survey_by_short_name = f'{app.config["RM_SURVEY_SERVICE"]}surveys/shortname/test'
-url_ces = '{}collectionexercises/survey/{}'.format(app.config["RM_COLLECTION_EXERCISE_SERVICE"],
-                                                   "cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87")
-url_ce = '{}collectionexercises/{}'.format(app.config["RM_COLLECTION_EXERCISE_SERVICE"],
-                                           "e33daf0e-6a27-40cd-98dc-c6231f50e84a")
+url_ces = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
+          'collectionexercises/survey/cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87'
+url_ce = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
+         f'collectionexercises/e33daf0e-6a27-40cd-98dc-c6231f50e84a'
 with open('test/test_data/collection_exercise/collection_exercise.json') as json_data:
     collection_exercise = json.load(json_data)
 

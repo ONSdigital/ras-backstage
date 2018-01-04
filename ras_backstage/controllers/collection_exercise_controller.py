@@ -13,8 +13,8 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 def get_collection_exercise_by_id(collection_exercise_id):
     logger.debug('Retrieving collection exercise', collection_exercise_id=collection_exercise_id)
-    url = '{}collectionexercises/{}'.format(app.config["RM_COLLECTION_EXERCISE_SERVICE"],
-                                            collection_exercise_id)
+    url = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
+          f'collectionexercises/{collection_exercise_id}'
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:
