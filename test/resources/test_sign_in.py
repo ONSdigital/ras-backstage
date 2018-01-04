@@ -35,9 +35,10 @@ class TestSignIn(unittest.TestCase):
 
         response = self.app.post('/backstage-api/v1/sign-in', headers=self.headers,
                                  data=json.dumps(self.posted_form))
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 201)
-        self.assertTrue('"token"'.encode() in response.data)
+        self.assertIsNotNone(response_data.get('token'))
 
     @requests_mock.mock()
     def test_sign_in_oauth_fail(self, mock_request):
@@ -45,6 +46,7 @@ class TestSignIn(unittest.TestCase):
 
         response = self.app.post('/backstage-api/v1/sign-in', headers=self.headers,
                                  data=json.dumps(self.posted_form))
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
-        self.assertTrue('"status_code": 500'.encode() in response.data)
+        self.assertEqual(response_data['error']['status_code'], 500)

@@ -16,17 +16,19 @@ class TestInfo(unittest.TestCase):
             os.remove('git_info')
 
         response = self.app.get("/info")
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('"name": "ras-backstage"'.encode(), response.data)
-        self.assertNotIn('"test": "test"'.encode(), response.data)
+        self.assertEqual(response_data['name'], "ras-backstage")
+        self.assertIsNone(response_data.get('test'))
 
     def test_info_with_git_info(self):
         with open('git_info', 'w') as outfile:
             json.dump({"test": "test"}, outfile)
 
         response = self.app.get("/info")
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('"name": "ras-backstage"'.encode(), response.data)
-        self.assertIn('"test": "test"'.encode(), response.data)
+        self.assertEqual(response_data['name'], "ras-backstage")
+        self.assertEqual(response_data['test'], "test")
