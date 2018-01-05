@@ -33,7 +33,7 @@ class Config(object):
 
     RM_COLLECTION_EXERCISE_SERVICE_HOST = os.getenv('RM_COLLECTION_EXERCISE_SERVICE_HOST',
                                                     'localhost')
-    RM_COLLECTION_EXERCISE_SERVICE_PORT = os.getenv('RM_COLLECTION_EXERCISE_SERVICE_PORT', 8080)
+    RM_COLLECTION_EXERCISE_SERVICE_PORT = os.getenv('RM_COLLECTION_EXERCISE_SERVICE_PORT', 8145)
     RM_COLLECTION_EXERCISE_SERVICE_PROTOCOL = os.getenv('RM_COLLECTION_EXERCISE_SERVICE_PROTOCOL',
                                                         'http')
     RM_COLLECTION_EXERCISE_SERVICE = '{}://{}:{}/'.format(RM_COLLECTION_EXERCISE_SERVICE_PROTOCOL,
@@ -58,11 +58,11 @@ class Config(object):
 class DevelopmentConfig(Config):
     DEBUG = os.getenv('DEBUG', True)
     LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'DEBUG')
-    SECURITY_USER_NAME = os.getenv('SECURITY_USER_NAME', 'test_user')
-    SECURITY_USER_PASSWORD = os.getenv('SECURITY_USER_PASSWORD', 'test_password')
+    SECURITY_USER_NAME = os.getenv('SECURITY_USER_NAME', 'admin')
+    SECURITY_USER_PASSWORD = os.getenv('SECURITY_USER_PASSWORD', 'secret')
     BASIC_AUTH = (SECURITY_USER_NAME, SECURITY_USER_PASSWORD)
-    DJANGO_CLIENT_ID = os.getenv('DJANGO_CLIENT_ID', 'test@test.test')
-    DJANGO_CLIENT_SECRET = os.getenv('DJANGO_CLIENT_SECRET', 'testtest')
+    DJANGO_CLIENT_ID = os.getenv('DJANGO_CLIENT_ID', 'ons@ons.gov')
+    DJANGO_CLIENT_SECRET = os.getenv('DJANGO_CLIENT_SECRET', 'password')
     DJANGO_BASIC_AUTH = (DJANGO_CLIENT_ID, DJANGO_CLIENT_SECRET)
     JWT_SECRET = os.getenv('JWT_SECRET', 'vrwgLNWEffe45thh545yuby')
 
