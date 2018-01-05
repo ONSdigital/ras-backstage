@@ -11,6 +11,22 @@ from ras_backstage.exception.exceptions import ApiError
 logger = wrap_logger(logging.getLogger(__name__))
 
 
+def get_collection_exercise_by_id(collection_exercise_id):
+    logger.debug('Retrieving collection exercise', collection_exercise_id=collection_exercise_id)
+    url = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
+          f'collectionexercises/{collection_exercise_id}'
+    response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
+
+    if response.status_code != 200:
+        logger.error('Error retrieving collection exercise',
+                     collection_exercise_id=collection_exercise_id)
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully retrieved collection exercise',
+                 collection_exercise_id=collection_exercise_id)
+    return json.loads(response.text)
+
+
 def get_collection_exercises_by_survey(survey_id):
     logger.debug('Retrieving collection exercises', survey_id=survey_id)
     url = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}collectionexercises/survey/{survey_id}'

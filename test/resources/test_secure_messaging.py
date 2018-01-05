@@ -49,9 +49,10 @@ class TestSecureMessaging(unittest.TestCase):
                       "?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&is_draft=false"
 
         response = self.app.get(message_url, headers=self.headers)
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
-        self.assertTrue('"body": "TEsdfdsfST"'.encode() in response.data)
+        self.assertEqual(response_data['body'], "TEsdfdsfST")
 
     @requests_mock.mock()
     def test_get_message_fail(self, mock_request):
@@ -60,9 +61,10 @@ class TestSecureMessaging(unittest.TestCase):
                       "?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&is_draft=false"
 
         response = self.app.get(message_url, headers=self.headers)
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
-        self.assertTrue('"status_code": 500'.encode() in response.data)
+        self.assertEqual(response_data['error']['status_code'], 500)
 
     @requests_mock.mock()
     def test_get_message_list(self, mock_request):
@@ -70,9 +72,10 @@ class TestSecureMessaging(unittest.TestCase):
         message_url = "/backstage-api/v1/secure-message/messages?limit=1000&label=INBOX"
 
         response = self.app.get(message_url, headers=self.headers)
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
-        self.assertTrue('"body": "TEsdfdsfST"'.encode() in response.data)
+        self.assertEqual(response_data['messages'][0]['body'], "TEsdfdsfST")
 
     @requests_mock.mock()
     def test_get_message_list_fail(self, mock_request):
@@ -80,9 +83,10 @@ class TestSecureMessaging(unittest.TestCase):
         message_url = "/backstage-api/v1/secure-message/messages?limit=1000&label=INBOX"
 
         response = self.app.get(message_url, headers=self.headers)
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
-        self.assertTrue('"status_code": 500'.encode() in response.data)
+        self.assertEqual(response_data['error']['status_code'], 500)
 
     @requests_mock.mock()
     def test_update_label(self, mock_request):
@@ -101,9 +105,10 @@ class TestSecureMessaging(unittest.TestCase):
 
         response = self.app.put(url, headers=self.headers,
                                 data=json.dumps({"label": 'UNREAD', "action": "remove"}))
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
-        self.assertTrue('"status_code": 500'.encode() in response.data)
+        self.assertEqual(response_data['error']['status_code'], 500)
 
     @requests_mock.mock()
     def test_send_message(self, mock_request):
@@ -111,9 +116,10 @@ class TestSecureMessaging(unittest.TestCase):
         url = '/backstage-api/v1/secure-message/send-message'
 
         response = self.app.post(url, headers=self.headers, data=json.dumps(self.posted_message))
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 201)
-        self.assertTrue('"status": "201"'.encode() in response.data)
+        self.assertEqual(response_data['status'], "201")
 
     @requests_mock.mock()
     def test_send_message_fail(self, mock_request):
@@ -121,9 +127,10 @@ class TestSecureMessaging(unittest.TestCase):
         url = '/backstage-api/v1/secure-message/send-message'
 
         response = self.app.post(url, headers=self.headers, data=json.dumps(self.posted_message))
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
-        self.assertTrue('"status_code": 500'.encode() in response.data)
+        self.assertEqual(response_data['error']['status_code'], 500)
 
     @requests_mock.mock()
     def test_save_draft(self, mock_request):
@@ -131,9 +138,10 @@ class TestSecureMessaging(unittest.TestCase):
         url = '/backstage-api/v1/secure-message/save-draft'
 
         response = self.app.post(url, headers=self.headers, data=json.dumps(self.posted_message))
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 201)
-        self.assertTrue('"status": "201"'.encode() in response.data)
+        self.assertEqual(response_data['status'], "201")
 
     @requests_mock.mock()
     def test_save_draft_fail(self, mock_request):
@@ -141,9 +149,10 @@ class TestSecureMessaging(unittest.TestCase):
         url = '/backstage-api/v1/secure-message/save-draft'
 
         response = self.app.post(url, headers=self.headers, data=json.dumps(self.posted_message))
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
-        self.assertTrue('"status_code": 500'.encode() in response.data)
+        self.assertEqual(response_data['error']['status_code'], 500)
 
     @requests_mock.mock()
     def test_update_draft(self, mock_request):
@@ -153,9 +162,10 @@ class TestSecureMessaging(unittest.TestCase):
         url = '/backstage-api/v1/secure-message/save-draft'
 
         response = self.app.put(url, headers=self.headers, data=json.dumps(self.posted_message))
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
-        self.assertTrue('"status": "200"'.encode() in response.data)
+        self.assertEqual(response_data['status'], "200")
 
     @requests_mock.mock()
     def test_update_draft_fail(self, mock_request):
@@ -164,6 +174,7 @@ class TestSecureMessaging(unittest.TestCase):
         url = '/backstage-api/v1/secure-message/save-draft'
 
         response = self.app.put(url, headers=self.headers, data=json.dumps(self.posted_message))
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
-        self.assertTrue('"status_code": 500'.encode() in response.data)
+        self.assertEqual(response_data['error']['status_code'], 500)

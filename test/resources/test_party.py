@@ -28,10 +28,11 @@ class TestParty(unittest.TestCase):
                       "?business_party_id=testid&respondent_party_id=testid"
 
         response = self.app.get(message_url)
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
-        self.assertTrue('"name": "Business Register and Employment'.encode() in response.data)
-        self.assertTrue('"partyId": "1216a88f-ee2a-420c-9e6a-ee34893c29c'.encode() in response.data)
+        self.assertEqual(response_data['business_party']['name'], "Bolts and Ratchets Ltd")
+        self.assertIsNotNone(response_data['business_party']['associations'][0]['enrolments'][0])
 
     @requests_mock.mock()
     def test_get_party_details_business_fail(self, mock_request):
@@ -40,9 +41,10 @@ class TestParty(unittest.TestCase):
                       "?business_party_id=testid&respondent_party_id=testid"
 
         response = self.app.get(message_url)
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
-        self.assertTrue('"status_code": 500'.encode() in response.data)
+        self.assertEqual(response_data['error']['status_code'], 500)
 
     @requests_mock.mock()
     def test_get_party_details_respondent_fail(self, mock_request):
@@ -52,6 +54,7 @@ class TestParty(unittest.TestCase):
                       "?business_party_id=testid&respondent_party_id=testid"
 
         response = self.app.get(message_url)
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
-        self.assertTrue('"status_code": 500'.encode() in response.data)
+        self.assertEqual(response_data['error']['status_code'], 500)

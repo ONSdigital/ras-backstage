@@ -38,38 +38,42 @@ class TestSurvey(unittest.TestCase):
         mock_request.get(url_get_survey_list, json=survey_list)
 
         response = self.app.get('/backstage-api/v1/survey/surveys')
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('BRES'.encode(), response.data)
-        self.assertIn('BRUS'.encode(), response.data)
+        self.assertEqual(response_data[0]['shortName'], "BRES")
+        self.assertEqual(response_data[1]['shortName'], "BRUS")
 
     @requests_mock.mock()
     def test_get_survey_list_no_surveys(self, mock_request):
         mock_request.get(url_get_survey_list, status_code=204)
 
         response = self.app.get('/backstage-api/v1/survey/surveys')
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('[]'.encode(), response.data)
+        self.assertEqual(response_data, [])
 
     @requests_mock.mock()
     def test_get_survey_list_fail(self, mock_request):
         mock_request.get(url_get_survey_list, status_code=500)
 
         response = self.app.get('/backstage-api/v1/survey/surveys')
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
-        self.assertIn('"status_code": 500'.encode(), response.data)
+        self.assertEqual(response_data['error']['status_code'], 500)
 
     @requests_mock.mock()
     def test_get_survey_list_JSONDecodeError(self, mock_request):
         mock_request.get(url_get_survey_list, text="aaaa")
 
         response = self.app.get('/backstage-api/v1/survey/surveys')
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
-        self.assertIn('"json": "aaaa"'.encode(), response.data)
-        self.assertIn('"message": "Expecting value"'.encode(), response.data)
+        self.assertEqual(response_data['error']['json'], "aaaa")
+        self.assertEqual(response_data['error']['message'], "Expecting value")
 
     @requests_mock.mock()
     def test_get_survey_by_short_name(self, mock_request):
@@ -77,30 +81,34 @@ class TestSurvey(unittest.TestCase):
         mock_request.get(url_get_collection_exercises, json=self.collection_exercises)
 
         response = self.app.get('/backstage-api/v1/survey/shortname/bres')
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('"id": "cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87"'.encode(), response.data)
-        self.assertIn('"longName": "Business Register and Employment Survey"'.encode(),
-                      response.data)
-        self.assertIn('"name": "201601"'.encode(), response.data)
+        self.assertEqual(response_data['collection_exercises'][0]['name'], "201601")
+        self.assertEqual(response_data['collection_exercises'][0]['id'],
+                         "c6467711-21eb-4e78-804c-1db8392f93fb")
+        self.assertEqual(response_data['survey']['longName'],
+                         "Business Register and Employment Survey")
 
     @requests_mock.mock()
     def test_get_survey_by_short_name_survey_connection_error(self, mock_request):
         mock_request.get(url_get_survey_by_short_name, exc=RequestException)
 
         response = self.app.get('/backstage-api/v1/survey/shortname/bres')
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
-        self.assertIn('"status_code": 500'.encode(), response.data)
+        self.assertEqual(response_data['error']['status_code'], 500)
 
     @requests_mock.mock()
     def test_get_survey_by_short_name_survey_fail(self, mock_request):
         mock_request.get(url_get_survey_by_short_name, status_code=500)
 
         response = self.app.get('/backstage-api/v1/survey/shortname/bres')
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
-        self.assertIn('"status_code": 500'.encode(), response.data)
+        self.assertEqual(response_data['error']['status_code'], 500)
 
     @requests_mock.mock()
     def test_get_survey_by_short_name_ce_fail(self, mock_request):
@@ -108,9 +116,10 @@ class TestSurvey(unittest.TestCase):
         mock_request.get(url_get_collection_exercises, status_code=500)
 
         response = self.app.get('/backstage-api/v1/survey/shortname/bres')
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
-        self.assertIn('"status_code": 500'.encode(), response.data)
+        self.assertEqual(response_data['error']['status_code'], 500)
 
     @requests_mock.mock()
     def test_get_survey_by_short_name_ce_empty(self, mock_request):
@@ -118,7 +127,8 @@ class TestSurvey(unittest.TestCase):
         mock_request.get(url_get_collection_exercises, status_code=204)
 
         response = self.app.get('/backstage-api/v1/survey/shortname/bres')
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('"id": "cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87"'.encode(), response.data)
-        self.assertIn('"collection_exercises": []'.encode(), response.data)
+        self.assertEqual(response_data['collection_exercises'], [])
+        self.assertEqual(response_data['survey']['id'], "cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87")
