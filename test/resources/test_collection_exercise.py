@@ -28,12 +28,12 @@ class TestCollectionExercise(unittest.TestCase):
         self.collection_exercises = [
           {
             "id": "c6467711-21eb-4e78-804c-1db8392f93fb",
-            "name": "201601",
+            "exerciseRef": "201601",
             "scheduledExecutionDateTime": "2017-05-15T00:00:00Z"
           },
           {
             "id": "e33daf0e-6a27-40cd-98dc-c6231f50e84a",
-            "name": "000000",
+            "exerciseRef": "000000",
             "scheduledExecutionDateTime": "2017-08-12T00:00:00Z"
           }
         ]
