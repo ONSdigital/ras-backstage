@@ -13,6 +13,10 @@ url_ce = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
          f'collectionexercises/e33daf0e-6a27-40cd-98dc-c6231f50e84a'
 with open('test/test_data/collection_exercise/collection_exercise.json') as json_data:
     collection_exercise = json.load(json_data)
+url_ce_events = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
+                f'collectionexercises/e33daf0e-6a27-40cd-98dc-c6231f50e84a/events'
+with open('test/test_data/collection_exercise/collection_exercise_events.json') as json_data:
+    events = json.load(json_data)
 
 
 class TestCollectionExercise(unittest.TestCase):
@@ -43,6 +47,7 @@ class TestCollectionExercise(unittest.TestCase):
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_ces, json=self.collection_exercises)
         mock_request.get(url_ce, json=collection_exercise)
+        mock_request.get(url_ce_events, json=events)
 
         response = self.app.get("/backstage-api/v1/collection-exercise/test/000000")
         response_data = json.loads(response.data)
@@ -51,6 +56,7 @@ class TestCollectionExercise(unittest.TestCase):
         self.assertEqual(response_data['survey']['longName'],
                          'Business Register and Employment Survey')
         self.assertEqual(response_data['collection_exercise']['name'], '000000')
+        self.assertEqual(response_data['events']['mps']['date'], "11 Sep 09")
 
     @requests_mock.mock()
     def test_single_collection_exercise_survey_fail(self, mock_request):
@@ -89,6 +95,19 @@ class TestCollectionExercise(unittest.TestCase):
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_ces, json=self.collection_exercises)
         mock_request.get(url_ce, status_code=500)
+
+        response = self.app.get("/backstage-api/v1/collection-exercise/test/000000")
+        response_data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response_data['error']['status_code'], 500)
+
+    @requests_mock.mock()
+    def test_single_collection_exercise_ce_events_fail(self, mock_request):
+        mock_request.get(url_get_survey_by_short_name, json=self.survey)
+        mock_request.get(url_ces, json=self.collection_exercises)
+        mock_request.get(url_ce, json=collection_exercise)
+        mock_request.get(url_ce_events, status_code=500)
 
         response = self.app.get("/backstage-api/v1/collection-exercise/test/000000")
         response_data = json.loads(response.data)

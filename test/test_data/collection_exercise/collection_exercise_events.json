@@ -1,0 +1,22 @@
+[
+  {
+    "tag": "mps",
+    "timestamp": "2000-09-11T23:00:00.000+0000"
+  },
+  {
+    "tag": "goLive",
+    "timestamp": "2000-09-11T23:00:00.000+0000"
+  },
+  {
+    "tag": "returnBy",
+    "timestamp": "2000-09-11T23:00:00.000+0000"
+  },
+  {
+    "tag": "firstReminder",
+    "timestamp": "2000-09-11T23:00:00.000+0000"
+  },
+  {
+    "tag": "exerciseEnd",
+    "timestamp": "2000-09-11T23:00:00.000+0000"
+  }
+]

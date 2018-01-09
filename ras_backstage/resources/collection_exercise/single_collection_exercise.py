@@ -31,10 +31,10 @@ class GetSingleCollectionExercise(Resource):
 
         # Retrieve the events and format correctly
         exercise_events = collection_exercise_controller.get_collection_exercise_events(exercise['id'])
-        formatted_events = []
+        formatted_events = {}
         for event in exercise_events:
             formatted_event_datetime = convert_event_to_new_format(event)
-            formatted_events.append({event['tag']: formatted_event_datetime})
+            formatted_events[event['tag']] = formatted_event_datetime
 
         response_json = {
             "survey": survey,
