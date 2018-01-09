@@ -6,6 +6,7 @@ from structlog import wrap_logger
 
 from ras_backstage import collection_exercise_api
 from ras_backstage.common.filters import get_collection_exercise_by_period
+from ras_backstage.common.mappers import convert_event_to_new_format
 from ras_backstage.controllers import collection_exercise_controller, survey_controller
 
 
@@ -21,15 +22,24 @@ class GetSingleCollectionExercise(Resource):
 
         survey = survey_controller.get_survey_by_shortname(short_name)
         exercises = collection_exercise_controller.get_collection_exercises_by_survey(survey['id'])
+
         # Find the collection exercise for the given period
         exercise = get_collection_exercise_by_period(exercises, period)
         if not exercise:
             return make_response(jsonify({"message": "Collection exercise not found"}), 404)
         full_exercise = collection_exercise_controller.get_collection_exercise_by_id(exercise['id'])
 
+        # Retrieve the events and format correctly
+        exercise_events = collection_exercise_controller.get_collection_exercise_events(exercise['id'])
+        formatted_events = []
+        for event in exercise_events:
+            formatted_event_datetime = convert_event_to_new_format(event)
+            formatted_events.append({event['tag']: formatted_event_datetime})
+
         response_json = {
             "survey": survey,
-            "collection_exercise": full_exercise
+            "collection_exercise": full_exercise,
+            "events": formatted_events
         }
         logger.info('Successfully retrieved collection exercise details',
                     shortname=short_name, period=period)
