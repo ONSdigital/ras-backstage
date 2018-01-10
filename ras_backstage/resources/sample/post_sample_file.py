@@ -1,7 +1,7 @@
 import logging
 
 from flask import jsonify, make_response, request
-from flask_restplus import Resource, reqparse 
+from flask_restplus import Resource, reqparse
 from structlog import wrap_logger
 from werkzeug.datastructures import FileStorage
 
@@ -31,8 +31,8 @@ class PostSampleFile(Resource):
         file_object = request.files['file']
 
         sample_id = sample_controller.post_sample_file_for_collection_exercise(collection_exercise_id,
-        																		file_object.filename,
-        																		file_object.read())
+                                                                               file_object.filename,
+                                                                               file_object.read())
 
         logger.info('Successfully uploaded sample file', sample_id=sample_id)
         return make_response(jsonify(sample_id), 201)
