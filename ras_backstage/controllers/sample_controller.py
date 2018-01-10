@@ -11,8 +11,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 
 def post_sample_file_for_collection_exercise(collection_exercise_id, filename, sample_file_data, survey_type='bres'):
-    url = f'{app.config["RM_SAMPLE_SERVICE"]}' \
-          f'{survey_type}/fileupload'
+    url = f'{app.config["RM_SAMPLE_SERVICE"]}{survey_type}/fileupload'
     logger.debug('Uploading sample file',
                  collection_exercise_id=collection_exercise_id,
                  filename=filename,
