@@ -1,17 +1,17 @@
 import json
 import unittest
 from io import BytesIO
+from urllib.parse import urlencode
 
 import requests_mock
 
 from ras_backstage import app
 
-
 url_get_survey_by_short_name = f'{app.config["RM_SURVEY_SERVICE"]}surveys/shortname/test'
 url_ces = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
           'collectionexercises/survey/cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87'
 url_upload_collection_instrument = f'{app.config["RAS_COLLECTION_INSTRUMENT_SERVICE"]}' \
-                                   f'upload/e33daf0e-6a27-40cd-98dc-c6231f50e84a'
+                                   f'collection-instrument-api/1.0.2/upload/e33daf0e-6a27-40cd-98dc-c6231f50e84a'
 
 
 class TestCollectionExercise(unittest.TestCase):
@@ -39,18 +39,23 @@ class TestCollectionExercise(unittest.TestCase):
 
     @requests_mock.mock()
     def test_upload_collection_instrument(self, mock_request):
+        classifiers = {
+            "SURVEY_ID": "cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87",
+            "COLLECTION_EXERCISE": "e33daf0e-6a27-40cd-98dc-c6231f50e84a"
+        }
+        params = urlencode({'classifiers': json.dumps(classifiers)})
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_ces, json=self.collection_exercises)
-        mock_request.post(url_upload_collection_instrument)
+        mock_request.post(f'{url_upload_collection_instrument}?{params}')
 
         response = self.app.post('/backstage-api/v1/collection-instrument/test/000000', data=dict(
             file=(BytesIO(b'data'), 'test.xlsx'),
-        ))
+        ), query_string={'classifiers': json.dumps(classifiers)})
 
         self.assertEqual(response.status_code, 200)
 
     @requests_mock.mock()
-    def test_empty_collection_instrument(self, mock_request):
+    def test_no_collection_instrument(self, mock_request):
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_ces, json=self.collection_exercises)
         mock_request.post(url_upload_collection_instrument)

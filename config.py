@@ -41,10 +41,10 @@ class Config(object):
                                                           RM_COLLECTION_EXERCISE_SERVICE_PORT)
 
     RAS_COLLECTION_INSTRUMENT_SERVICE_HOST = os.getenv('RAS_COLLECTION_INSTRUMENT_SERVICE_HOST',
-                                                    'localhost')
+                                                       'localhost')
     RAS_COLLECTION_INSTRUMENT_SERVICE_PORT = os.getenv('RAS_COLLECTION_INSTRUMENT_SERVICE_PORT', 8002)
     RAS_COLLECTION_INSTRUMENT_SERVICE_PROTOCOL = os.getenv('RAS_COLLECTION_INSTRUMENT_SERVICE_PROTOCOL',
-                                                        'http')
+                                                           'http')
     RAS_COLLECTION_INSTRUMENT_SERVICE = '{}://{}:{}/'.format(RAS_COLLECTION_INSTRUMENT_SERVICE_PROTOCOL,
                                                              RAS_COLLECTION_INSTRUMENT_SERVICE_HOST,
                                                              RAS_COLLECTION_INSTRUMENT_SERVICE_PORT)

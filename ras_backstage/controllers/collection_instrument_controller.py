@@ -1,3 +1,4 @@
+import json
 import logging
 
 import requests
@@ -21,7 +22,8 @@ def upload_collection_instrument(survey_id, collection_exercise_id, file):
     if collection_exercise_id:
         classifiers['COLLECTION_EXERCISE'] = collection_exercise_id
     try:
-        response = requests.post(url, auth=app.config['BASIC_AUTH'], files={'file': file})
+        response = requests.post(url, auth=app.config['BASIC_AUTH'], files={'file': file},
+                                 params={'classifiers': json.dumps(classifiers)})
 
         if response.status_code != 200:
             logger.error('Error retrieving collection exercise',
