@@ -1,12 +1,10 @@
 import json
 import logging
 
-import requests
-from requests import RequestException
 from structlog import wrap_logger
 
 from ras_backstage import app
-from ras_backstage.exception.exceptions import ApiError
+from ras_backstage.common.requests_handler import request_handler
 
 logger = wrap_logger(logging.getLogger(__name__))
 
@@ -21,17 +19,9 @@ def upload_collection_instrument(survey_id, collection_exercise_id, file):
         classifiers['SURVEY_ID'] = survey_id
     if collection_exercise_id:
         classifiers['COLLECTION_EXERCISE'] = collection_exercise_id
-    try:
-        response = requests.post(url, auth=app.config['BASIC_AUTH'], files={'file': file},
-                                 params={'classifiers': json.dumps(classifiers)})
 
-        if response.status_code != 200:
-            logger.error('Error retrieving collection exercise',
-                         collection_exercise_id=collection_exercise_id)
-            raise ApiError(url, response.status_code)
+    request_handler(url=url, method='POST', auth=app.config['BASIC_AUTH'], files={'file': file},
+                    params={'classifiers': json.dumps(classifiers)})
 
-        logger.debug('Successfully uploaded collection instrument',
-                     collection_exercise_id=collection_exercise_id)
-    except RequestException as e:
-        logger.exception('Failed to connect to external service', method='POST', url=url)
-        raise ApiError(url)
+    logger.debug('Successfully uploaded collection instrument',
+                 collection_exercise_id=collection_exercise_id)
