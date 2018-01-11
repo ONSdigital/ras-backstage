@@ -12,7 +12,8 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 def upload_collection_instrument(survey_id, collection_exercise_id, file):
     logger.debug('Uploading collection instrument', collection_exercise_id=collection_exercise_id)
-    url = f'{app.config["RAS_COLLECTION_INSTRUMENT_SERVICE"]}upload/{collection_exercise_id}'
+    url = f'{app.config["RAS_COLLECTION_INSTRUMENT_SERVICE"]}' \
+          f'collection-instrument-api/1.0.2/upload/{collection_exercise_id}'
 
     classifiers = {}
     if survey_id:
