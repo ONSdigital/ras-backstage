@@ -24,6 +24,8 @@ class GetSurveyList(Resource):
         # Format survey shortName
         for survey in survey_list:
             survey['shortName'] = format_short_name(survey['shortName'])
+        # Order List by surveyRef
+        sorted_survey_list = sorted(survey_list, key=lambda k: k['surveyRef'])
 
         logger.info('Successfully retrieved survey list')
-        return make_response(jsonify(survey_list), 200)
+        return make_response(jsonify(sorted_survey_list), 200)
