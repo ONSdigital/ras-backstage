@@ -7,8 +7,14 @@
   },
   {
     "id": "cb0711c3-0ac8-41d3-ae0e-567e5ea1ef88",
-    "shortName": "BRUS",
-    "longName": "Business Register and Umployment Survey",
-    "surveyRef": "222"
+    "shortName": "MWSS",
+    "longName": "Monthly Wages and Salaries Survey",
+    "surveyRef": "134"
+  },
+    {
+    "id": "cb0711c3-0ac8-41d3-ae0e-567e5ea1ef88",
+    "shortName": "RSI",
+    "longName": "Monthly Business Survey - Retail Sales Index",
+    "surveyRef": "023"
   }
 ]
