@@ -5,6 +5,7 @@ from flask_restplus import Resource
 from structlog import wrap_logger
 
 from ras_backstage import survey_api
+from ras_backstage.common.mappers import format_short_name
 from ras_backstage.controllers import collection_exercise_controller, survey_controller
 
 
@@ -19,6 +20,9 @@ class GetSurveyByShortName(Resource):
         logger.info('Retrieving survey', short_name=short_name)
 
         survey = survey_controller.get_survey_by_shortname(short_name)
+        # Format survey shortName
+        survey['shortName'] = format_short_name(survey['shortName'])
+
         ce_list = collection_exercise_controller.get_collection_exercises_by_survey(survey['id'])
 
         response_json = {"survey": survey, "collection_exercises": ce_list}
