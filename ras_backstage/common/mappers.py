@@ -1,5 +1,6 @@
-from datetime import datetime
 import calendar
+from datetime import datetime
+import re
 
 
 def convert_event_to_new_format(event):
@@ -14,3 +15,7 @@ def convert_event_to_new_format(event):
         "time": time
     }
     return event_json
+
+
+def format_short_name(short_name):
+    return re.sub('(&)', r' \1 ', short_name)
