@@ -52,7 +52,7 @@ class TestCollectionExercise(unittest.TestCase):
             file=(BytesIO(b'data'), 'test.xlsx'),
         ), query_string={'classifiers': json.dumps(classifiers)})
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
 
     @requests_mock.mock()
     def test_no_collection_instrument(self, mock_request):
@@ -63,3 +63,13 @@ class TestCollectionExercise(unittest.TestCase):
         response = self.app.post('/backstage-api/v1/collection-instrument/test/000000')
 
         self.assertEqual(response.status_code, 400)
+
+    @requests_mock.mock()
+    def test_no_collection_exercise(self, mock_request):
+        mock_request.get(url_get_survey_by_short_name, json=self.survey)
+        mock_request.get(url_ces, json=self.collection_exercises)
+        mock_request.post(url_upload_collection_instrument)
+
+        response = self.app.post('/backstage-api/v1/collection-instrument/test/000001')
+
+        self.assertEqual(response.status_code, 404)

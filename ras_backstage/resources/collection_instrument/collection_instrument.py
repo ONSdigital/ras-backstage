@@ -1,6 +1,6 @@
 import logging
 
-from flask import make_response, jsonify, request
+from flask import make_response, jsonify, request, Response
 from flask_restplus import Resource
 from structlog import wrap_logger
 
@@ -27,3 +27,5 @@ class CollectionInstrument(Resource):
 
         collection_instrument_controller.upload_collection_instrument(survey['id'], exercise['id'],
                                                                       request.files['file'])
+        logger.info('Successfully retrieved collection exercise details', shortname=short_name, period=period)
+        return Response(status=201)
