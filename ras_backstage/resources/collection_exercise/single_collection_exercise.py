@@ -6,6 +6,7 @@ from structlog import wrap_logger
 
 from ras_backstage import collection_exercise_api
 from ras_backstage.common.filters import get_collection_exercise_by_period
+from ras_backstage.common.mappers import format_short_name
 from ras_backstage.controllers import collection_exercise_controller, survey_controller
 
 
@@ -20,6 +21,8 @@ class GetSingleCollectionExercise(Resource):
         logger.info('Retrieving collection exercise details', shortname=short_name, period=period)
 
         survey = survey_controller.get_survey_by_shortname(short_name)
+        survey['shortName'] = format_short_name(survey['shortName'])
+
         exercises = collection_exercise_controller.get_collection_exercises_by_survey(survey['id'])
         # Find the collection exercise for the given period
         exercise = get_collection_exercise_by_period(exercises, period)
