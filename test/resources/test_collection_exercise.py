@@ -56,7 +56,7 @@ class TestCollectionExercise(unittest.TestCase):
         self.assertEqual(response_data['survey']['longName'],
                          'Business Register and Employment Survey')
         self.assertEqual(response_data['collection_exercise']['name'], '000000')
-        self.assertEqual(response_data['events']['mps']['date'], "11 Sep 09")
+        self.assertEqual(response_data['events'][0]['tag'], "mps")
 
     @requests_mock.mock()
     def test_single_collection_exercise_survey_fail(self, mock_request):
