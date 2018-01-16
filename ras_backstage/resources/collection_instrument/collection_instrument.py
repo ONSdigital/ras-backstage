@@ -1,7 +1,7 @@
 import logging
 
 from flask import make_response, jsonify, request, Response
-from flask_restplus import Resource
+from flask_restplus import Resource, reqparse
 from structlog import wrap_logger
 
 from ras_backstage import collection_instrument_api
@@ -9,13 +9,18 @@ from ras_backstage.common.filters import get_collection_exercise_by_period
 from ras_backstage.controllers import survey_controller, collection_exercise_controller, \
     collection_instrument_controller
 
+
 logger = wrap_logger(logging.getLogger(__name__))
+
+parser = reqparse.RequestParser()
+parser.add_argument('file', location='files', required=True)
 
 
 @collection_instrument_api.route('/<short_name>/<period>')
 class CollectionInstrument(Resource):
 
     @staticmethod
+    @collection_instrument_api.expect(parser)
     def post(short_name, period):
         logger.info('Uploading collection instrument', shortname=short_name, period=period)
         survey = survey_controller.get_survey_by_shortname(short_name)

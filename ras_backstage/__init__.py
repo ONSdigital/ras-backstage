@@ -22,7 +22,7 @@ api = Api(title='Ras-Backstage', default='info', default_label="")
 
 collection_exercise_api = Namespace('collection-exercise',
                                     path='/backstage-api/v1/collection-exercise')
-collection_instrument_api = Namespace('survey', path='/backstage-api/v1/collection-instrument')
+collection_instrument_api = Namespace('collection-instrument', path='/backstage-api/v1/collection-instrument')
 party_api = Namespace('party', path='/backstage-api/v1/party')
 sample_api = Namespace('sample', path='/backstage-api/v1/sample')
 secure_messaging_api = Namespace('secure-messaging', path='/backstage-api/v1/secure-message')
