@@ -10,21 +10,19 @@ from ras_backstage.exception.exceptions import ApiError
 logger = wrap_logger(logging.getLogger(__name__))
 
 
-def post_sample_file_for_collection_exercise(collection_exercise_id, filename, sample_file_data, survey_type='bres'):
-    url = f'{app.config["RM_SAMPLE_SERVICE"]}{survey_type}/fileupload'
+def upload_sample(survey_id, collection_exercise_id, sample_file, survey_type='B'):
     logger.debug('Uploading sample file',
                  collection_exercise_id=collection_exercise_id,
-                 filename=filename,
-                 survey_type=survey_type,
-                 url=url)
+                 survey_id=survey_id,
+                 survey_type=survey_type)
+    url = f'{app.config["RM_SAMPLE_SERVICE"]}samples/{survey_type}/fileupload'
 
-    files_dict = {'file': (filename, sample_file_data, 'text/csv')}
-    response = request_handler('POST', url, auth=app.config['BASIC_AUTH'], files=files_dict)
+    response = request_handler(url=url, method='POST', auth=app.config['BASIC_AUTH'], files={'file': sample_file})
 
     if response.status_code != 201:
         logger.error('Error uploading sample file',
                      collection_exercise_id=collection_exercise_id,
-                     filename=filename,
+                     survey_id=survey_id,
                      survey_type=survey_type)
         raise ApiError(url, response.status_code)
 
@@ -32,8 +30,6 @@ def post_sample_file_for_collection_exercise(collection_exercise_id, filename, s
 
     logger.debug('Successfully uploaded sample file',
                  collection_exercise_id=collection_exercise_id,
-                 filename=filename,
-                 survey_type=survey_type,
-                 sample_id=sample_id)
-
-    return sample_id
+                 sample_id=sample_id,
+                 survey_id=survey_id,
+                 survey_type=survey_type)
