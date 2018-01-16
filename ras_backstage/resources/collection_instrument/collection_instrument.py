@@ -29,3 +29,16 @@ class CollectionInstrument(Resource):
                                                                       request.files['file'])
         logger.info('Successfully retrieved collection exercise details', shortname=short_name, period=period)
         return Response(status=201)
+
+
+    @staticmethod
+    def get(short_name, period):
+        logger.info('Retrieving collection instruments', short_name=short_name, period=period)
+
+        survey = survey_controller.get_survey_by_shortname(short_name)
+        exercises = collection_exercise_controller.get_collection_exercises_by_survey(survey['id'])
+        exercise = get_collection_exercise_by_period(exercises, period)
+        collection_instruments = collection_instrument_controller.get_collection_instruments_by_classifier(survey['id'], exercise['id'])
+
+        logger.info('Successfully retrieved collection instruments', short_name=short_name, period=period)
+        return make_response(jsonify(collection_instruments), 200)
