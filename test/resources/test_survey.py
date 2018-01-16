@@ -41,8 +41,9 @@ class TestSurvey(unittest.TestCase):
         response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response_data[0]['shortName'], "BRES")
-        self.assertEqual(response_data[1]['shortName'], "BRUS")
+        self.assertEqual(response_data[0]['shortName'], "RSI")
+        self.assertEqual(response_data[1]['shortName'], "MWSS")
+        self.assertEqual(response_data[2]['shortName'], "BRES")
 
     @requests_mock.mock()
     def test_get_survey_list_no_surveys(self, mock_request):

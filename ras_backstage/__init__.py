@@ -27,6 +27,7 @@ sample_api = Namespace('sample', path='/backstage-api/v1/sample')
 secure_messaging_api = Namespace('secure-messaging', path='/backstage-api/v1/secure-message')
 sign_in_api = Namespace('sign-in', path='/backstage-api/v1/sign-in')
 survey_api = Namespace('survey', path='/backstage-api/v1/survey')
+collection_instrument_api = Namespace('survey', path='/backstage-api/v1/collection-instrument')
 
 api.add_namespace(collection_exercise_api)
 api.add_namespace(party_api)
@@ -34,6 +35,7 @@ api.add_namespace(sample_api)
 api.add_namespace(secure_messaging_api)
 api.add_namespace(sign_in_api)
 api.add_namespace(survey_api)
+api.add_namespace(collection_instrument_api)
 
 
 import ras_backstage.error_handlers  # NOQA # pylint: disable=wrong-import-position
@@ -49,6 +51,7 @@ from ras_backstage.resources.secure_messaging.save_draft import SaveDraft  # NOQ
 from ras_backstage.resources.survey.get_survey_list import GetSurveyList  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.survey.get_survey_by_short_name import GetSurveyByShortName  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.collection_exercise.single_collection_exercise import GetSingleCollectionExercise  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.resources.collection_instrument.collection_instrument import CollectionInstrument  # NOQA # pylint: disable=wrong-import-position
 
 
 api.init_app(app)

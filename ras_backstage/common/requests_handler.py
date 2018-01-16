@@ -17,7 +17,7 @@ def request_handler(method, url, params=None, auth=None, headers=None, json=None
                                      json=json, data=data, files=files)
         elif method == 'PUT':
             response = requests.put(url, params=params, auth=auth, headers=headers,
-                                    json=json, data=data)
+                                    json=json, data=data, files=files)
         else:
             response = requests.get(url, params=params, auth=auth, headers=headers)
     except RequestException as e:
