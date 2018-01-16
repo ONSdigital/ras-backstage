@@ -6,8 +6,9 @@ from structlog import wrap_logger
 
 from ras_backstage import collection_instrument_api
 from ras_backstage.common.filters import get_collection_exercise_by_period
-from ras_backstage.controllers import survey_controller, collection_exercise_controller, \
-    collection_instrument_controller
+from ras_backstage.controllers import survey_controller, collection_exercise_controller
+from ras_backstage.controllers.collection_instrument_controller import get_collection_instruments_by_classifier, \
+    upload_collection_instrument
 
 logger = wrap_logger(logging.getLogger(__name__))
 
@@ -25,11 +26,9 @@ class CollectionInstrument(Resource):
         if not exercise:
             return make_response(jsonify({"message": "Collection exercise not found"}), 404)
 
-        collection_instrument_controller.upload_collection_instrument(survey['id'], exercise['id'],
-                                                                      request.files['file'])
+        upload_collection_instrument(survey['id'], exercise['id'], request.files['file'])
         logger.info('Successfully retrieved collection exercise details', shortname=short_name, period=period)
         return Response(status=201)
-
 
     @staticmethod
     def get(short_name, period):
@@ -37,8 +36,11 @@ class CollectionInstrument(Resource):
 
         survey = survey_controller.get_survey_by_shortname(short_name)
         exercises = collection_exercise_controller.get_collection_exercises_by_survey(survey['id'])
+        # Find the collection exercise for the given period
         exercise = get_collection_exercise_by_period(exercises, period)
-        collection_instruments = collection_instrument_controller.get_collection_instruments_by_classifier(survey['id'], exercise['id'])
+        if not exercise:
+            return make_response(jsonify({"message": "Collection exercise not found"}), 404)
+        collection_instruments = get_collection_instruments_by_classifier(survey['id'], exercise['id'])
 
         logger.info('Successfully retrieved collection instruments', short_name=short_name, period=period)
         return make_response(jsonify(collection_instruments), 200)

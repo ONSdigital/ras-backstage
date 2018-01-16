@@ -15,11 +15,7 @@ def upload_collection_instrument(survey_id, collection_exercise_id, file):
     url = f'{app.config["RAS_COLLECTION_INSTRUMENT_SERVICE"]}' \
           f'collection-instrument-api/1.0.2/upload/{collection_exercise_id}'
 
-    classifiers = {}
-    if survey_id:
-        classifiers['SURVEY_ID'] = survey_id
-    if collection_exercise_id:
-        classifiers['COLLECTION_EXERCISE'] = collection_exercise_id
+    classifiers = _build_classifiers(collection_exercise_id, survey_id)
 
     request_handler(url=url, method='POST', auth=app.config['BASIC_AUTH'], files={'file': file},
                     params={'classifiers': json.dumps(classifiers)})
@@ -34,11 +30,7 @@ def get_collection_instruments_by_classifier(survey_id, collection_exercise_id):
     url = f'{app.config["RAS_COLLECTION_INSTRUMENT_SERVICE"]}' \
           f'collection-instrument-api/1.0.2/collectioninstrument'
 
-    classifiers = {}
-    if survey_id:
-        classifiers['SURVEY_ID'] = survey_id
-    if collection_exercise_id:
-        classifiers['COLLECTION_EXERCISE'] = collection_exercise_id
+    classifiers = _build_classifiers(collection_exercise_id, survey_id)
 
     response = request_handler(url=url, method='GET', auth=app.config['BASIC_AUTH'],
                                params={'searchString': json.dumps(classifiers)})
@@ -50,3 +42,12 @@ def get_collection_instruments_by_classifier(survey_id, collection_exercise_id):
     logger.debug('Successfully retrieved collection instruments', survey_id=survey_id,
                  collection_exercise_id=collection_exercise_id)
     return json.loads(response.text)
+
+
+def _build_classifiers(collection_exercise_id, survey_id):
+    classifiers = {}
+    if survey_id:
+        classifiers['SURVEY_ID'] = survey_id
+    if collection_exercise_id:
+        classifiers['COLLECTION_EXERCISE'] = collection_exercise_id
+    return classifiers
