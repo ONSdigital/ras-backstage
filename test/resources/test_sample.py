@@ -44,8 +44,10 @@ class TestSample(unittest.TestCase):
         response = self.app.post(
             '/backstage-api/v1/sample/test/000000',
             data={'file': (self.csv_file, 'test.csv')})
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 201)
+        self.assertEqual(response_data['id'], 'test-sample-id')
 
     @requests_mock.mock()
     def test_post_sample_service_fails(self, mock_request):

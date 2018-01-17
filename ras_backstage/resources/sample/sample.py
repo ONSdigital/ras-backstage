@@ -30,7 +30,7 @@ class Sample(Resource):
         if not exercise:
             return make_response(jsonify({"message": "Collection exercise not found"}), 404)
 
-        sample_controller.upload_sample(survey['id'], exercise['id'], request.files['file'])
+        response_json = sample_controller.upload_sample(survey['id'], exercise['id'], request.files['file'])
 
         logger.info('Successfully uploaded sample', shortname=short_name, period=period)
-        return Response(status=201)
+        return make_response(jsonify(response_json), 201)

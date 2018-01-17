@@ -26,10 +26,12 @@ def upload_sample(survey_id, collection_exercise_id, sample_file, survey_type='B
                      survey_type=survey_type)
         raise ApiError(url, response.status_code)
 
-    sample_id = response.json()['id']
+    response_json = response.json()
 
     logger.debug('Successfully uploaded sample file',
                  collection_exercise_id=collection_exercise_id,
-                 sample_id=sample_id,
+                 response_json=response_json,
                  survey_id=survey_id,
                  survey_type=survey_type)
+
+    return response_json
