@@ -19,9 +19,11 @@ def upload_sample(survey_id, collection_exercise_id, sample_file, survey_type='B
 
     response = request_handler(url=url, method='POST', auth=app.config['BASIC_AUTH'], files={'file': sample_file})
 
+    # Sample service *should* return something other than 201 when upload / ingest fails
     if response.status_code != 201:
         logger.error('Error uploading sample file',
                      collection_exercise_id=collection_exercise_id,
+                     status_code=response.status_code,
                      survey_id=survey_id,
                      survey_type=survey_type)
         raise ApiError(url, response.status_code)

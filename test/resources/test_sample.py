@@ -5,6 +5,7 @@ import requests_mock
 
 from ras_backstage import app
 
+
 url_get_survey_by_short_name = f'{app.config["RM_SURVEY_SERVICE"]}surveys/shortname/test'
 url_ces = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
           'collectionexercises/survey/cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87'
