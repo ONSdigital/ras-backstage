@@ -7,8 +7,7 @@ from structlog import wrap_logger
 from ras_backstage import collection_instrument_api
 from ras_backstage.common.filters import get_collection_exercise_by_period
 from ras_backstage.controllers import survey_controller, collection_exercise_controller
-from ras_backstage.controllers.collection_instrument_controller import get_collection_instruments_by_classifier, \
-    upload_collection_instrument
+from ras_backstage.controllers.collection_instrument_controller import upload_collection_instrument
 
 logger = wrap_logger(logging.getLogger(__name__))
 
