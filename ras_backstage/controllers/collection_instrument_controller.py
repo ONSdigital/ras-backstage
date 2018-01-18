@@ -17,7 +17,8 @@ def upload_collection_instrument(survey_id, collection_exercise_id, file):
 
     classifiers = _build_classifiers(collection_exercise_id, survey_id)
 
-    request_handler(url=url, method='POST', auth=app.config['BASIC_AUTH'], files={'file': file},
+    files = {"file": (file.filename, file.stream, file.mimetype)}
+    request_handler(url=url, method='POST', auth=app.config['BASIC_AUTH'], files=files,
                     params={'classifiers': json.dumps(classifiers)})
 
     logger.debug('Successfully uploaded collection instrument',
