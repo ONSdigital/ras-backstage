@@ -73,6 +73,7 @@ class TestCollectionExercise(unittest.TestCase):
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_ces, json=self.collection_exercises)
         mock_request.get(url_ce, json=collection_exercise)
+        mock_request.get(url_ce_events, json=events)
         search_string = _build_search_string()
         mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
                          complete_qs=True)
@@ -144,12 +145,14 @@ class TestCollectionExercise(unittest.TestCase):
 
         self.assertEqual(response.status_code, 500)
         self.assertEqual(response_data['error']['status_code'], 500)
-        
+
+    @requests_mock.mock()
     def test_get_collection_instrument(self, mock_request):
         # Given
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_ces, json=self.collection_exercises)
         mock_request.get(url_ce, json=collection_exercise)
+        mock_request.get(url_ce_events, json=events)
         search_string = _build_search_string()
         mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
                          complete_qs=True)
@@ -168,6 +171,7 @@ class TestCollectionExercise(unittest.TestCase):
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_ces, json=self.collection_exercises)
         mock_request.get(url_ce, json=collection_exercise)
+        mock_request.get(url_ce_events, json=events)
         search_string = _build_search_string()
         mock_request.get(f'{url_get_collection_instrument}?{search_string}',
                          complete_qs=True, status_code=400)
