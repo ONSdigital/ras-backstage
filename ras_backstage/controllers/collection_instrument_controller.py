@@ -18,8 +18,12 @@ def upload_collection_instrument(survey_id, collection_exercise_id, file):
     classifiers = _build_classifiers(collection_exercise_id, survey_id)
 
     files = {"file": (file.filename, file.stream, file.mimetype)}
-    request_handler(url=url, method='POST', auth=app.config['BASIC_AUTH'], files=files,
-                    params={'classifiers': json.dumps(classifiers)})
+    response = request_handler(url=url, method='POST', auth=app.config['BASIC_AUTH'], files=files,
+                               params={'classifiers': json.dumps(classifiers)})
+
+    if response.status_code != 200:
+        logger.error('Error uploading collection instrument')
+        raise ApiError(url, response.status_code)
 
     logger.debug('Successfully uploaded collection instrument',
                  collection_exercise_id=collection_exercise_id)

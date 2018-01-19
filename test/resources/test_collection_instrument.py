@@ -55,6 +55,20 @@ class TestCollectionExercise(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
 
     @requests_mock.mock()
+    def test_upload_collection_instrument_fail(self, mock_request):
+        # Given
+        mock_request.get(url_get_survey_by_short_name, json=self.survey)
+        mock_request.get(url_ces, json=self.collection_exercises)
+        mock_request.post(f'{url_upload_collection_instrument}', status_code=500)
+
+        # When
+        response = self.app.post('/backstage-api/v1/collection-instrument/test/000000', data=dict(
+            file=(BytesIO(b'data'), 'test.xlsx')))
+
+        # Then
+        self.assertEqual(response.status_code, 500)
+
+    @requests_mock.mock()
     def test_no_collection_instrument_file_uploaded(self, mock_request):
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_ces, json=self.collection_exercises)
@@ -65,7 +79,7 @@ class TestCollectionExercise(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
 
     @requests_mock.mock()
-    def test_collection_exercise_period_does_not_match(self, mock_request):
+    def test_upload_ci_when_missing_collection_exercise_period(self, mock_request):
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_ces, json=self.collection_exercises)
         mock_request.post(url_upload_collection_instrument)
