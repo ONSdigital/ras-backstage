@@ -41,3 +41,28 @@ def get_collection_exercises_by_survey(survey_id):
 
     logger.debug('Successfully retrieved collection exercises', survey_id=survey_id)
     return response.json()
+
+
+def link_sample_summary_to_collection_exercise(collection_exercise_id, sample_summary_id):
+    logger.debug('Linking sample summary to collection exercise',
+                 collection_exercise_id=collection_exercise_id,
+                 sample_summary_id=sample_summary_id)
+    url = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}collectionexercises/link/{collection_exercise_id}'
+    # Currently we only need to link a single sample to a single collection exercise
+    payload = {'sampleSummaryIds': [str(sample_summary_id)]}
+    response = request_handler('PUT', url, auth=app.config['BASIC_AUTH'], json=payload)
+
+    if response.status_code == 404:
+        logger.error('Error retrieving collection exercise', collection_exercise_id=collection_exercise_id)
+        raise ApiError(url, response.status_code)
+    if response.status_code != 200:
+        logger.error('Error linking sample to collection exercise',
+                     collection_exercise_id=collection_exercise_id,
+                     sample_summary_id=sample_summary_id)
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully linked sample summary with collection exercise',
+                 collection_exercise_id=collection_exercise_id,
+                 sample_summary_id=sample_summary_id)
+
+    return response.json()

@@ -33,5 +33,16 @@ class Sample(Resource):
         sample_summary = sample_controller.upload_sample(exercise['id'], request.files['file'])
         logger.info('Successfully uploaded sample', sample_id=sample_summary['id'])
 
+        logger.info('Linking sample summary with collection exercise',
+                    collection_exercise_id=exercise['id'],
+                    sample_id=sample_summary['id'])
+
+        collection_exercise_controller.link_sample_summary_to_collection_exercise(
+            collection_exercise_id=exercise['id'],
+            sample_summary_id=sample_summary['id'])
+
+        logger.info('Successfully linked sample to collection exercise',
+                    collection_exercise_id=exercise['id'],
+                    sample_id=sample_summary['id'])
 
         return make_response(jsonify(sample_summary), 201)
