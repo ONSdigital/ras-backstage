@@ -6,8 +6,8 @@ from structlog import wrap_logger
 
 from ras_backstage import collection_instrument_api
 from ras_backstage.common.filters import get_collection_exercise_by_period
-from ras_backstage.controllers import survey_controller, collection_exercise_controller, \
-    collection_instrument_controller
+from ras_backstage.controllers import survey_controller, collection_exercise_controller
+from ras_backstage.controllers.collection_instrument_controller import upload_collection_instrument
 
 logger = wrap_logger(logging.getLogger(__name__))
 
@@ -25,7 +25,6 @@ class CollectionInstrument(Resource):
         if not exercise:
             return make_response(jsonify({"message": "Collection exercise not found"}), 404)
 
-        collection_instrument_controller.upload_collection_instrument(survey['id'], exercise['id'],
-                                                                      request.files['file'])
+        upload_collection_instrument(survey['id'], exercise['id'], request.files['file'])
         logger.info('Successfully retrieved collection exercise details', shortname=short_name, period=period)
         return Response(status=201)

@@ -9,6 +9,7 @@ from ras_backstage.common.filters import get_collection_exercise_by_period
 from ras_backstage.common.mappers import format_short_name
 
 from ras_backstage.controllers import collection_exercise_controller, survey_controller
+from ras_backstage.controllers.collection_instrument_controller import get_collection_instruments_by_classifier
 
 
 logger = wrap_logger(logging.getLogger(__name__))
@@ -25,7 +26,6 @@ class GetSingleCollectionExercise(Resource):
         survey['shortName'] = format_short_name(survey['shortName'])
 
         exercises = collection_exercise_controller.get_collection_exercises_by_survey(survey['id'])
-
         # Find the collection exercise for the given period
         exercise = get_collection_exercise_by_period(exercises, period)
         if not exercise:
@@ -34,10 +34,13 @@ class GetSingleCollectionExercise(Resource):
 
         exercise_events = collection_exercise_controller.get_collection_exercise_events(exercise['id'])
 
+        collection_instruments = get_collection_instruments_by_classifier(survey['id'], exercise['id'])
+
         response_json = {
             "survey": survey,
             "collection_exercise": full_exercise,
-            "events": exercise_events
+            "events": exercise_events,
+            "collection_instruments": collection_instruments
         }
         logger.info('Successfully retrieved collection exercise details',
                     shortname=short_name, period=period)
