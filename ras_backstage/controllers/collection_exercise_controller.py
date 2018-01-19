@@ -24,7 +24,7 @@ def get_collection_exercise_by_id(collection_exercise_id):
 
     logger.debug('Successfully retrieved collection exercise',
                  collection_exercise_id=collection_exercise_id)
-    return json.loads(response.text)
+    return response.json()
 
 
 def get_collection_exercises_by_survey(survey_id):
@@ -40,4 +40,4 @@ def get_collection_exercises_by_survey(survey_id):
         raise ApiError(url, response.status_code)
 
     logger.debug('Successfully retrieved collection exercises', survey_id=survey_id)
-    return json.loads(response.text)
+    return response.json()

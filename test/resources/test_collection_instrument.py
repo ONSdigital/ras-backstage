@@ -21,7 +21,7 @@ class TestCollectionExercise(unittest.TestCase):
         self.survey = {
             "id": "cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87",
             "longName": "Business Register and Employment Survey",
-            "shortName": "BRES",
+            "shortName": "test",
             "surveyRef": "221"
         }
         self.collection_exercises = [
