@@ -32,7 +32,7 @@ class TestSample(unittest.TestCase):
                 "scheduledExecutionDateTime": "2017-05-15T00:00:00Z"
             },
             {
-               "id": "e33daf0e-6a27-40cd-98dc-c6231f50e84a",
+                "id": "e33daf0e-6a27-40cd-98dc-c6231f50e84a",
                 "exerciseRef": "000000",
                 "scheduledExecutionDateTime": "2017-08-12T00:00:00Z"
             }
@@ -123,7 +123,6 @@ class TestSample(unittest.TestCase):
         response = self.app.post(
             f"/backstage-api/v1/sample/test/000000",
             data={'file': (self.csv_file, 'test.csv')})
-        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
 
@@ -137,6 +136,5 @@ class TestSample(unittest.TestCase):
         response = self.app.post(
             f"/backstage-api/v1/sample/test/000000",
             data={'file': (self.csv_file, 'test.csv')})
-        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 404)
