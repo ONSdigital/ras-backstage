@@ -26,5 +26,5 @@ class CollectionInstrument(Resource):
             return make_response(jsonify({"message": "Collection exercise not found"}), 404)
 
         upload_collection_instrument(survey['id'], exercise['id'], request.files['file'])
-        logger.info('Successfully retrieved collection exercise details', shortname=short_name, period=period)
+        logger.info('Successfully uploaded collection instrument', shortname=short_name, period=period)
         return Response(status=201)

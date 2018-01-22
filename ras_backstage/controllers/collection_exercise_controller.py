@@ -41,3 +41,32 @@ def get_collection_exercises_by_survey(survey_id):
 
     logger.debug('Successfully retrieved collection exercises', survey_id=survey_id)
     return json.loads(response.text)
+
+
+def get_linked_sample_summary_id(collection_exercise_id):
+    logger.debug('Getting sample linked to collection exercise', collection_exercise_id=collection_exercise_id)
+    url = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}collectionexercises/link/{collection_exercise_id}'
+    response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
+
+    if response.status_code == 404:
+        logger.error('Error retrieving collection exercise', collection_exercise_id=collection_exercise_id)
+        raise ApiError(url, response.status_code)
+    elif response.status_code == 204:
+        logger.error('No samples linked to collection exercise', collection_exercise_id=collection_exercise_id)
+        raise ApiError(url, response.status_code)
+    elif response.status_code != 200:
+        logger.error('Error retrieving sample summaries linked to collection exercise',
+                     collection_exercise_id=collection_exercise_id)
+        raise ApiError(url, response.status_code)
+
+    try:
+        sample_summary_id = response.json()[0]
+    except IndexError:
+        logger.error('No samples linked to collection exercise', collection_exercise_id=collection_exercise_id)
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully retrieved linked sample summary',
+                 collection_exercise_id=collection_exercise_id,
+                 sample_summary_id=sample_summary_id)
+
+    return sample_summary_id
