@@ -48,10 +48,7 @@ def get_linked_sample_summary_id(collection_exercise_id):
     url = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}collectionexercises/link/{collection_exercise_id}'
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
-    if response.status_code == 404:
-        logger.error('Error retrieving collection exercise', collection_exercise_id=collection_exercise_id)
-        raise ApiError(url, response.status_code)
-    elif response.status_code == 204:
+    if response.status_code == 204:
         logger.error('No samples linked to collection exercise', collection_exercise_id=collection_exercise_id)
         raise ApiError(url, response.status_code)
     elif response.status_code != 200:
@@ -59,11 +56,8 @@ def get_linked_sample_summary_id(collection_exercise_id):
                      collection_exercise_id=collection_exercise_id)
         raise ApiError(url, response.status_code)
 
-    try:
-        sample_summary_id = response.json()[0]
-    except IndexError:
-        logger.error('No samples linked to collection exercise', collection_exercise_id=collection_exercise_id)
-        raise ApiError(url, 404)
+    # currently, we only want a single sample summary
+    sample_summary_id = response.json()[0]
 
     logger.debug('Successfully retrieved linked sample summary',
                  collection_exercise_id=collection_exercise_id,

@@ -16,7 +16,6 @@ def get_sample_summary(sample_summary_id):
 
     response = request_handler(url=url, method='GET', auth=app.config['BASIC_AUTH'])
 
-    # Sample service *should* return something other than 201 when upload / ingest fails
     if response.status_code != 200:
         logger.error('Error retrieving sample summary',
                      sample_summary_id=sample_summary_id,
