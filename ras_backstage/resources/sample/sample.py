@@ -1,6 +1,6 @@
 import logging
 
-from flask import jsonify, make_response, request
+from flask import jsonify, make_response
 from flask_restplus import Resource
 from structlog import wrap_logger
 
@@ -25,7 +25,7 @@ class Sample(Resource):
         exercise = get_collection_exercise_by_period(exercises, period)
         if not exercise:
             return make_response(jsonify({'message': 'Collection exercise not found'}), 404)
-        
+
         summary_id = collection_exercise_controller.get_linked_sample_summary_id(exercise['id'])
 
         sample_summary = sample_controller.get_sample_summary(summary_id)
