@@ -44,7 +44,7 @@ def get_collection_exercises_by_survey(survey_id):
 
 
 def get_linked_sample_summary_id(collection_exercise_id):
-    logger.debug('Getting sample linked to collection exercise', collection_exercise_id=collection_exercise_id)
+    logger.debug('Retrieving sample linked to collection exercise', collection_exercise_id=collection_exercise_id)
     url = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}collectionexercises/link/{collection_exercise_id}'
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
@@ -63,7 +63,7 @@ def get_linked_sample_summary_id(collection_exercise_id):
         sample_summary_id = response.json()[0]
     except IndexError:
         logger.error('No samples linked to collection exercise', collection_exercise_id=collection_exercise_id)
-        raise ApiError(url, response.status_code)
+        raise ApiError(url, 404)
 
     logger.debug('Successfully retrieved linked sample summary',
                  collection_exercise_id=collection_exercise_id,

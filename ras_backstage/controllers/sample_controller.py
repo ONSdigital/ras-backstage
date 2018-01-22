@@ -11,7 +11,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 
 def get_sample_summary(sample_summary_id):
-    logger.debug('Getting sample summary', sample_summary_id=sample_summary_id)
+    logger.debug('Retrieving sample summary', sample_summary_id=sample_summary_id)
     url = f'{app.config["RM_SAMPLE_SERVICE"]}samples/samplesummary/{sample_summary_id}'
 
     response = request_handler(url=url, method='GET', auth=app.config['BASIC_AUTH'])
