@@ -221,9 +221,11 @@ class TestCollectionExercise(unittest.TestCase):
 
         # When
         response = self.app.get(f'/backstage-api/v1/collection-exercise/{test_short_name}/{test_period}')
+        response_data = json.loads(response.data)
 
         # Then
-        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_data['sample_summary'], None)
 
     @requests_mock.mock()
     def test_get_link_returns_error(self, mock_request):
