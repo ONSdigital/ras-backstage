@@ -80,7 +80,7 @@ class DevelopmentConfig(Config):
     DJANGO_CLIENT_ID = os.getenv('DJANGO_CLIENT_ID', 'ons@ons.gov')
     DJANGO_CLIENT_SECRET = os.getenv('DJANGO_CLIENT_SECRET', 'password')
     DJANGO_BASIC_AUTH = (DJANGO_CLIENT_ID, DJANGO_CLIENT_SECRET)
-    JWT_SECRET = os.getenv('JWT_SECRET', 'vrwgLNWEffe45thh545yuby')
+    JWT_SECRET = os.getenv('JWT_SECRET', 'testsecret')
 
 
 class TestingConfig(DevelopmentConfig):
