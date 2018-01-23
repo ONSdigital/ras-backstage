@@ -49,8 +49,8 @@ def get_linked_sample_summary_id(collection_exercise_id):
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code == 204:
-        logger.error('No samples linked to collection exercise', collection_exercise_id=collection_exercise_id)
-        raise ApiError(url, response.status_code)
+        logger.info('No samples linked to collection exercise', collection_exercise_id=collection_exercise_id)
+        return
     elif response.status_code != 200:
         logger.error('Error retrieving sample summaries linked to collection exercise',
                      collection_exercise_id=collection_exercise_id)

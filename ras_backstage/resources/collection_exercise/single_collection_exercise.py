@@ -34,7 +34,7 @@ class GetSingleCollectionExercise(Resource):
         collection_instruments = get_collection_instruments_by_classifier(survey['id'], exercise['id'])
 
         summary_id = collection_exercise_controller.get_linked_sample_summary_id(exercise['id'])
-        sample_summary = sample_controller.get_sample_summary(summary_id)
+        sample_summary = sample_controller.get_sample_summary(summary_id) if summary_id else None
 
         response_json = {
             "survey": survey,
