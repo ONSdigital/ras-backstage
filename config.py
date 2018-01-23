@@ -63,6 +63,13 @@ class Config(object):
                                              RM_SURVEY_SERVICE_HOST,
                                              RM_SURVEY_SERVICE_PORT)
 
+    RM_SAMPLE_SERVICE_HOST = os.getenv('RM_SAMPLE_SERVICE_HOST', 'localhost')
+    RM_SAMPLE_SERVICE_PORT = os.getenv('RM_SAMPLE_SERVICE_PORT', 8125)
+    RM_SAMPLE_SERVICE_PROTOCOL = os.getenv('RM_SAMPLE_SERVICE_PROTOCOL', 'http')
+    RM_SAMPLE_SERVICE = '{}://{}:{}/'.format(RM_SAMPLE_SERVICE_PROTOCOL,
+                                             RM_SAMPLE_SERVICE_HOST,
+                                             RM_SAMPLE_SERVICE_PORT)
+
 
 class DevelopmentConfig(Config):
     DEBUG = os.getenv('DEBUG', True)
