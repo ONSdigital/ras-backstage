@@ -27,6 +27,10 @@ url_get_collection_instrument = f'{app.config["RAS_COLLECTION_INSTRUMENT_SERVICE
 
 with open('test/test_data/collection_exercise/collection_exercise.json') as json_data:
     collection_exercise = json.load(json_data)
+url_ce_events = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
+                f'collectionexercises/e33daf0e-6a27-40cd-98dc-c6231f50e84a/events'
+with open('test/test_data/collection_exercise/collection_exercise_events.json') as json_data:
+    events = json.load(json_data)
 
 
 def _build_search_string():
@@ -92,6 +96,7 @@ class TestCollectionExercise(unittest.TestCase):
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_ces, json=self.collection_exercises)
         mock_request.get(url_ce, json=collection_exercise)
+        mock_request.get(url_ce_events, json=events)
         mock_request.get(url_link_sample, json=[sample_summary_id])
         mock_request.get(url_sample_summary, json=self.sample_summary)
         search_string = _build_search_string()
@@ -106,6 +111,8 @@ class TestCollectionExercise(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response_data['survey']['longName'],
                          'Business Register and Employment Survey')
+        self.assertEqual(response_data['collection_exercise']['name'], '000000')
+        self.assertEqual(response_data['events'][0]['tag'], "mps")
         self.assertEqual(response_data['collection_exercise']['name'], test_period)
 
     @requests_mock.mock()
@@ -153,11 +160,25 @@ class TestCollectionExercise(unittest.TestCase):
         self.assertEqual(response_data['error']['status_code'], 500)
 
     @requests_mock.mock()
+    def test_single_collection_exercise_ce_events_fail(self, mock_request):
+        mock_request.get(url_get_survey_by_short_name, json=self.survey)
+        mock_request.get(url_ces, json=self.collection_exercises)
+        mock_request.get(url_ce, json=collection_exercise)
+        mock_request.get(url_ce_events, status_code=500)
+
+        response = self.app.get("/backstage-api/v1/collection-exercise/test/000000")
+        response_data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response_data['error']['status_code'], 500)
+
+    @requests_mock.mock()
     def test_get_collection_instrument(self, mock_request):
         # Given
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_ces, json=self.collection_exercises)
         mock_request.get(url_ce, json=collection_exercise)
+        mock_request.get(url_ce_events, json=events)
         mock_request.get(url_link_sample, json=[sample_summary_id])
         mock_request.get(url_sample_summary, json=self.sample_summary)
         search_string = _build_search_string()
@@ -178,6 +199,7 @@ class TestCollectionExercise(unittest.TestCase):
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_ces, json=self.collection_exercises)
         mock_request.get(url_ce, json=collection_exercise)
+        mock_request.get(url_ce_events, json=events)
         search_string = _build_search_string()
         mock_request.get(f'{url_get_collection_instrument}?{search_string}',
                          complete_qs=True, status_code=400)
@@ -194,6 +216,7 @@ class TestCollectionExercise(unittest.TestCase):
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_ces, json=self.collection_exercises)
         mock_request.get(url_ce, json=collection_exercise)
+        mock_request.get(url_ce_events, json=events)
         mock_request.get(url_link_sample, json=[sample_summary_id])
         mock_request.get(url_sample_summary, json=self.sample_summary)
         search_string = _build_search_string()
@@ -214,6 +237,7 @@ class TestCollectionExercise(unittest.TestCase):
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_ces, json=self.collection_exercises)
         mock_request.get(url_ce, json=collection_exercise)
+        mock_request.get(url_ce_events, json=events)
         search_string = _build_search_string()
         mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
                          complete_qs=True)
@@ -233,6 +257,7 @@ class TestCollectionExercise(unittest.TestCase):
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_ces, json=self.collection_exercises)
         mock_request.get(url_ce, json=collection_exercise)
+        mock_request.get(url_ce_events, json=events)
         mock_request.get(url_link_sample, status_code=400)
         search_string = _build_search_string()
         mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
@@ -250,6 +275,7 @@ class TestCollectionExercise(unittest.TestCase):
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_ces, json=self.collection_exercises)
         mock_request.get(url_ce, json=collection_exercise)
+        mock_request.get(url_ce_events, json=events)
         mock_request.get(url_link_sample, json=[sample_summary_id])
         mock_request.get(url_sample_summary, status_code=400)
         search_string = _build_search_string()

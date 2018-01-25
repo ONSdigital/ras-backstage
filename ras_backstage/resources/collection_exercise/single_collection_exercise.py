@@ -31,6 +31,8 @@ class GetSingleCollectionExercise(Resource):
             return make_response(jsonify({"message": "Collection exercise not found"}), 404)
         full_exercise = collection_exercise_controller.get_collection_exercise_by_id(exercise['id'])
 
+        exercise_events = collection_exercise_controller.get_collection_exercise_events(exercise['id'])
+
         collection_instruments = get_collection_instruments_by_classifier(survey['id'], exercise['id'])
 
         summary_id = collection_exercise_controller.get_linked_sample_summary_id(exercise['id'])
@@ -39,8 +41,9 @@ class GetSingleCollectionExercise(Resource):
         response_json = {
             "survey": survey,
             "collection_exercise": full_exercise,
+            "events": exercise_events,
             "collection_instruments": collection_instruments,
-            "sample_summary": sample_summary,
+            "sample_summary": sample_summary
         }
         logger.info('Successfully retrieved collection exercise details',
                     shortname=short_name, period=period)
