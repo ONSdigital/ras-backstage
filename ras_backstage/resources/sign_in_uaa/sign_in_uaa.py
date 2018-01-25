@@ -4,7 +4,7 @@ from flask import request, make_response, jsonify
 from flask_restplus import fields, Resource
 from structlog import wrap_logger
 
-from ras_backstage import app, sign_in_uaa_api
+from ras_backstage import sign_in_uaa_api
 
 
 logger = wrap_logger(logging.getLogger(__name__))
@@ -22,11 +22,11 @@ class SignInUaa(Resource):
     @sign_in_uaa_api.expect(sign_in_details, validate=True)
     def post():
         logger.info('Retrieving sign-in details')
-        # force=true means there post doesn't HAVE to have application/json
+        # force=true means the post doesn't HAVE to have application/json
         # in its content type.  This feels wrong to me but is also in the django signin code...
         message_json = request.get_json(force=True)
-        username = message_json['username']
-        password = message_json['password']
+        username = message_json.get('username')
+        password = message_json.get('password')
 
         # Obviously horrible, stopgap until uaa is implemented
         if username == 'user' and password == 'pass':
