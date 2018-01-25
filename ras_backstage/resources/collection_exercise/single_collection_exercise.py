@@ -7,8 +7,7 @@ from structlog import wrap_logger
 from ras_backstage import collection_exercise_api
 from ras_backstage.common.filters import get_collection_exercise_by_period
 from ras_backstage.common.mappers import format_short_name
-
-from ras_backstage.controllers import collection_exercise_controller, survey_controller
+from ras_backstage.controllers import collection_exercise_controller, sample_controller, survey_controller
 from ras_backstage.controllers.collection_instrument_controller import get_collection_instruments_by_classifier
 
 
@@ -36,11 +35,15 @@ class GetSingleCollectionExercise(Resource):
 
         collection_instruments = get_collection_instruments_by_classifier(survey['id'], exercise['id'])
 
+        summary_id = collection_exercise_controller.get_linked_sample_summary_id(exercise['id'])
+        sample_summary = sample_controller.get_sample_summary(summary_id) if summary_id else None
+
         response_json = {
             "survey": survey,
             "collection_exercise": full_exercise,
             "events": exercise_events,
-            "collection_instruments": collection_instruments
+            "collection_instruments": collection_instruments,
+            "sample_summary": sample_summary
         }
         logger.info('Successfully retrieved collection exercise details',
                     shortname=short_name, period=period)
