@@ -115,7 +115,6 @@ class TestCollectionExercise(unittest.TestCase):
         self.assertEqual(response_data['events'][0]['tag'], "mps")
         self.assertEqual(response_data['collection_exercise']['name'], test_period)
 
-
     @requests_mock.mock()
     def test_single_collection_exercise_survey_fail(self, mock_request):
         mock_request.get(url_get_survey_by_short_name, status_code=500)
