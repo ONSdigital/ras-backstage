@@ -15,6 +15,11 @@ pip install -U pipenv
 pipenv install
 ```
 
+or using make
+```
+make build
+```
+
 Start server
 ```
 pipenv run python run.py
@@ -25,6 +30,11 @@ or with docker
 ```bash
 docker build . -t ras-backstage
 docker run -p 8080:8080 ras-backstage
+```
+
+or with make
+```
+make start
 ```
 
 
@@ -42,6 +52,11 @@ pipenv run python run_tests.py
 Run flake8 check
 ```
 pipenv check --style .
+```
+
+Run tests with make
+```
+make test
 ```
 
 ## Swagger
