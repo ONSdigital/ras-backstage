@@ -17,32 +17,89 @@ class TestSignInUAA(unittest.TestCase):
 
         self.app = app.test_client()
 
+        self.data = json.dumps({
+            'username': 'user',
+            'password': 'pass',
+        })
+
+        self.wrong_user_data = json.dumps({
+            'username': 'wrong',
+            'password': 'pass',
+        })
+
+        self.wrong_pass_data = json.dumps({
+            'username': 'user',
+            'password': 'wrong',
+        })
+
+        self.all_wrong_data = json.dumps({
+            'username': 'wrong',
+            'password': 'also_wrong',
+        })
+
         self.headers = {
             'Content-Type': 'application/json',
         }
 
     def test_sign_in_success(self):
-        data = {
-            'username': 'user',
-            'password': 'pass',
-        }
 
-        response = self.app.post('/backstage-api/v1/sign-in-uaa',
-                                 data=json.dumps(data),
+        response = self.app.post('/backstage-api/v2/sign-in',
+                                 data=self.data,
                                  headers=self.headers)
 
         # response_json = json.loads(response.data)
         self.assertEqual(response.status_code, 201)
 
-    def test_sign_in_fails(self):
+    def test_sign_in_fails_wrong_user(self):
         data = {
             "username": "wrong",
             "password": "pass"
         }
 
-        response = self.app.post('/backstage-api/v1/sign-in-uaa',
+        response = self.app.post('/backstage-api/v2/sign-in',
                                  data=json.dumps(data),
                                  headers=self.headers)
 
-        # response_json = json.loads(response.data)
         self.assertEqual(response.status_code, 401)
+
+    def test_sign_in_fails_wrong_pass(self):
+        response = self.app.post('/backstage-api/v2/sign-in',
+                                 data=self.wrong_user_data,
+                                 headers=self.headers)
+
+        self.assertEqual(response.status_code, 401)
+
+    def test_sign_in_fails_wrong_user_and_pass(self):
+        response = self.app.post('/backstage-api/v2/sign-in',
+                                 data=self.all_wrong_data,
+                                 headers=self.headers)
+
+        self.assertEqual(response.status_code, 401)
+
+    def test_sign_in_fails_no_content_type(self):
+        response = self.app.post('/backstage-api/v2/sign-in',
+                                 data=self.data,
+                                 headers=None)
+
+        self.assertEqual(response.status_code, 400)
+
+    def test_sign_in_fails_no_content_type_wrong_user(self):
+        response = self.app.post('/backstage-api/v2/sign-in',
+                                 data=self.wrong_user_data,
+                                 headers=None)
+
+        self.assertEqual(response.status_code, 400)
+
+    def test_sign_in_fails_no_content_type_wrong_pass(self):
+        response = self.app.post('/backstage-api/v2/sign-in',
+                                 data=self.wrong_pass_data,
+                                 headers=None)
+
+        self.assertEqual(response.status_code, 400)
+
+    def test_sign_in_fails_no_content_type_wrong_pass_wrong_user(self):
+        response = self.app.post('/backstage-api/v2/sign-in',
+                                 data=self.all_wrong_data,
+                                 headers=None)
+
+        self.assertEqual(response.status_code, 400)
