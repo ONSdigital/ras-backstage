@@ -29,7 +29,7 @@ sample_api = Namespace('sample', path='/backstage-api/v1/sample')
 secure_messaging_api = Namespace('secure-messaging',
                                  path='/backstage-api/v1/secure-message')
 sign_in_api = Namespace('sign-in', path='/backstage-api/v1/sign-in')
-sign_in_api_v2 = Namespace('sign-in-uaa', path='/backstage-api/v2/sign-in')
+sign_in_api_v2 = Namespace('sign-in-v2', path='/backstage-api/v2/sign-in')
 survey_api = Namespace('survey', path='/backstage-api/v1/survey')
 
 api.add_namespace(collection_exercise_api)
