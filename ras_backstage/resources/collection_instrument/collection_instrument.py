@@ -30,7 +30,7 @@ class CollectionInstrument(Resource):
         if not exercise:
             return make_response(jsonify({"message": "Collection exercise not found"}), 404)
 
-        upload_collection_instrument(survey['id'], exercise['id'], request.files['file'])
+        upload_collection_instrument(exercise['id'], request.files['file'])
 
         logger.info('Successfully uploaded collection instrument', shortname=short_name, period=period)
         return Response(status=201)
