@@ -1,4 +1,5 @@
 import json
+import logging
 import unittest
 
 import requests_mock
