@@ -49,9 +49,7 @@ class SignInV2(Resource):
     @sign_in_api_v2.expect(sign_in_details, validate=True)
     def post():
         logger.info('Retrieving sign-in details')
-        # force=true means the post doesn't HAVE to have application/json
-        # in its content type.  This feels wrong to me but is also in the django signin code...
-        message_json = request.get_json(force=True)
+        message_json = request.get_json()
         username = message_json.get('username')
         password = message_json.get('password')
 
