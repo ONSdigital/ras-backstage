@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import logging
 
-from flask import request, make_response, jsonify
+from flask import current_app, request, make_response, jsonify
 from flask_restplus import fields, Resource
 from jose import jwt
 from structlog import wrap_logger
@@ -54,7 +54,7 @@ class SignInV2(Resource):
         password = message_json.get('password')
 
         # Obviously horrible, stopgap until uaa is implemented
-        if username == 'user' and password == 'pass':
+        if username == current_app.config['USERNAME'] and password == current_app.config['PASSWORD']:
             # We're assuming that uaa will return an Oauth2 token though it's almost certain that
             # this will change once we know exactly what is being returned.
             logger.info("Authentication successful", user=username)
