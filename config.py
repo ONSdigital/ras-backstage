@@ -76,6 +76,10 @@ class Config(object):
                                              RM_SAMPLE_SERVICE_HOST,
                                              RM_SAMPLE_SERVICE_PORT)
 
+    UAA_SERVICE_URL = os.getenv('UAA_SERVICE_URL', 'localhost')
+    UAA_CLIENT_ID = os.getenv('UAA_CLIENT_ID', 'ras_backstage_client_id')
+    UAA_CLIENT_SECRET = os.getenv('UAA_CLIENT_SECRET', 'password')
+
 
 class DevelopmentConfig(Config):
     DEBUG = os.getenv('DEBUG', True)
