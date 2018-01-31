@@ -33,7 +33,7 @@ class GetSingleCollectionExercise(Resource):
 
         exercise_events = collection_exercise_controller.get_collection_exercise_events(exercise['id'])
 
-        collection_instruments = get_collection_instruments_by_classifier(exercise['id'])
+        collection_instruments = get_collection_instruments_by_classifier(survey['id'], exercise['id'])
 
         summary_id = collection_exercise_controller.get_linked_sample_summary_id(exercise['id'])
         sample_summary = sample_controller.get_sample_summary(summary_id) if summary_id else None
