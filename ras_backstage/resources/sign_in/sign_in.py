@@ -53,8 +53,10 @@ class SignInV2(Resource):
         username = message_json.get('username')
         password = message_json.get('password')
 
-        if True:
+        if not current_app.config.get('USE_UAA'):
             if username == current_app.config['USERNAME'] and password == current_app.config['PASSWORD']:
+            logger.info('Retrieving sign-in details using UAA')
+            if username == 'user' and passwo    rd == 'pass':
                 # We're assuming that uaa will return an Oauth2 token though it's almost certain that
                 # this will change once we know exactly what is being returned.
                 logger.info("Authentication successful", user=username)
@@ -63,7 +65,7 @@ class SignInV2(Resource):
                 logger.info("Authentication failed", user=username)
                 return make_response(jsonify({"error": "Username and/or password incorrect"}), 401)
         else:
-            logger.info('Retrieving sign-in details')
+            logger.info('Retrieving sign-in details using UAA')
             message_json = request.get_json()
             username = message_json.get('username')
             password = message_json.get('password')
