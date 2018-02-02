@@ -15,7 +15,7 @@ class Config(object):
     DJANGO_BASIC_AUTH = (DJANGO_CLIENT_ID, DJANGO_CLIENT_SECRET)
     JWT_ALGORITHM = os.getenv('JWT_ALGORITHM', 'HS256')
     JWT_SECRET = os.getenv('JWT_SECRET')
-    
+
     # TODO: remove once UAA is implemented and use user supplied username/password
     USERNAME = os.getenv('RAS_BACKSTAGE_USERNAME', 'user')
     PASSWORD = os.getenv('RAS_BACKSTAGE_PASSWORD', 'pass')
@@ -87,6 +87,7 @@ class DevelopmentConfig(Config):
     DJANGO_CLIENT_SECRET = os.getenv('DJANGO_CLIENT_SECRET', 'password')
     DJANGO_BASIC_AUTH = (DJANGO_CLIENT_ID, DJANGO_CLIENT_SECRET)
     JWT_SECRET = os.getenv('JWT_SECRET', 'testsecret')
+
 
 class TestingConfig(DevelopmentConfig):
     DEBUG = True
