@@ -14,7 +14,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 def sign_in(username, password):
     logger.debug('Retrieving OAuth2 token for sign-in')
     url = '{}{}'.format(app.config['UAA_SERVICE_URL'], '/oauth/token')
-    print(url)
+
     data = {
         'grant_type': 'password',
         'client_id': app.config['UAA_CLIENT_ID'],
@@ -24,7 +24,7 @@ def sign_in(username, password):
         'response_type': 'token',
         'token_format': 'opaque'
     }
-    print(data)
+
     headers = {
         'Accept': 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
