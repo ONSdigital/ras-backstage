@@ -79,7 +79,7 @@ class Config(object):
     UAA_SERVICE_URL = os.getenv('UAA_SERVICE_URL', 'localhost')
     UAA_CLIENT_ID = os.getenv('UAA_CLIENT_ID', 'ras_backstage_client_id')
     UAA_CLIENT_SECRET = os.getenv('UAA_CLIENT_SECRET', 'password')
-    USE_UAA = os.getenv('USE_UAA', default=True)
+    USE_UAA = os.getenv('USE_UAA', True)
 
 
 class DevelopmentConfig(Config):
