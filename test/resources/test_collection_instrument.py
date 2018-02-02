@@ -1,7 +1,5 @@
-import json
 import unittest
 from io import BytesIO
-from urllib.parse import urlencode
 
 import requests_mock
 
@@ -39,14 +37,9 @@ class TestCollectionExercise(unittest.TestCase):
 
     @requests_mock.mock()
     def test_upload_collection_instrument(self, mock_request):
-        classifiers = {
-            "SURVEY_ID": "cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87",
-            "COLLECTION_EXERCISE": "e33daf0e-6a27-40cd-98dc-c6231f50e84a"
-        }
-        params = urlencode({'classifiers': json.dumps(classifiers)})
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_ces, json=self.collection_exercises)
-        mock_request.post(f'{url_upload_collection_instrument}?{params}', complete_qs=True,
+        mock_request.post(f'{url_upload_collection_instrument}', complete_qs=True,
                           additional_matcher=self.file_matcher)
 
         response = self.app.post('/backstage-api/v1/collection-instrument/test/000000', data=dict(

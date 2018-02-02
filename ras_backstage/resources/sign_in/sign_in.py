@@ -7,7 +7,7 @@ from jose import jwt
 from structlog import wrap_logger
 
 from ras_backstage import app, sign_in_api, sign_in_api_v2
-from ras_backstage.controllers import django_controller
+from ras_backstage.controllers import django_controller, uaa_controller
 
 
 logger = wrap_logger(logging.getLogger(__name__))
@@ -53,12 +53,28 @@ class SignInV2(Resource):
         username = message_json.get('username')
         password = message_json.get('password')
 
-        # Obviously horrible, stopgap until uaa is implemented
-        if username == current_app.config['USERNAME'] and password == current_app.config['PASSWORD']:
-            # We're assuming that uaa will return an Oauth2 token though it's almost certain that
-            # this will change once we know exactly what is being returned.
-            logger.info("Authentication successful", user=username)
-            return make_response(jsonify({"token": "1234abc"}), 201)
+        if not current_app.config.get('USE_UAA'):
+            logger.info('Retrieving sign-in details')
+            if username == current_app.config['USERNAME'] and password == current_app.config['PASSWORD']:
+                logger.info("Authentication successful", user=username)
+                return make_response(jsonify({"token": "1234abc"}), 201)
+            else:
+                logger.info("Authentication failed", user=username)
+                return make_response(jsonify({"error": "Username and/or password incorrect"}), 401)
         else:
-            logger.info("Authentication failed", user=username)
-            return make_response(jsonify({"error": "Username and/or password incorrect"}), 401)
+            logger.info('Retrieving sign-in details using UAA')
+            message_json = request.get_json()
+            username = message_json.get('username')
+            password = message_json.get('password')
+
+            oauth2_token = uaa_controller.sign_in(username, password)
+            token_expiry = datetime.now() + timedelta(seconds=int(oauth2_token['expires_in']))
+            oauth2_token['expires_at'] = token_expiry.timestamp()
+            oauth2_token['party_id'] = 'BRES'
+            oauth2_token['role'] = 'internal'
+
+            jwt_secret = app.config['JWT_SECRET']
+            token = jwt.encode(oauth2_token, jwt_secret, algorithm=app.config['JWT_ALGORITHM'])
+
+            logger.info('Successfully retrieved sign-in details')
+            return make_response(jsonify({"token": token}), 201)

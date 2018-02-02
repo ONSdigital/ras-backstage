@@ -17,8 +17,8 @@ class Config(object):
     JWT_SECRET = os.getenv('JWT_SECRET')
 
     # TODO: remove once UAA is implemented and use user supplied username/password
-    USERNAME = os.getenv('RAS_BACKSTAGE_USERNAME', 'user')
-    PASSWORD = os.getenv('RAS_BACKSTAGE_PASSWORD', 'pass')
+    USERNAME = os.getenv('RAS_BACKSTAGE_USERNAME')
+    PASSWORD = os.getenv('RAS_BACKSTAGE_PASSWORD')
 
     RAS_OAUTH_SERVICE_HOST = os.getenv('RAS_OAUTH_SERVICE_HOST', 'localhost')
     RAS_OAUTH_SERVICE_PORT = os.getenv('RAS_OAUTH_SERVICE_PORT', 8040)
@@ -76,6 +76,11 @@ class Config(object):
                                              RM_SAMPLE_SERVICE_HOST,
                                              RM_SAMPLE_SERVICE_PORT)
 
+    UAA_SERVICE_URL = os.getenv('UAA_SERVICE_URL', 'localhost')
+    UAA_CLIENT_ID = os.getenv('UAA_CLIENT_ID', 'ras_backstage_client_id')
+    UAA_CLIENT_SECRET = os.getenv('UAA_CLIENT_SECRET', 'password')
+    USE_UAA = int(os.getenv('USE_UAA', 1))
+
 
 class DevelopmentConfig(Config):
     DEBUG = os.getenv('DEBUG', True)
@@ -87,8 +92,11 @@ class DevelopmentConfig(Config):
     DJANGO_CLIENT_SECRET = os.getenv('DJANGO_CLIENT_SECRET', 'password')
     DJANGO_BASIC_AUTH = (DJANGO_CLIENT_ID, DJANGO_CLIENT_SECRET)
     JWT_SECRET = os.getenv('JWT_SECRET', 'testsecret')
+    USERNAME = os.getenv('RAS_BACKSTAGE_USERNAME', 'user')
+    PASSWORD = os.getenv('RAS_BACKSTAGE_PASSWORD', 'pass')
 
 
 class TestingConfig(DevelopmentConfig):
     DEBUG = True
     Testing = True
+    USE_UAA = 0
