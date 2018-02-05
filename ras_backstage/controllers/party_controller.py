@@ -21,7 +21,7 @@ def get_party_by_business_id(party_id):
         raise ApiError(url, response.status_code)
 
     logger.debug('Successfully retrieved business party', party_id=party_id)
-    return json.loads(response.text)
+    return response.json()
 
 
 def get_party_by_respondent_id(party_id):
@@ -34,4 +34,17 @@ def get_party_by_respondent_id(party_id):
         raise ApiError(url, response.status_code)
 
     logger.debug('Successfully retrieved respondent party', party_id=party_id)
-    return json.loads(response.text)
+    return response.json()
+
+
+def get_party_by_ru_ref(ru_ref):
+    logger.debug('Retrieving reporting unit', ru_ref=ru_ref)
+    url = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/parties/type/B/ref/{ru_ref}'
+    response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
+
+    if response.status_code != 200:
+        logger.error('Error retrieving reporting unit', ru_ref=ru_ref)
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully retrieved reporting unit', ru_ref=ru_ref)
+    return response.json()
