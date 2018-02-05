@@ -64,8 +64,18 @@ class TestParty(unittest.TestCase):
     def test_get_reporting_unit(self, mock_request):
         mock_request.get(url_get_reporting_unit, json=business_party)
 
-        response = self.app.get("/backstage-api/v1/party/reporting-unit/test_ru")
+        response = self.app.get("/backstage-api/v1/reporting-unit/test_ru")
         response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response_data['name'], "Bolts and Ratchets Ltd")
+
+    @requests_mock.mock()
+    def test_get_reporting_unit_fail(self, mock_request):
+        mock_request.get(url_get_reporting_unit, status_code=500)
+
+        response = self.app.get("/backstage-api/v1/reporting-unit/test_ru")
+        response_data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response_data['error']['status_code'], 500)

@@ -4,14 +4,14 @@ from flask import jsonify, make_response
 from flask_restplus import Resource
 from structlog import wrap_logger
 
-from ras_backstage import party_api
+from ras_backstage import reporting_unit_api
 from ras_backstage.controllers import party_controller
 
 
 logger = wrap_logger(logging.getLogger(__name__))
 
 
-@party_api.route('/reporting-unit/<ru_ref>')
+@reporting_unit_api.route('/<ru_ref>')
 class GetReportingUnit(Resource):
 
     @staticmethod

@@ -25,6 +25,7 @@ collection_exercise_api = Namespace('collection-exercise',
 collection_instrument_api = Namespace('collection-instrument',
                                       path='/backstage-api/v1/collection-instrument')
 party_api = Namespace('party', path='/backstage-api/v1/party')
+reporting_unit_api = Namespace('party', path='/backstage-api/v1/reporting-unit')
 sample_api = Namespace('sample', path='/backstage-api/v1/sample')
 secure_messaging_api = Namespace('secure-messaging',
                                  path='/backstage-api/v1/secure-message')
@@ -35,6 +36,7 @@ survey_api = Namespace('survey', path='/backstage-api/v1/survey')
 api.add_namespace(collection_exercise_api)
 api.add_namespace(collection_instrument_api)
 api.add_namespace(party_api)
+api.add_namespace(reporting_unit_api)
 api.add_namespace(sample_api)
 api.add_namespace(secure_messaging_api)
 api.add_namespace(sign_in_api)
