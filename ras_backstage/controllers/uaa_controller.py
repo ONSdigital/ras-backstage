@@ -1,5 +1,9 @@
-import json
 import logging
+
+import jwt
+import requests
+import pprint
+
 
 from structlog import wrap_logger
 
@@ -11,7 +15,25 @@ from ras_backstage.exception.exceptions import ApiError
 logger = wrap_logger(logging.getLogger(__name__))
 
 
+def get_public_key():
+    # TODO this needs to be done at start up
+    headers = {
+        'Accept': 'application/json'
+    }
+
+    public_key_url = '{}{}'.format(app.config['UAA_SERVICE_URL'], '/token_key')
+    response = requests.get(public_key_url, headers=headers)
+
+    if response.status_code == 200:
+        key = response.json().get('value')
+        print(key)
+        return key
+    else:
+        raise ApiError(public_key_url, response.status_code)
+
+
 def sign_in(username, password):
+    #  this doesn't work, don't think the UAA is configured correctly
     logger.debug('Retrieving OAuth2 token for sign-in')
     url = f"{app.config['UAA_SERVICE_URL']}/oauth/token",
 
@@ -22,7 +44,7 @@ def sign_in(username, password):
         'username': username,
         'password': password,
         'response_type': 'token',
-        'token_format': 'opaque'
+        'token_format': 'jwt'
     }
 
     headers = {
@@ -35,6 +57,12 @@ def sign_in(username, password):
         logger.error(f'Failed to retrieve OAuth2 token {response.text}')
         raise ApiError(url, response.status_code)
 
-    oauth2_token = json.loads(response.text)
-    logger.debug('Successfully retrieved OAuth2 token')
-    return oauth2_token
+    resp_json = response.json()
+    pprint.pprint(resp_json)
+
+    # verify the token
+    decoded_jwt = jwt.decode(resp_json.get("access_token"), algorithms=resp_json.get('alg'), verify=True, key=get_public_key(), audience='ras_backstage')
+    pprint.pprint(decoded_jwt)
+
+    logger.debug('Successfully retrieved UAA token')
+    return decoded_jwt
