@@ -1,11 +1,7 @@
 from datetime import datetime, timedelta
 import logging
 
-<<<<<<< HEAD
 from flask import current_app, request, make_response, jsonify
-=======
-from flask import request, make_response, jsonify, current_app
->>>>>>> Connect to UAA, verify public key
 from flask_restplus import fields, Resource
 from jose import jwt
 from structlog import wrap_logger
@@ -57,7 +53,7 @@ class SignInV2(Resource):
         username = message_json.get('username')
         password = message_json.get('password')
 
-        if  current_app.config.get('USE_UAA'):
+        if current_app.config.get('USE_UAA'):
             logger.info('Retrieving sign-in details')
 
             logger.info('Retrieving sign-in details')

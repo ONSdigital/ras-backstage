@@ -35,7 +35,8 @@ def get_public_key():
 def sign_in(username, password):
     #  this doesn't work, don't think the UAA is configured correctly
     logger.debug('Retrieving OAuth2 token for sign-in')
-    url = f"{app.config['UAA_SERVICE_URL']}/oauth/token",
+    url = '{}{}'.format(app.config['UAA_SERVICE_URL'], '/oauth/token')
+    print(url)
 
     data = {
         'grant_type': 'password',
