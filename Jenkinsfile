@@ -145,10 +145,14 @@ pipeline {
                 }
 
             }
+            environment {
+                GITHUB_API_KEY = credentials('GITHUB_API_KEY')
+            }
             when {
                 environment name: 'do_release', value: 'yes'
             }
             steps {
+                sh "git remote set-url origin https://ons-sdc:${GITHUB_API_KEY}@github.com/ONSdigital/ras-backstage.git"
                 sh "npm install -g bmpr"
                 sh "bmpr patch|xargs git push origin"
             }
