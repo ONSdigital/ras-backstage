@@ -6,7 +6,7 @@ import requests_mock
 from ras_backstage import app
 
 
-url_search_businesses = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/reporting-unit/search'
+url_search_businesses = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/businesses/search'
 with open('test/test_data/party/reporting_unit_search.json') as json_data:
     business_search = json.load(json_data)
 
