@@ -44,7 +44,7 @@ def sign_in(username, password):
         'client_secret': app.config['UAA_CLIENT_SECRET'],
         'username': username,
         'password': password,
-        'response_type': 'token',
+        'response_type': 'token_id',
         'token_format': 'jwt'
     }
 

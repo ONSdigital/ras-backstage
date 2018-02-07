@@ -67,7 +67,7 @@ class SignInV2(Resource):
 
             return make_response(jsonify(oauth2_token, 201))
         else:
-            # Obviously horrible, stopgap until uaa is implemented
+            #  TODO remove this once UAA fully deployed in all environments
             if username == current_app.config['USERNAME'] and password == current_app.config['PASSWORD']:
                 # We're assuming that uaa will return an Oauth2 token though it's almost certain that
                 logger.info("Authentication successful", user=username)
