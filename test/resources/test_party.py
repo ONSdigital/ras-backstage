@@ -14,7 +14,7 @@ url_get_respondent_party = f'{app.config["RAS_PARTY_SERVICE"]}' \
                            f'party-api/v1/respondents/id/testid'
 with open('test/test_data/party/respondent_party.json') as json_data:
     respondent_party = json.load(json_data)
-with open('test/test_data/party/business_search.json') as json_data:
+with open('test/test_data/party/reporting_unit_search.json') as json_data:
     business_search = json.load(json_data)
 
 
@@ -61,24 +61,3 @@ class TestParty(unittest.TestCase):
 
         self.assertEqual(response.status_code, 500)
         self.assertEqual(response_data['error']['status_code'], 500)
-
-    @requests_mock.mock()
-    def test_search_businesses(self, mock_request):
-        mock_request.get(url_search_businesses, json=business_search)
-        search_url = "/backstage-api/v1/party/search-businesses?query=test"
-
-        response = self.app.get(search_url)
-        response_data = json.loads(response.data)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response_data), 1)
-
-    @requests_mock.mock()
-    def test_search_businesses_fail(self, mock_request):
-        mock_request.get(url_search_businesses, status_code=500)
-        search_url = "/backstage-api/v1/party/search-businesses?query=test"
-
-        response = self.app.get(search_url)
-        json.loads(response.data)
-
-        self.assertEqual(response.status_code, 500)

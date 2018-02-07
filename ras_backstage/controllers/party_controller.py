@@ -39,7 +39,7 @@ def get_party_by_respondent_id(party_id):
 
 def get_businesses_by_search(query):
     logger.debug('Retrieving businesses by search query', query=query)
-    url = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/businesses/search'
+    url = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/reporting-unit/search'
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'], params={"query": query})
 
     if response.status_code != 200:
