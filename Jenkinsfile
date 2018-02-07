@@ -120,20 +120,37 @@ pipeline {
             }
         }
 
-        stage('test?') {
+        stage('release?') {
             agent none
             steps {
                 script {
                     try {
                         timeout(time: 60, unit: 'SECONDS') {
                             script {
-                                env.deploy_test = input message: 'Deploy to test?', id: 'deploy_test', parameters: [choice(name: 'Deploy to test', choices: 'no\nyes', description: 'Choose "yes" if you want to deploy to test')]
+                                env.do_release = input message: 'Deploy to test?', id: 'do_release', parameters: [choice(name: 'Deploy to test', choices: 'no\nyes', description: 'Choose "yes" if you want to deploy to test')]
                             }
                         }
                     } catch (ignored) {
                         echo 'Skipping test deployment'
                     }
                 }
+            }
+        }
+
+        stage('release') {
+            agent {
+                docker {
+                    image 'node'
+                    args '-u root'
+                }
+
+            }
+            when {
+                environment name: 'do_release', value: 'yes'
+            }
+            steps {
+                sh "npm install -g bmpr"
+                sh "bmpr patch|xargs git push origin"
             }
         }
 
@@ -146,7 +163,7 @@ pipeline {
 
             }
             when {
-                environment name: 'deploy_test', value: 'yes'
+                environment name: 'do_release', value: 'yes'
             }
 
             environment {
