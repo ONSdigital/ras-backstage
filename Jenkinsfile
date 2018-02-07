@@ -127,7 +127,7 @@ pipeline {
                     try {
                         timeout(time: 60, unit: 'SECONDS') {
                             script {
-                                env.do_release = input message: 'Deploy to test?', id: 'do_release', parameters: [choice(name: 'Deploy to test', choices: 'no\nyes', description: 'Choose "yes" if you want to deploy to test')]
+                                env.do_release = input message: 'Do a release?', id: 'do_release', parameters: [choice(name: 'Deploy to test', choices: 'no\nyes', description: 'Choose "yes" if you want to create a tag')]
                             }
                         }
                     } catch (ignored) {
