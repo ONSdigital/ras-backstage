@@ -7,7 +7,52 @@ pipeline {
 
     stages {
 
+        stage('dev') {
+            agent {
+                docker {
+                    image 'governmentpaas/cf-cli'
+                    args '-u root'
+                }
+            }
 
+            environment {
+                CLOUDFOUNDRY_API = credentials('CLOUDFOUNDRY_API')
+                CF_DOMAIN = credentials('CF_DOMAIN')
+                DEV_SECURITY = credentials('DEV_SECURITY')
+                CF_USER = credentials('CF_USER')
+                JWT_SECRET = credentials('JWT_SECRET')
+            }
+            steps {
+                sh "cf login -a https://${env.CLOUDFOUNDRY_API} --skip-ssl-validation -u ${CF_USER_USR} -p ${CF_USER_PSW} -o rmras -s dev"
+                sh 'cf push --no-start ras-backstage-service-dev'
+                sh 'cf set-env ras-backstage-service-dev ONS_ENV dev'
+                sh "cf set-env ras-backstage-service-dev SECURITY_USER_NAME ${env.DEV_SECURITY_USR}"
+                sh "cf set-env ras-backstage-service-dev SECURITY_USER_PASSWORD ${env.DEV_SECURITY_PSW}"
+                sh "cf set-env ras-backstage-service-dev DJANGO_CLIENT_ID ons@ons.gov"
+                sh "cf set-env ras-backstage-service-dev DJANGO_CLIENT_SECRET password"
+                sh "cf set-env ras-backstage-service-dev JWT_SECRET ${env.JWT_SECRET}"
+
+                sh "cf set-env ras-backstage-service-dev RAS_OAUTH_SERVICE_HOST ras-django-dev.${env.CF_DOMAIN}"
+                sh "cf set-env ras-backstage-service-dev RAS_OAUTH_SERVICE_PORT 80"
+
+                sh "cf set-env ras-backstage-service-dev RAS_SECURE_MESSAGING_SERVICE_HOST ras-secure-messaging-dev.${env.CF_DOMAIN}"
+                sh "cf set-env ras-backstage-service-dev RAS_SECURE_MESSAGING_SERVICE_PORT 80"
+
+                sh "cf set-env ras-backstage-service-dev RM_COLLECTION_EXERCISE_SERVICE_HOST collectionexercisesvc-dev.${env.CF_DOMAIN}"
+                sh "cf set-env ras-backstage-service-dev RM_COLLECTION_EXERCISE_SERVICE_PORT 80"
+
+                sh "cf set-env ras-backstage-service-dev RAS_COLLECTION_INSTRUMENT_SERVICE_HOST ras-collection-instrument-dev.${env.CF_DOMAIN}"
+                sh "cf set-env ras-backstage-service-dev RAS_COLLECTION_INSTRUMENT_SERVICE_PORT 80"
+
+                sh "cf set-env ras-backstage-service-dev RAS_SURVEY_SERVICE_HOST surveysvc-dev.${env.CF_DOMAIN}"
+                sh "cf set-env ras-backstage-service-dev RAS_SURVEY_SERVICE_PORT 80"
+
+                sh "cf set-env ras-backstage-service-dev RM_SAMPLE_SERVICE_HOST samplesvc-dev.${env.CF_DOMAIN}"
+                sh "cf set-env ras-backstage-service-dev RM_SAMPLE_SERVICE_PORT 80"
+
+                sh 'cf start ras-backstage-service-dev'
+            }
+        }
 
         stage('ci?') {
             agent none
@@ -107,9 +152,11 @@ pipeline {
                 environment name: 'do_release', value: 'yes'
             }
             steps {
+                // Prune any local tags created by any other builds
+                sh "git tag -l | xargs git tag -d && git fetch -t"
                 sh "git remote set-url origin https://ons-sdc:${GITHUB_API_KEY}@github.com/ONSdigital/ras-backstage.git"
                 sh "npm install -g bmpr"
-                sh "bmpr patch|xargs echo git push origin"
+                sh "bmpr patch|xargs git push origin"
             }
         }
 
