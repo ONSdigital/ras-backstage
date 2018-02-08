@@ -1,7 +1,5 @@
-import json
 import unittest
 from io import BytesIO
-from urllib.parse import urlencode
 
 import requests_mock
 
