@@ -62,7 +62,12 @@ def sign_in(username, password):
     pprint.pprint(resp_json)
 
     # verify the token
-    decoded_jwt = jwt.decode(resp_json.get("access_token"), algorithms=resp_json.get('alg'), verify=True, key=get_public_key(), audience='ras_backstage')
+    decoded_jwt = jwt.decode(resp_json.get("access_token"),
+                             algorithms=resp_json.get('alg'),
+                             verify=True,
+                             key=get_public_key(),
+                             audience='ras_backstage',
+                             leeway=10)
     pprint.pprint(decoded_jwt)
 
     logger.debug('Successfully retrieved UAA token')
