@@ -7,7 +7,7 @@ from ras_backstage import app
 
 
 url_get_business_party = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/businesses/id/testid'
-url_search_businesses= f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/businesses/search'
+url_search_businesses = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/businesses/search'
 with open('test/test_data/party/business_party.json') as json_data:
     business_party = json.load(json_data)
 url_get_respondent_party = f'{app.config["RAS_PARTY_SERVICE"]}' \
