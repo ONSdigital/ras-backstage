@@ -55,14 +55,8 @@ class SignInV2(Resource):
 
         if current_app.config.get('USE_UAA'):
             logger.info('Retrieving sign-in details')
-
-            logger.info('Retrieving sign-in details')
-            message_json = request.get_json()
-            username = message_json.get('username')
-            password = message_json.get('password')
             oauth2_token = uaa_controller.sign_in(username, password)
             logger.info('Successfully retrieved sign-in details')
-
             return make_response(jsonify({"token": oauth2_token}), 201)
         else:
             #  TODO remove this once UAA fully deployed in all environments
