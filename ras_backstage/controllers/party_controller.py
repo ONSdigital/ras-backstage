@@ -1,3 +1,4 @@
+import json
 import logging
 
 from structlog import wrap_logger
@@ -47,3 +48,16 @@ def get_party_by_ru_ref(ru_ref):
 
     logger.debug('Successfully retrieved reporting unit', ru_ref=ru_ref)
     return response.json()
+
+
+def get_businesses_by_search(query):
+    logger.debug('Retrieving businesses by search query', query=query)
+    url = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/businesses/search'
+    response = request_handler('GET', url, auth=app.config['BASIC_AUTH'], params={"query": query})
+
+    if response.status_code != 200:
+        logger.error('Error retrieving businesses by search query', query=query)
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully retrieved businesses by search query')
+    return json.loads(response.text)
