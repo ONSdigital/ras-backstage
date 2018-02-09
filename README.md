@@ -80,6 +80,7 @@ Environment variables available for configuration are listed below:
 | JWT_SECRET                      | SECRET used to code JWT                            | None
 | DJANGO_CLIENT_ID                | Client ID for OAuth service                        | None
 | DJANGO_CLIENT_SECRET            | Client secret for OAuth service                    | None
+| USE_UAA                         | Switches UAA authentication                        | 1
 
 
 For each external application which frontstage communicates with there are 3 environment variables e.g. for the RM case service:
