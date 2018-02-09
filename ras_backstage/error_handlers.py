@@ -22,7 +22,7 @@ def api_error_method(error):
             "data": error.data
         }
     }
-    logger.error('Error during api call', url=error.url, status_code=error.status_code)
+    logger.error('Error during api call', url=error.url, status=error.status_code)
     return jsonify(error_json), status_code
 
 
