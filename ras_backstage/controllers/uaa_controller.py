@@ -65,7 +65,7 @@ def sign_in(username, password):
 
     try:
         decoded_jwt = jwt.decode(response.json()["access_token"],
-                                 algorithms=resp_json.get('alg'),
+                                 algorithms=response.json().get('alg'),
                                  verify=True,
                                  key=get_public_key(),
                                  audience='ras_backstage',
