@@ -26,5 +26,5 @@ class SearchReportingUnits(Resource):
 
         businesses = party_controller.get_businesses_by_search(query)
 
-        logger.info('Successfully retrieved reporting units by search query')
+        logger.info('Successfully retrieved reporting units by search query', query=query)
         return make_response(jsonify(businesses), 200)
