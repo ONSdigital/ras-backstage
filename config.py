@@ -87,7 +87,7 @@ class Config(object):
     UAA_SERVICE_URL = os.getenv('UAA_SERVICE_URL')
     UAA_CLIENT_ID = os.getenv('UAA_CLIENT_ID')
     UAA_CLIENT_SECRET = os.getenv('UAA_CLIENT_SECRET')
-    USE_UAA = int(os.getenv('USE_UAA'), 0)
+    USE_UAA = int(os.getenv('USE_UAA'), '0')
 
 
 class DevelopmentConfig(Config):
