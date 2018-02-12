@@ -8,12 +8,15 @@ from ras_backstage import app
 
 url_get_business_party = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/businesses/id/testid'
 url_get_reporting_unit = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/parties/type/B/ref/test_ru'
+url_search_businesses = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/businesses/search'
 with open('test/test_data/party/business_party.json') as json_data:
     business_party = json.load(json_data)
 url_get_respondent_party = f'{app.config["RAS_PARTY_SERVICE"]}' \
                            f'party-api/v1/respondents/id/testid'
 with open('test/test_data/party/respondent_party.json') as json_data:
     respondent_party = json.load(json_data)
+with open('test/test_data/party/reporting_unit_search.json') as json_data:
+    business_search = json.load(json_data)
 
 
 class TestParty(unittest.TestCase):

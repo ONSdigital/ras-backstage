@@ -38,7 +38,7 @@ def upload_sample(collection_exercise_id, sample_file, survey_type='B'):
     if response.status_code != 201:
         logger.error('Error uploading sample file',
                      collection_exercise_id=collection_exercise_id,
-                     status_code=response.status_code,
+                     status=response.status_code,
                      survey_type=survey_type)
         raise ApiError(url, response.status_code)
 
