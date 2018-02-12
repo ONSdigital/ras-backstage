@@ -5,6 +5,7 @@ import requests_mock
 
 from ras_backstage import app
 
+
 url_get_survey_by_short_name = f'{app.config["RM_SURVEY_SERVICE"]}surveys/shortname/test'
 url_ces = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
           'collectionexercises/survey/cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87'
@@ -39,7 +40,7 @@ class TestCollectionExercise(unittest.TestCase):
     def test_upload_collection_instrument(self, mock_request):
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_ces, json=self.collection_exercises)
-        mock_request.post(f'{url_upload_collection_instrument}', additional_matcher=self.file_matcher)
+        mock_request.post(url_upload_collection_instrument, additional_matcher=self.file_matcher)
 
         response = self.app.post('/backstage-api/v1/collection-instrument/test/000000', data=dict(
             file=(BytesIO(b'data'), 'test.xlsx')))
