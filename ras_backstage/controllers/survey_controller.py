@@ -1,4 +1,3 @@
-import json
 import logging
 
 from structlog import wrap_logger
@@ -24,7 +23,20 @@ def get_survey_list():
         raise ApiError(url, response.status_code)
 
     logger.debug('Successfully retrieved the survey list')
-    return json.loads(response.text)
+    return response.json()
+
+
+def get_survey_by_id(survey_id):
+    logger.debug('Retrieving survey', survey_id=survey_id)
+    url = f'{app.config["RM_SURVEY_SERVICE"]}surveys/{survey_id}'
+    response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
+
+    if response.status_code != 200:
+        logger.error('Error retrieving survey', survey_id=survey_id)
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully retrieved survey', survey_id=survey_id)
+    return response.json()
 
 
 def get_survey_by_shortname(short_name):
@@ -37,4 +49,4 @@ def get_survey_by_shortname(short_name):
         raise ApiError(url, response.status_code)
 
     logger.debug('Successfully retrieved survey', short_name=short_name)
-    return json.loads(response.text)
+    return response.json()
