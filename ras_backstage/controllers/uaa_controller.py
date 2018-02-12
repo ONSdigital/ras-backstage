@@ -76,4 +76,4 @@ def sign_in(username, password):
         return decoded_jwt
     except KeyError:
         logger.exception("No access_token claim in jwt")
-        raise ApiError(url, status_code=500)
+        raise ApiError(url, status_code=401)
