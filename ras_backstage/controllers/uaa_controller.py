@@ -9,17 +9,16 @@ from ras_backstage import app
 from ras_backstage.common.requests_handler import request_handler
 from ras_backstage.exception.exceptions import ApiError
 
-
 logger = wrap_logger(logging.getLogger(__name__))
 
 
 def get_public_key():
-    # TODO this needs to be done at start up
+    # TODO: this needs to be done at start up
     headers = {
         'Accept': 'application/json',
     }
 
-    public_key_url = '{}{}'.format(app.config['UAA_SERVICE_URL'], '/token_key')
+    public_key_url = f'{app.config["UAA_SERVICE_URL"]}{"/token_key"}'
     response = requests.get(public_key_url, headers=headers)
 
     try:
@@ -38,7 +37,7 @@ def get_public_key():
 
 def sign_in(username, password):
     logger.debug('Retrieving OAuth2 token for sign-in')
-    url = '{}{}'.format(app.config['UAA_SERVICE_URL'], '/oauth/token')
+    url = f'{app.config["UAA_SERVICE_URL"]}{"/oauth/token"}'
 
     data = {
         'grant_type': 'password',
@@ -64,12 +63,15 @@ def sign_in(username, password):
         raise ApiError(url, response.status_code)
 
     try:
-        decoded_jwt = jwt.decode(response.json()["access_token"],
-                                 algorithms=response.json().get('alg'),
-                                 verify=True,
-                                 key=get_public_key(),
-                                 audience='ras_backstage',
-                                 leeway=10)
+        decoded_jwt = jwt.decode(
+            response.json()["access_token"],
+            algorithms=response.json().get('alg'),
+            verify=True,
+            key=get_public_key(),
+            audience='ras_backstage',
+            leeway=10,
+        )
+
         logger.debug('Successfully retrieved UAA token')
         return decoded_jwt
     except KeyError:
