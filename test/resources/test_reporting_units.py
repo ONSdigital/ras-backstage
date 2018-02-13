@@ -36,3 +36,14 @@ class TestReportingUnits(unittest.TestCase):
         json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
+
+    @requests_mock.mock()
+    def test_search_businesses(self, mock_request):
+        mock_request.get(url_search_businesses, json=business_search)
+        search_url = "/backstage-api/v1/reporting-unit/search?query=test"
+
+        response = self.app.get(search_url)
+        response_data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response_data), 1)

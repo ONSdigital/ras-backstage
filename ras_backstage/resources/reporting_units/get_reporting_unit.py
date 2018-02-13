@@ -1,7 +1,9 @@
+from datetime import datetime, timezone
 import logging
 
 from flask import jsonify, make_response
 from flask_restplus import Resource
+from iso8601 import parse_date
 from structlog import wrap_logger
 
 from ras_backstage import reporting_unit_api
@@ -29,6 +31,8 @@ class GetReportingUnit(Resource):
         for survey in surveys:
             ces = collection_exercise_controller.get_collection_exercises_by_survey(survey['id'])
             survey['collection_exercises'] = [ce for ce in ces if ce['id'] in case_collection_exercise_ids]
+            now = datetime.now(timezone.utc)
+            survey['collection_exercises'] = [ce for ce in survey['collection_exercises'] if parse_date(ce['scheduledStartDateTime']) < now]
 
             # Add collection exercise details
             for exercise in survey['collection_exercises']:
