@@ -8,7 +8,8 @@ from structlog import wrap_logger
 
 from ras_backstage import reporting_unit_api
 from ras_backstage.common.filters import get_case_group_status_by_collection_exercise
-from ras_backstage.controllers import case_controller, collection_exercise_controller, party_controller, survey_controller
+from ras_backstage.controllers import (case_controller, collection_exercise_controller, party_controller,
+                                       survey_controller)
 
 
 logger = wrap_logger(logging.getLogger(__name__))
@@ -32,7 +33,8 @@ class GetReportingUnit(Resource):
             ces = collection_exercise_controller.get_collection_exercises_by_survey(survey['id'])
             survey['collection_exercises'] = [ce for ce in ces if ce['id'] in case_collection_exercise_ids]
             now = datetime.now(timezone.utc)
-            survey['collection_exercises'] = [ce for ce in survey['collection_exercises'] if parse_date(ce['scheduledStartDateTime']) < now]
+            survey['collection_exercises'] = [ce for ce in survey['collection_exercises']
+                                              if parse_date(ce['scheduledStartDateTime']) < now]
 
             # Add collection exercise details
             for exercise in survey['collection_exercises']:
