@@ -22,18 +22,30 @@ class GetReportingUnit(Resource):
         reporting_unit = party_controller.get_party_by_ru_ref(ru_ref)
 
         # Retrieve surveys for the reporting unit
-        enrolments = [respondent['enrolments'] for respondent in reporting_unit.get('associations')]
-        survey_ids = [enrolment['surveyId'] for enrolment in enrolments]
-        surveys = [survey_controller.get_survey_by_id(survey_id) for survey_id in survey_ids]
+        survey_ids = []
+        for respondent in reporting_unit.get('associations'):
+            for enrolment in respondent.get('enrolments'):
+                survey_ids.append(enrolment.get('surveyId'))
+        unique_survey_ids = set(survey_ids)
+        surveys = [survey_controller.get_survey_by_id(survey_id) for survey_id in unique_survey_ids]
 
         # Retrieve cases for the reporting unit
-        cases = case_controller.get_case_groups_by_business_party_id(reporting_unit['id'])
+        cases = case_controller.get_cases_by_business_party_id(reporting_unit['id'])
+        case_collection_exercise_ids = [case['caseGroup']['collectionExerciseId'] for case in cases]
 
-        # Create required response data
         for survey in surveys:
-            survey['collection_exercises'] = collection_exercise_controller.get_collection_exercises_by_survey(survey['id'])
-            for exercise in survey['collection_exercise']:
-                exercise['status'] = get_case_group_status_by_collection_exercise(cases, exercise['id'])
+            survey_collection_exercises = []
+            ces = collection_exercise_controller.get_collection_exercises_by_survey(survey['id'])
+            for ce in ces:
+                survey_collection_exercises.append(ce)
+            survey['collection_exercises'] = [ce for ce in survey_collection_exercises if ce['id'] in case_collection_exercise_ids]
+
+        for survey in surveys:
+            for exercise in survey['collection_exercises']:
+                exercise['responseStatus'] = get_case_group_status_by_collection_exercise(cases, exercise['id'])
+                reporting_unit_ce = party_controller.get_party_by_business_id(reporting_unit['id'], exercise['id'])
+                exercise['companyName'] = reporting_unit_ce['name']
+                exercise['companyRegion'] = reporting_unit_ce['region']
 
         response_json = {
             "reporting_unit": reporting_unit,
