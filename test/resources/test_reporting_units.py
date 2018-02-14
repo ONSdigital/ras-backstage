@@ -69,6 +69,20 @@ class TestReportingUnits(unittest.TestCase):
                          'Bolts and Ratchets Ltd')
 
     @requests_mock.mock()
+    def test_get_reporting_unit_no_cases(self, mock_request):
+        mock_request.get(url_get_party_by_ru_ref, json=party)
+        mock_request.get(url_get_survey_by_id, json=survey_list[0])
+        mock_request.get(url_get_cases_by_business_id, status_code=404)
+        mock_request.get(url_get_collection_exercise_by_survey, json=[collection_exercise])
+        mock_request.get(url_get_party_by_business_id, json=party)
+
+        response = self.app.get("/backstage-api/v1/reporting-unit/12345")
+        response_data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_data['surveys'][0]['surveyRef'], "221")
+
+    @requests_mock.mock()
     def test_get_reporting_unit_party_ru_fail(self, mock_request):
         mock_request.get(url_get_party_by_ru_ref, status_code=500)
 

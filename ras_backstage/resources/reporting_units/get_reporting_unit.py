@@ -31,10 +31,10 @@ class GetReportingUnit(Resource):
 
         for survey in surveys:
             ces = collection_exercise_controller.get_collection_exercises_by_survey(survey['id'])
-            survey['collection_exercises'] = [ce for ce in ces if ce['id'] in case_collection_exercise_ids]
             now = datetime.now(timezone.utc)
-            survey['collection_exercises'] = [ce for ce in survey['collection_exercises']
-                                              if parse_date(ce['scheduledStartDateTime']) < now]
+            survey['collection_exercises'] = [ce for ce in ces
+                                              if ce['id'] in case_collection_exercise_ids
+                                              and parse_date(ce['scheduledStartDateTime']) < now]
 
             # Add collection exercise details
             for exercise in survey['collection_exercises']:
