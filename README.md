@@ -104,3 +104,6 @@ The services these variables exist for are listed below with the beginnings of t
 | Party service                   | RAS_PARTY_SERVICE           | https://github.com/ONSdigital/ras-party
 | Secure message service          | RAS_SECURE_MESSAGE_SERVICE  | https://github.com/ONSdigital/ras-secure-message
 | Oauth service                   | RAS_OAUTH_SERVICE           | https://github.com/ONSdigital/django-oauth2-test
+
+## Deployments
+The app is deployed automatically via jenkins on a commit to master. See [Jenkinsfile](Jenkinsfile) for the configuration.
