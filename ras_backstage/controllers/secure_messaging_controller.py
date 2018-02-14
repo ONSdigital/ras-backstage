@@ -11,17 +11,17 @@ from ras_backstage.exception.exceptions import ApiError
 logger = wrap_logger(logging.getLogger(__name__))
 
 
-def get_messages_list(encoded_jwt, label="", limit=1000):
-    logger.debug('Retrieving messages list', label=label)
+def get_messages_list(encoded_jwt, message_args):
+    logger.debug('Retrieving messages list', label=message_args.get('label'))
     url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'messages')
     headers = {"Authorization": encoded_jwt}
-    response = request_handler('GET', url, headers=headers, params={"label": label, "limit": limit})
+    response = request_handler('GET', url, headers=headers, params=message_args)
 
     if response.status_code != 200:
-        logger.error('Error retrieving the messages list', label=label)
+        logger.error('Error retrieving the messages list', label=message_args.get('label'))
         raise ApiError(url, response.status_code)
 
-    logger.debug('Successfully retrieved the messages list', label=label)
+    logger.debug('Successfully retrieved the messages list', label=message_args.get('label'))
     return json.loads(response.text)
 
 

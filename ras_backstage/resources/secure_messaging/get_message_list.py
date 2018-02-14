@@ -25,11 +25,15 @@ class GetMessagesList(Resource):
     @secure_messaging_api.header('Authorization',
                                  'JWT to pass to secure messaging service', required=True)
     def get(encoded_jwt):
-        label = request.args.get('label')
-        limit = request.args.get('limit')
-        logger.info('Retrieving message list', label=label)
+        message_args = {
+            'label': request.args.get('label'),
+            'limit': request.args.get('limit', 1000),
+            'survey': request.args.get('survey')
 
-        messages = secure_messaging_controller.get_messages_list(encoded_jwt, label, limit)
+        }
+        logger.info('Retrieving message list', label=message_args.get('label'))
 
-        logger.info('Successfully retrieved message list', label=label)
+        messages = secure_messaging_controller.get_messages_list(encoded_jwt, message_args)
+
+        logger.info('Successfully retrieved message list', label=message_args.get('label'))
         return make_response(jsonify(messages), 200)

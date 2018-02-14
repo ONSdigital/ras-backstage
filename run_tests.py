@@ -1,7 +1,9 @@
 import os
+import sys
 
 import pytest
 
 if __name__ == "__main__":
     os.environ['APP_SETTINGS'] = 'TestingConfig'
-    pytest.main(['--cov-report', 'term-missing', '--cov', 'ras_backstage'])
+    exitcode = pytest.main(['--cov-report', 'term-missing', '--cov', 'ras_backstage'])
+    sys.exit(exitcode)
