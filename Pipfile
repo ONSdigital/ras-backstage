@@ -20,6 +20,7 @@ flask-httpauth = "==3.2.3"
 pyyaml = "==3.12"
 flask-restplus = "==0.10.1"
 cryptography = "==2.1.4"
+"iso8601" = "==0.1.12"
 
 
 [dev-packages]

@@ -11,10 +11,11 @@ from ras_backstage.exception.exceptions import ApiError
 logger = wrap_logger(logging.getLogger(__name__))
 
 
-def get_party_by_business_id(party_id):
+def get_party_by_business_id(party_id, collection_exercise_id=None):
     logger.debug('Retrieving business party', party_id=party_id)
     url = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/businesses/id/{party_id}'
-    response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
+    params = {"collection_exercise_id": collection_exercise_id, "verbose": True}
+    response = request_handler('GET', url, params=params, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:
         logger.error('Error retrieving business party', party_id=party_id)
