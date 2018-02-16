@@ -26,6 +26,8 @@ class GetReportingUnit(Resource):
 
         surveys = get_surveys_for_reporting_unit(reporting_unit)
 
+        respondents_for_survey = get_respondents_for_reporting_unit(reporting_unit)
+
         cases = case_controller.get_cases_by_business_party_id(reporting_unit['id'])
         case_collection_exercise_ids = [case['caseGroup']['collectionExerciseId'] for case in cases]
 
@@ -35,6 +37,9 @@ class GetReportingUnit(Resource):
             survey['collection_exercises'] = [ce for ce in ces
                                               if ce['id'] in case_collection_exercise_ids
                                               and parse_date(ce['scheduledStartDateTime']) < now]
+
+            respondents = respondents_for_survey.get(survey.get('id'))
+            survey['respondents'] = respondents if respondents else []
 
             # Add collection exercise details
             for exercise in survey['collection_exercises']:
@@ -58,3 +63,17 @@ def get_surveys_for_reporting_unit(reporting_unit):
             survey_ids.append(enrolment.get('surveyId'))
     unique_survey_ids = set(survey_ids)
     return [survey_controller.get_survey_by_id(survey_id) for survey_id in unique_survey_ids]
+
+
+def get_respondents_for_reporting_unit(reporting_unit):
+    respondents_per_survey = dict()
+    for respondent in reporting_unit.get('associations'):
+        respondent_details = party_controller.get_party_by_respondent_id(respondent.get('partyId'))
+        respondent_details.pop('associations', None)
+        for enrolment in respondent.get('enrolments'):
+            respondent_details['enrolmentStatus'] = enrolment.get('enrolmentStatus')
+            if enrolment.get('surveyId') in respondents_per_survey:
+                respondents_per_survey[enrolment.get('surveyId')].append(respondent_details)
+            else:
+                respondents_per_survey[enrolment.get('surveyId')] = [respondent_details]
+    return respondents_per_survey
