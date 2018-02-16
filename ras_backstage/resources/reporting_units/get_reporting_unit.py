@@ -22,31 +22,57 @@ class GetReportingUnit(Resource):
     def get(ru_ref):
         logger.info('Retrieving reporting unit details', ru_ref=ru_ref)
 
+        # Get all collection exercises for ru_ref
         reporting_unit = party_controller.get_party_by_ru_ref(ru_ref)
-
-        surveys = get_surveys_for_reporting_unit(reporting_unit)
-
-        respondents_for_survey = get_respondents_for_reporting_unit(reporting_unit)
-
         cases = case_controller.get_cases_by_business_party_id(reporting_unit['id'])
-        case_collection_exercise_ids = [case['caseGroup']['collectionExerciseId'] for case in cases]
+        collection_exercise_ids = [case['caseGroup']['collectionExerciseId']
+                                   for case in cases]
+        all_collection_exercises = [collection_exercise_controller.get_collection_exercise_by_id(collection_exercise_id)
+                                    for collection_exercise_id in collection_exercise_ids]
 
+        # We only want collection exercises which are live
+        now = datetime.now(timezone.utc)
+        collection_exercises = [collection_exercise
+                                for collection_exercise in all_collection_exercises
+                                if parse_date(collection_exercise['scheduledStartDateTime']) < now]
+
+        # Add extra collection exercise details
+        for exercise in collection_exercises:
+            exercise['responseStatus'] = get_case_group_status_by_collection_exercise(cases, exercise['id'])
+            reporting_unit_ce = party_controller.get_party_by_business_id(reporting_unit['id'], exercise['id'])
+            exercise['companyName'] = reporting_unit_ce['name']
+            exercise['companyRegion'] = reporting_unit_ce['region']
+
+        # Get all surveys for gathered collection exercises
+        survey_ids = {collection_exercise['surveyId']
+                      for collection_exercise in collection_exercises}
+        surveys = [survey_controller.get_survey_by_id(survey_id)
+                   for survey_id in survey_ids]
+
+        # Link collection exercises to surveys
         for survey in surveys:
-            ces = collection_exercise_controller.get_collection_exercises_by_survey(survey['id'])
-            now = datetime.now(timezone.utc)
-            survey['collection_exercises'] = [ce for ce in ces
-                                              if ce['id'] in case_collection_exercise_ids
-                                              and parse_date(ce['scheduledStartDateTime']) < now]
+            survey['collection_exercises'] = [collection_exercise
+                                              for collection_exercise in collection_exercises
+                                              if survey['id'] == collection_exercise['surveyId']]
+            survey['respondents'] = []
 
-            respondents = respondents_for_survey.get(survey.get('id'))
-            survey['respondents'] = respondents if respondents else []
+        # Get respondents for ru_ref
+        respondents = [party_controller.get_party_by_respondent_id(respondent['partyId'])
+                       for respondent in reporting_unit.get('associations')]
 
-            # Add collection exercise details
-            for exercise in survey['collection_exercises']:
-                exercise['responseStatus'] = get_case_group_status_by_collection_exercise(cases, exercise['id'])
-                reporting_unit_ce = party_controller.get_party_by_business_id(reporting_unit['id'], exercise['id'])
-                exercise['companyName'] = reporting_unit_ce['name']
-                exercise['companyRegion'] = reporting_unit_ce['region']
+        # Link respondents and surveys
+        for respondent in respondents:
+            respondent_survey_id_and_status = []
+            for association in respondent.get('associations'):
+                for enrolment in association.get('enrolments'):
+                    respondent_survey_id_and_status.append(enrolment['surveyId'], )
+            for survey in surveys:
+                if survey['id'] in respondent_survey_ids:
+                    survey['respondents'].append(respondent)
+            respondent.pop('associations', None)
+
+
+
 
         response_json = {
             "reporting_unit": reporting_unit,
