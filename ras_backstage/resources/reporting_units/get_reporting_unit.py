@@ -10,7 +10,7 @@ from ras_backstage import reporting_unit_api
 from ras_backstage.common.filters import get_case_group_status_by_collection_exercise
 from ras_backstage.controllers import (case_controller, collection_exercise_controller, party_controller,
                                        survey_controller)
-
+from ras_backstage.controllers import iac_controller
 
 logger = wrap_logger(logging.getLogger(__name__))
 
@@ -41,12 +41,16 @@ class GetReportingUnit(Resource):
             respondents = respondents_for_survey.get(survey.get('id'))
             survey['respondents'] = respondents if respondents else []
 
+            ces_for_survey = list()
             # Add collection exercise details
             for exercise in survey['collection_exercises']:
                 exercise['responseStatus'] = get_case_group_status_by_collection_exercise(cases, exercise['id'])
                 reporting_unit_ce = party_controller.get_party_by_business_id(reporting_unit['id'], exercise['id'])
                 exercise['companyName'] = reporting_unit_ce['name']
                 exercise['companyRegion'] = reporting_unit_ce['region']
+                ces_for_survey.append(exercise.get('id'))
+
+            survey['activeIacCode'] = get_latest_activeiac_code(cases, ces_for_survey)
 
         response_json = {
             "reporting_unit": reporting_unit,
@@ -77,3 +81,17 @@ def get_respondents_for_reporting_unit(reporting_unit):
             else:
                 respondents_per_survey[enrolment.get('surveyId')] = [respondent_details]
     return respondents_per_survey
+
+
+def get_latest_activeiac_code(cases, ces_for_survey):
+    cases_for_survey = []
+    for case in cases:
+        if case.get('caseGroup', {}).get('collectionExerciseId') in ces_for_survey:
+            cases_for_survey.append(case)
+
+    cases_for_survey = sorted(cases_for_survey, key=lambda c: c['createdDateTime'], reverse=True)
+
+    for case in cases_for_survey:
+        iac_details = iac_controller.get_iac(case.get('iac'))
+        if iac_details.get('active'):
+            return case.get('iac')
