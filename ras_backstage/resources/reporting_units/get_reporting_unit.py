@@ -32,6 +32,7 @@ class GetReportingUnit(Resource):
                                 for collection_exercise in collection_exercises
                                 if parse_date(collection_exercise['scheduledStartDateTime']) < now]
 
+        # Add extra collection exercise data using data from case service
         cases = case_controller.get_cases_by_business_party_id(reporting_unit['id'])
         add_collection_exercise_details(collection_exercises, reporting_unit, cases)
 
