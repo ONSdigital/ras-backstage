@@ -25,14 +25,13 @@ class GetReportingUnit(Resource):
         # Get all collection exercises for ru_ref
         reporting_unit = party_controller.get_party_by_ru_ref(ru_ref)
         collection_exercises = collection_exercise_controller.get_collection_exercises_by_party_id(reporting_unit['id'])
-
         # We only want collection exercises which are live
         now = datetime.now(timezone.utc)
         collection_exercises = [collection_exercise
                                 for collection_exercise in collection_exercises
                                 if parse_date(collection_exercise['scheduledStartDateTime']) < now]
 
-        # Add extra collection exercise data using data from case service
+        # Add extra collection exercise details using data from case service
         cases = case_controller.get_cases_by_business_party_id(reporting_unit['id'])
         add_collection_exercise_details(collection_exercises, reporting_unit, cases)
 
@@ -42,16 +41,16 @@ class GetReportingUnit(Resource):
         surveys = [survey_controller.get_survey_by_id(survey_id)
                    for survey_id in survey_ids]
 
-        # Link collection exercises to surveys
+        # Get all respondents for the given ru
+        respondents = [party_controller.get_party_by_respondent_id(respondent['partyId'])
+                       for respondent in reporting_unit.get('associations')]
+
+        # Link collection exercises and respondents to surveys
         for survey in surveys:
             survey['collection_exercises'] = [collection_exercise
                                               for collection_exercise in collection_exercises
                                               if survey['id'] == collection_exercise['surveyId']]
-
-        # Get all respondents for the given ru and link to the appropriate surveys
-        respondents = [party_controller.get_party_by_respondent_id(respondent['partyId'])
-                       for respondent in reporting_unit.get('associations')]
-        link_respondents_to_surveys(respondents, surveys)
+            link_respondents_to_surveys(respondents, survey)
 
         response_json = {
             "reporting_unit": reporting_unit,
@@ -69,12 +68,11 @@ def add_collection_exercise_details(collection_exercises, reporting_unit, cases)
         exercise['companyRegion'] = reporting_unit_ce['region']
 
 
-def link_respondents_to_surveys(respondents, surveys):
-    for survey in surveys:
-        survey['respondents'] = []
-        for respondent in respondents:
-            for association in respondent.get('associations'):
-                for enrolment in association.get('enrolments'):
-                    respondent['enrolmentStatus'] = enrolment.get('enrolmentStatus')
-                    if survey['id'] == enrolment['surveyId'] and respondent not in survey['respondents']:
-                        survey['respondents'].append(respondent)
+def link_respondents_to_surveys(respondents, survey):
+    survey['respondents'] = []
+    for respondent in respondents:
+        for association in respondent.get('associations'):
+            for enrolment in association.get('enrolments'):
+                respondent['enrolmentStatus'] = enrolment.get('enrolmentStatus')
+                if survey['id'] == enrolment['surveyId'] and respondent not in survey['respondents']:
+                    survey['respondents'].append(respondent)
