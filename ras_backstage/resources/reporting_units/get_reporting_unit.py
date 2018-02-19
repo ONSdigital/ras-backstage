@@ -50,7 +50,7 @@ class GetReportingUnit(Resource):
             survey['collection_exercises'] = [collection_exercise
                                               for collection_exercise in collection_exercises
                                               if survey['id'] == collection_exercise['surveyId']]
-            link_respondents_to_surveys(respondents, survey)
+            link_respondents_to_survey(respondents, survey)
 
         response_json = {
             "reporting_unit": reporting_unit,
@@ -68,7 +68,7 @@ def add_collection_exercise_details(collection_exercises, reporting_unit, cases)
         exercise['companyRegion'] = reporting_unit_ce['region']
 
 
-def link_respondents_to_surveys(respondents, survey):
+def link_respondents_to_survey(respondents, survey):
     survey['respondents'] = []
     for respondent in respondents:
         for association in respondent.get('associations'):
