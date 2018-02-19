@@ -62,17 +62,13 @@ class GetReportingUnit(Resource):
 
         # Link respondents and surveys
         for respondent in respondents:
-            respondent_survey_id_and_status = []
             for association in respondent.get('associations'):
+                respondent.pop('associations', None)
                 for enrolment in association.get('enrolments'):
-                    respondent_survey_id_and_status.append(enrolment['surveyId'], )
-            for survey in surveys:
-                if survey['id'] in respondent_survey_ids:
-                    survey['respondents'].append(respondent)
-            respondent.pop('associations', None)
-
-
-
+                    respondent['enrolmentStatus'] = enrolment.get('enrolmentStatus')
+                    for survey in surveys:
+                        if survey['id'] == enrolment['surveyId'] and respondent not in survey['respondents']:
+                            survey['respondents'].append(respondent)
 
         response_json = {
             "reporting_unit": reporting_unit,
