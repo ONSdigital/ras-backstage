@@ -74,7 +74,6 @@ def link_respondents_to_surveys(respondents, surveys):
         survey['respondents'] = []
         for respondent in respondents:
             for association in respondent.get('associations'):
-                respondent.pop('associations', None)
                 for enrolment in association.get('enrolments'):
                     respondent['enrolmentStatus'] = enrolment.get('enrolmentStatus')
                     if survey['id'] == enrolment['surveyId'] and respondent not in survey['respondents']:
