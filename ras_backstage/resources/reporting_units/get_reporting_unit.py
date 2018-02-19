@@ -24,11 +24,7 @@ class GetReportingUnit(Resource):
 
         # Get all collection exercises for ru_ref
         reporting_unit = party_controller.get_party_by_ru_ref(ru_ref)
-        cases = case_controller.get_cases_by_business_party_id(reporting_unit['id'])
-        collection_exercise_ids = [case['caseGroup']['collectionExerciseId']
-                                   for case in cases]
-        all_collection_exercises = [collection_exercise_controller.get_collection_exercise_by_id(collection_exercise_id)
-                                    for collection_exercise_id in collection_exercise_ids]
+        all_collection_exercises = collection_exercise_controller.get_collection_exercises_by_party_id(reporting_unit['id'])
 
         # We only want collection exercises which are live
         now = datetime.now(timezone.utc)
@@ -36,12 +32,8 @@ class GetReportingUnit(Resource):
                                 for collection_exercise in all_collection_exercises
                                 if parse_date(collection_exercise['scheduledStartDateTime']) < now]
 
-        # Add extra collection exercise details
-        for exercise in collection_exercises:
-            exercise['responseStatus'] = get_case_group_status_by_collection_exercise(cases, exercise['id'])
-            reporting_unit_ce = party_controller.get_party_by_business_id(reporting_unit['id'], exercise['id'])
-            exercise['companyName'] = reporting_unit_ce['name']
-            exercise['companyRegion'] = reporting_unit_ce['region']
+        cases = case_controller.get_cases_by_business_party_id(reporting_unit['id'])
+        add_collection_exercise_details(collection_exercises, reporting_unit, cases)
 
         # Get all surveys for gathered collection exercises
         survey_ids = {collection_exercise['surveyId']
@@ -54,21 +46,11 @@ class GetReportingUnit(Resource):
             survey['collection_exercises'] = [collection_exercise
                                               for collection_exercise in collection_exercises
                                               if survey['id'] == collection_exercise['surveyId']]
-            survey['respondents'] = []
 
-        # Get respondents for ru_ref
+        # Get all respondents for the given ru and link to the appropriate surveys
         respondents = [party_controller.get_party_by_respondent_id(respondent['partyId'])
                        for respondent in reporting_unit.get('associations')]
-
-        # Link respondents and surveys
-        for respondent in respondents:
-            for association in respondent.get('associations'):
-                respondent.pop('associations', None)
-                for enrolment in association.get('enrolments'):
-                    respondent['enrolmentStatus'] = enrolment.get('enrolmentStatus')
-                    for survey in surveys:
-                        if survey['id'] == enrolment['surveyId'] and respondent not in survey['respondents']:
-                            survey['respondents'].append(respondent)
+        link_respondents_to_surveys(respondents, surveys)
 
         response_json = {
             "reporting_unit": reporting_unit,
@@ -78,24 +60,21 @@ class GetReportingUnit(Resource):
         return make_response(jsonify(response_json), 200)
 
 
-def get_surveys_for_reporting_unit(reporting_unit):
-    survey_ids = []
-    for respondent in reporting_unit.get('associations'):
-        for enrolment in respondent.get('enrolments'):
-            survey_ids.append(enrolment.get('surveyId'))
-    unique_survey_ids = set(survey_ids)
-    return [survey_controller.get_survey_by_id(survey_id) for survey_id in unique_survey_ids]
+def add_collection_exercise_details(collection_exercises, reporting_unit, cases):
+    for exercise in collection_exercises:
+        exercise['responseStatus'] = get_case_group_status_by_collection_exercise(cases, exercise['id'])
+        reporting_unit_ce = party_controller.get_party_by_business_id(reporting_unit['id'], exercise['id'])
+        exercise['companyName'] = reporting_unit_ce['name']
+        exercise['companyRegion'] = reporting_unit_ce['region']
 
 
-def get_respondents_for_reporting_unit(reporting_unit):
-    respondents_per_survey = dict()
-    for respondent in reporting_unit.get('associations'):
-        respondent_details = party_controller.get_party_by_respondent_id(respondent.get('partyId'))
-        respondent_details.pop('associations', None)
-        for enrolment in respondent.get('enrolments'):
-            respondent_details['enrolmentStatus'] = enrolment.get('enrolmentStatus')
-            if enrolment.get('surveyId') in respondents_per_survey:
-                respondents_per_survey[enrolment.get('surveyId')].append(respondent_details)
-            else:
-                respondents_per_survey[enrolment.get('surveyId')] = [respondent_details]
-    return respondents_per_survey
+def link_respondents_to_surveys(respondents, surveys):
+    for survey in surveys:
+        survey['respondents'] = []
+        for respondent in respondents:
+            for association in respondent.get('associations'):
+                respondent.pop('associations', None)
+                for enrolment in association.get('enrolments'):
+                    respondent['enrolmentStatus'] = enrolment.get('enrolmentStatus')
+                    if survey['id'] == enrolment['surveyId'] and respondent not in survey['respondents']:
+                        survey['respondents'].append(respondent)
