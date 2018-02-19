@@ -24,12 +24,12 @@ class GetReportingUnit(Resource):
 
         # Get all collection exercises for ru_ref
         reporting_unit = party_controller.get_party_by_ru_ref(ru_ref)
-        all_collection_exercises = collection_exercise_controller.get_collection_exercises_by_party_id(reporting_unit['id'])
+        collection_exercises = collection_exercise_controller.get_collection_exercises_by_party_id(reporting_unit['id'])
 
         # We only want collection exercises which are live
         now = datetime.now(timezone.utc)
         collection_exercises = [collection_exercise
-                                for collection_exercise in all_collection_exercises
+                                for collection_exercise in collection_exercises
                                 if parse_date(collection_exercise['scheduledStartDateTime']) < now]
 
         cases = case_controller.get_cases_by_business_party_id(reporting_unit['id'])
