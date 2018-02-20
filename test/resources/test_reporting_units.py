@@ -185,3 +185,19 @@ class TestReportingUnits(unittest.TestCase):
 
         self.assertEqual(response.status_code, 500)
         self.assertEqual(response_data['error']['status_code'], 500)
+
+    @requests_mock.mock()
+    def test_get_reporting_unit_iac_fail(self, mock_request):
+        mock_request.get(url_get_party_by_ru_ref, json=party_business)
+        mock_request.get(url_get_collection_exercises_by_party, json=collection_exercise_list)
+        mock_request.get(url_get_cases_by_business_id, json=case_list)
+        mock_request.get(url_get_party_by_business_id, json=party_business)
+        mock_request.get(url_get_survey_by_id, json=survey_list[0])
+        mock_request.get(url_get_party_by_respondent_id, json=party_respondent)
+        mock_request.get(url_get_iac_by_code, status_code=500)
+
+        response = self.app.get("/backstage-api/v1/reporting-unit/12345")
+        response_data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response_data['error']['status_code'], 500)

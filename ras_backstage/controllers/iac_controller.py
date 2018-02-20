@@ -11,13 +11,13 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 
 def get_iac(iac_code):
-    logger.debug('Retrieving iac', iac_code=iac_code)
+    logger.debug('Retrieving iac')
     url = f'{app.config["RM_IAC_SERVICE"]}iacs/{iac_code}'
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:
-        logger.error('Error retrieving iac', iac_code=iac_code)
+        logger.error('Error retrieving iac')
         raise ApiError(url, response.status_code)
 
-    logger.debug('Successfully retrieved iac', iac_code=iac_code)
+    logger.debug('Successfully retrieved iac')
     return response.json()
