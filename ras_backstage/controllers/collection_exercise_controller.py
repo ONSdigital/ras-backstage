@@ -116,7 +116,7 @@ def link_sample_summary_to_collection_exercise(collection_exercise_id, sample_su
 
 def execute_collection_exercise(collection_exercise_id):
     logger.debug('Executing collection exercise', collection_exercise_id=collection_exercise_id)
-    url = f'{app.config['RM_COLLECTION_EXERCISE_SERVICE']}collectionexerciseexecution/{collection_exercise_id}'
+    url = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}collectionexerciseexecution/{collection_exercise_id}'
     response = request_handler('POST', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code == 404:
