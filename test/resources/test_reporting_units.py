@@ -32,6 +32,9 @@ url_get_collection_exercise_by_survey = f'{app.config["RM_COLLECTION_EXERCISE_SE
                                         f'collectionexercises/survey/cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87'
 with open('test/test_data/collection_exercise/collection_exercise.json') as json_data:
     collection_exercise = json.load(json_data)
+url_get_iac_by_code = f'{app.config["RM_IAC_SERVICE"]}iacs/jkbvyklkwj88'
+with open('test/test_data/iac_details.json') as json_data:
+    iac_details = json.load(json_data)
 
 
 class TestReportingUnits(unittest.TestCase):
@@ -68,6 +71,7 @@ class TestReportingUnits(unittest.TestCase):
         mock_request.get(url_get_party_by_business_id, json=party_business)
         mock_request.get(url_get_survey_by_id, json=survey_list[0])
         mock_request.get(url_get_party_by_respondent_id, json=party_respondent)
+        mock_request.get(url_get_iac_by_code, json=iac_details)
 
         response = self.app.get("/backstage-api/v1/reporting-unit/12345")
         response_data = json.loads(response.data)
