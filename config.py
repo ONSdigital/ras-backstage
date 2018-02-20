@@ -90,6 +90,13 @@ class Config(object):
                                              RM_SAMPLE_SERVICE_HOST,
                                              RM_SAMPLE_SERVICE_PORT)
 
+    RM_IAC_SERVICE_HOST = os.getenv('RM_IAC_SERVICE_HOST', 'localhost')
+    RM_IAC_SERVICE_PORT = os.getenv('RM_IAC_SERVICE_PORT', 8121)
+    RM_IAC_SERVICE_PROTOCOL = os.getenv('RM_IAC_SERVICE_PROTOCOL', 'http')
+    RM_IAC_SERVICE = '{}://{}:{}/'.format(RM_IAC_SERVICE_PROTOCOL,
+                                          RM_IAC_SERVICE_HOST,
+                                          RM_IAC_SERVICE_PORT)
+
     UAA_SERVICE_URL = os.getenv('UAA_SERVICE_URL')
     UAA_CLIENT_ID = os.getenv('UAA_CLIENT_ID')
     UAA_CLIENT_SECRET = os.getenv('UAA_CLIENT_SECRET')

@@ -9,8 +9,7 @@ from structlog import wrap_logger
 from ras_backstage import reporting_unit_api
 from ras_backstage.common.filters import get_case_group_status_by_collection_exercise
 from ras_backstage.controllers import (case_controller, collection_exercise_controller, party_controller,
-                                       survey_controller)
-
+                                       survey_controller, iac_controller)
 
 logger = wrap_logger(logging.getLogger(__name__))
 
@@ -51,6 +50,7 @@ class GetReportingUnit(Resource):
                                               for collection_exercise in collection_exercises
                                               if survey['id'] == collection_exercise['surveyId']]
             link_respondents_to_survey(respondents, survey)
+            survey['activeIacCode'] = get_latest_active_iac_code(survey['id'], cases, collection_exercises)
 
         response_json = {
             "reporting_unit": reporting_unit,
@@ -76,3 +76,20 @@ def link_respondents_to_survey(respondents, survey):
                 respondent['enrolmentStatus'] = enrolment.get('enrolmentStatus')
                 if survey['id'] == enrolment['surveyId'] and respondent not in survey['respondents']:
                     survey['respondents'].append(respondent)
+
+
+def get_latest_active_iac_code(survey_id, cases, ces_for_survey):
+    cases_for_survey = []
+
+    ces_ids = [ce['id'] for ce in ces_for_survey if survey_id == ce['surveyId']]
+
+    for case in cases:
+        if case.get('caseGroup', {}).get('collectionExerciseId') in ces_ids:
+            cases_for_survey.append(case)
+
+    cases_for_survey = sorted(cases_for_survey, key=lambda c: c['createdDateTime'], reverse=True)
+
+    for case in cases_for_survey:
+        iac_details = iac_controller.get_iac(case.get('iac'))
+        if iac_details.get('active'):
+            return case.get('iac')
