@@ -112,3 +112,18 @@ def link_sample_summary_to_collection_exercise(collection_exercise_id, sample_su
                  collection_exercise_id=collection_exercise_id,
                  sample_summary_id=sample_summary_id)
     return response.json()
+
+
+def execute_collection_exercise(collection_exercise_id):
+    logger.debug('Executing collection exercise', collection_exercise_id=collection_exercise_id)
+    url = f'{app.config['RM_COLLECTION_EXERCISE_SERVICE']}collectionexerciseexecution/{collection_exercise_id}'
+    response = request_handler('POST', url, auth=app.config['BASIC_AUTH'])
+
+    if response.status_code == 404:
+        logger.error('Error retrieving collection exercise', collection_exercise_id=collection_exercise_id)
+        raise ApiError(url, response.status_code)
+    if response.status_code not in (200, 201, 202):
+        logger.error('Error executing collection exercise', collection_exercise_id=collection_exercise_id)
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully executed collection exercise', collection_exercise_id=collection_exercise_id)
