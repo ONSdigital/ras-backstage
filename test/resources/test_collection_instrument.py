@@ -99,7 +99,7 @@ class TestCollectionExercise(unittest.TestCase):
 
     @requests_mock.mock()
     def test_link_collection_instrument_fail(self, mock_request):
-        mock_request.post(url_link_collection_instrument, statu_code=500)
+        mock_request.post(url_link_collection_instrument, status_code=500)
         url = '/backstage-api/v1/collection-instrument/link/' \
               '14fb3e68-4dca-46db-bf49-04b84e07e77c/14fb3e68-4dca-46db-bf49-04b84e07e77c'
 
