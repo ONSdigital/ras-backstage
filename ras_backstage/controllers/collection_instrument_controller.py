@@ -27,21 +27,20 @@ def upload_collection_instrument(collection_exercise_id, file):
 
 
 def link_collection_instrument_to_exercise(collection_instrument_id, collection_exercise_id):
-    logger.debug('Uploading collection instrument', collection_instrument_id=collection_instrument_id,
-                 collection_exercise_id=collection_exercise_id)
+    logger.debug('Linking collection instrument to exercise',
+                 collection_instrument_id=collection_instrument_id, collection_exercise_id=collection_exercise_id)
     url = f'{app.config["RAS_COLLECTION_INSTRUMENT_SERVICE"]}' \
           f'collection-instrument-api/1.0.2/link-exercise/{collection_instrument_id}/{collection_exercise_id}'
 
     response = request_handler(url=url, method='POST', auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:
-        logger.error('Error uploading collection instrument', collection_instrument_id=collection_instrument_id,
-                     collection_exercise_id=collection_exercise_id)
+        logger.error('Failed to link collection instrument to exercise',
+                     collection_instrument_id=collection_instrument_id, collection_exercise_id=collection_exercise_id)
         raise ApiError(url, response.status_code)
 
-    logger.debug('Successfully uploaded collection instrument',
-                 collection_instrument_id=collection_instrument_id,
-                 collection_exercise_id=collection_exercise_id)
+    logger.debug('Successfully linked collection instrument to exercise',
+                 collection_instrument_id=collection_instrument_id, collection_exercise_id=collection_exercise_id)
 
 
 def get_collection_instruments_by_classifier(survey_id, collection_exercise_id):
