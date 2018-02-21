@@ -44,7 +44,7 @@ def get_collection_exercises_by_party_id(party_id):
     url = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}collectionexercises/party/{party_id}'
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
-    if response.status_code == 204:
+    if response.status_code == 204 or response.status_code == 404:
         logger.debug('No collection exercises', party_id=party_id)
         return []
     if response.status_code != 200:
