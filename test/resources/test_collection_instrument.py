@@ -91,16 +91,19 @@ class TestCollectionExercise(unittest.TestCase):
     @requests_mock.mock()
     def test_link_collection_instrument(self, mock_request):
         mock_request.post(url_link_collection_instrument)
-
-        response = self.app.post('/backstage-api/v1/collection-instrument/test/000001')
+        url = '/backstage-api/v1/collection-instrument/link/' \
+              '14fb3e68-4dca-46db-bf49-04b84e07e77c/14fb3e68-4dca-46db-bf49-04b84e07e77c'
+        response = self.app.post(url)
 
         self.assertEqual(response.status_code, 200)
 
     @requests_mock.mock()
     def test_link_collection_instrument_fail(self, mock_request):
         mock_request.post(url_link_collection_instrument, statu_code=500)
+        url = '/backstage-api/v1/collection-instrument/link/' \
+              '14fb3e68-4dca-46db-bf49-04b84e07e77c/14fb3e68-4dca-46db-bf49-04b84e07e77c'
 
-        response = self.app.post('/backstage-api/v1/collection-instrument/test/000001')
+        response = self.app.post(url)
         response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
