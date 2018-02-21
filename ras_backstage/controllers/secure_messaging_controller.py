@@ -1,6 +1,8 @@
 import json
 import logging
 
+import jwt
+from flask import current_app
 from structlog import wrap_logger
 
 from ras_backstage import app
@@ -14,7 +16,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 def get_messages_list(encoded_jwt, message_args):
     logger.debug('Retrieving messages list', label=message_args.get('label'))
     url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'messages')
-    headers = {"Authorization": encoded_jwt}
+    headers = create_authorization_header(encoded_jwt)
     response = request_handler('GET', url, headers=headers, params=message_args)
 
     if response.status_code != 200:
@@ -29,7 +31,7 @@ def get_message(encoded_jwt, message_id, is_draft):
     logger.debug('Retrieving message', message_id=message_id, is_draft=is_draft)
     endpoint = 'draft/' if is_draft == 'true' else 'message/'
     url = '{}{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], endpoint, message_id)
-    headers = {"Authorization": encoded_jwt}
+    headers = create_authorization_header(encoded_jwt)
     response = request_handler('GET', url, headers=headers)
 
     if response.status_code != 200:
@@ -44,7 +46,7 @@ def update_label(encoded_jwt, message_id, label, action):
     logger.debug('Updating label', message_id=message_id, label=label, action=action)
     url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'],
                         'message/{}/modify'.format(message_id))
-    headers = {"Authorization": encoded_jwt}
+    headers = create_authorization_header(encoded_jwt)
     data = {"label": label, "action": action}
     response = request_handler('PUT', url, headers=headers, json=data)
 
@@ -57,7 +59,7 @@ def update_label(encoded_jwt, message_id, label, action):
 
 def send_message(encoded_jwt, message_json):
     logger.debug('Sending message')
-    headers = {"Authorization": encoded_jwt}
+    headers = create_authorization_header(encoded_jwt)
     url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'message/send')
     response = request_handler('POST', url, headers=headers, json=message_json)
 
@@ -72,7 +74,7 @@ def send_message(encoded_jwt, message_json):
 
 def save_draft(encoded_jwt, message_json):
     logger.debug('Saving draft')
-    headers = {"Authorization": encoded_jwt}
+    headers = create_authorization_header(encoded_jwt)
 
     url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'draft/save')
     response = request_handler('POST', url, headers=headers, json=message_json)
@@ -88,7 +90,7 @@ def save_draft(encoded_jwt, message_json):
 
 def update_draft(encoded_jwt, message_json):
     logger.debug('Updating draft', message_id=message_json['msg_id'])
-    headers = {"Authorization": encoded_jwt}
+    headers = create_authorization_header(encoded_jwt)
 
     url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'],
                         'draft/{}/modify'.format(message_json['msg_id']))
@@ -101,3 +103,34 @@ def update_draft(encoded_jwt, message_json):
     message = json.loads(response.text)
     logger.debug('Draft updated successfully', message_id=message['msg_id'])
     return message
+
+
+def create_authorization_header(encoded_jwt):
+    if current_app.config.get('USE_UAA'):
+        sm_token = convert_token(encoded_jwt)
+    else:
+        sm_token = jwt.encode({'party_id': 'BRES', 'role': 'internal'}, app.config['RAS_SECURE_MESSAGING_JWT_SECRET'], algorithm='HS256')
+    return {"Authorization": sm_token}
+
+
+def decode_access_token(access_token):
+    decoded_jwt = jwt.decode(
+        access_token,
+        verify=True,
+        algorithms=None,
+        key=app.config['UAA_PUBLIC_KEY'],
+        audience='ras_backstage',
+        leeway=10,
+    )
+    return decoded_jwt
+
+
+def convert_token(access_token):
+    token = decode_access_token(access_token)
+
+    user_id = token.get('user_id')
+
+    secret = app.config['RAS_SECURE_MESSAGING_JWT_SECRET']
+    return jwt.encode({'party_id': user_id, 'role': 'internal'}, secret, algorithm='HS256')
+
+

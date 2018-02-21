@@ -38,6 +38,8 @@ class Config(object):
         RAS_SECURE_MESSAGING_SERVICE_PROTOCOL,
         RAS_SECURE_MESSAGING_SERVICE_HOST, RAS_SECURE_MESSAGING_SERVICE_PORT)
 
+    RAS_SECURE_MESSAGING_JWT_SECRET = os.getenv('RAS_SECURE_MESSAGING_JWT_SECRET')
+
     RM_CASE_SERVICE_HOST = os.getenv('RM_CASE_SERVICE_HOST', 'localhost')
     RM_CASE_SERVICE_PORT = os.getenv('RM_CASE_SERVICE_PORT', 8171)
     RM_CASE_SERVICE_PROTOCOL = os.getenv('RM_CASE_SERVICE_PROTOCOL', 'http')
@@ -119,6 +121,7 @@ class DevelopmentConfig(Config):
     UAA_SERVICE_URL = os.getenv('UAA_SERVICE_URL', 'localhost')
     UAA_CLIENT_ID = os.getenv('UAA_CLIENT_ID', 'ras_backstage')
     UAA_CLIENT_SECRET = os.getenv('UAA_CLIENT_SECRET', 'password')
+    RAS_SECURE_MESSAGING_JWT_SECRET = os.getenv('RAS_SECURE_MESSAGING_JWT_SECRET', 'test_secret')
 
 
 class TestingConfig(DevelopmentConfig):
