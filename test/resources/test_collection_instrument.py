@@ -1,3 +1,4 @@
+import json
 import unittest
 from io import BytesIO
 
@@ -11,6 +12,8 @@ url_ces = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
     'collectionexercises/survey/cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87'
 url_upload_collection_instrument = f'{app.config["RAS_COLLECTION_INSTRUMENT_SERVICE"]}' \
     f'collection-instrument-api/1.0.2/upload/e33daf0e-6a27-40cd-98dc-c6231f50e84a'
+url_link_collection_instrument = f'{app.config["RAS_COLLECTION_INSTRUMENT_SERVICE"]}collection-instrument-api/1.0.2/' \
+    f'link-exercise/14fb3e68-4dca-46db-bf49-04b84e07e77c/14fb3e68-4dca-46db-bf49-04b84e07e77c'
 
 
 class TestCollectionExercise(unittest.TestCase):
@@ -84,6 +87,24 @@ class TestCollectionExercise(unittest.TestCase):
         response = self.app.post('/backstage-api/v1/collection-instrument/test/000001')
 
         self.assertEqual(response.status_code, 404)
+
+    @requests_mock.mock()
+    def test_link_collection_instrument(self, mock_request):
+        mock_request.post(url_link_collection_instrument)
+
+        response = self.app.post('/backstage-api/v1/collection-instrument/test/000001')
+
+        self.assertEqual(response.status_code, 200)
+
+    @requests_mock.mock()
+    def test_link_collection_instrument_fail(self, mock_request):
+        mock_request.post(url_link_collection_instrument, statu_code=500)
+
+        response = self.app.post('/backstage-api/v1/collection-instrument/test/000001')
+        response_data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_data['surveys'][0]['surveyRef'], "221")
 
     @staticmethod
     def file_matcher(request):
