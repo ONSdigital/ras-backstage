@@ -62,7 +62,7 @@ class ExecuteSingleCollectionExercise(Resource):
         # Find the collection exercise for the given period
         exercise = get_collection_exercise_by_period(exercises, period)
         if not exercise:
-            return make_response(jsonify({"message": "Collection exercise not found"}), 404)
+            return make_response(jsonify({'message': 'Collection exercise not found'}), 404)
 
         collection_exercise_controller.execute_collection_exercise(exercise['id'])
 
