@@ -1,4 +1,3 @@
-import json
 import unittest
 from io import BytesIO
 
@@ -104,10 +103,8 @@ class TestCollectionExercise(unittest.TestCase):
               '14fb3e68-4dca-46db-bf49-04b84e07e77c/14fb3e68-4dca-46db-bf49-04b84e07e77c'
 
         response = self.app.post(url)
-        response_data = json.loads(response.data)
 
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response_data['surveys'][0]['surveyRef'], "221")
+        self.assertEqual(response.status_code, 500)
 
     @staticmethod
     def file_matcher(request):
