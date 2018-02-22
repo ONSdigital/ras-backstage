@@ -47,6 +47,7 @@ api.add_namespace(survey_api)
 import ras_backstage.error_handlers  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.collection_exercise.single_collection_exercise import GetSingleCollectionExercise, ExecuteSingleCollectionExercise  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.collection_instrument.collection_instrument import CollectionInstrument  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.resources.collection_instrument.link_exercise import LinkExercise  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.info import Info  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.party.get_party_details import PartyDetails  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.reporting_units.get_reporting_unit import GetReportingUnit  # NOQA # pylint: disable=wrong-import-position
