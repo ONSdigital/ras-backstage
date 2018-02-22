@@ -43,6 +43,14 @@ def _build_search_string():
     return urlencode({'searchString': json.dumps(classifiers)})
 
 
+def _build_ci_type_search_string():
+    classifiers = {
+        "SURVEY_ID": survey_id,
+        "TYPE": "EQ"
+    }
+    return urlencode({'searchString': json.dumps(classifiers)})
+
+
 class TestCollectionExercise(unittest.TestCase):
 
     def setUp(self):
@@ -79,6 +87,19 @@ class TestCollectionExercise(unittest.TestCase):
                 "surveyId": survey_id
             }
         ]
+        self.eq_ci_selectors = [
+            {
+                "classifiers": {
+                    "COLLECTION_EXERCISE": [
+                    ],
+                    "RU_REF": [],
+                    "SURVEY_ID": survey_id,
+                },
+                "file_name": None,
+                "id": collection_instrument_id,
+                "surveyId": survey_id
+            }
+        ]
         self.sample_summary = {
             "sampleSummaryPK": 1,
             "id": sample_summary_id,
@@ -102,6 +123,9 @@ class TestCollectionExercise(unittest.TestCase):
         mock_request.get(url_link_sample, json=[sample_summary_id])
         mock_request.get(url_sample_summary, json=self.sample_summary)
         search_string = _build_search_string()
+        mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
+                         complete_qs=True)
+        search_string = _build_ci_type_search_string()
         mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
                          complete_qs=True)
 
@@ -186,6 +210,9 @@ class TestCollectionExercise(unittest.TestCase):
         search_string = _build_search_string()
         mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
                          complete_qs=True)
+        search_string = _build_ci_type_search_string()
+        mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
+                         complete_qs=True)
 
         # When
         response = self.app.get(f"/backstage-api/v1/collection-exercise/{test_short_name}/{test_period}")
@@ -205,6 +232,9 @@ class TestCollectionExercise(unittest.TestCase):
         search_string = _build_search_string()
         mock_request.get(f'{url_get_collection_instrument}?{search_string}',
                          complete_qs=True, status_code=400)
+        search_string = _build_ci_type_search_string()
+        mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
+                         complete_qs=True)
 
         # When
         response = self.app.get(f'/backstage-api/v1/collection-exercise/{test_short_name}/{test_period}')
@@ -224,6 +254,9 @@ class TestCollectionExercise(unittest.TestCase):
         search_string = _build_search_string()
         mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
                          complete_qs=True)
+        search_string = _build_ci_type_search_string()
+        mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
+                         complete_qs=True)
 
         # When
         response = self.app.get(f"/backstage-api/v1/collection-exercise/{test_short_name}/{test_period}")
@@ -241,6 +274,9 @@ class TestCollectionExercise(unittest.TestCase):
         mock_request.get(url_ce, json=collection_exercise)
         mock_request.get(url_ce_events, json=events)
         search_string = _build_search_string()
+        mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
+                         complete_qs=True)
+        search_string = _build_ci_type_search_string()
         mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
                          complete_qs=True)
         mock_request.get(url_link_sample, status_code=204)
@@ -264,6 +300,9 @@ class TestCollectionExercise(unittest.TestCase):
         search_string = _build_search_string()
         mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
                          complete_qs=True)
+        search_string = _build_ci_type_search_string()
+        mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
+                         complete_qs=True)
 
         # When
         response = self.app.get(f'/backstage-api/v1/collection-exercise/{test_short_name}/{test_period}')
@@ -281,6 +320,9 @@ class TestCollectionExercise(unittest.TestCase):
         mock_request.get(url_link_sample, json=[sample_summary_id])
         mock_request.get(url_sample_summary, status_code=400)
         search_string = _build_search_string()
+        mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
+                         complete_qs=True)
+        search_string = _build_ci_type_search_string()
         mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
                          complete_qs=True)
 
