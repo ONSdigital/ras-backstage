@@ -1,11 +1,13 @@
 import json
 import logging
 
+
 import jwt
 from flask import current_app
 from structlog import wrap_logger
 
 from ras_backstage import app
+from ras_backstage.authentication import token_decoder
 from ras_backstage.common.requests_handler import request_handler
 from ras_backstage.exception.exceptions import ApiError
 
@@ -15,7 +17,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 def get_messages_list(encoded_jwt, message_args):
     logger.debug('Retrieving messages list', label=message_args.get('label'))
-    url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'messages')
+    url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'v2/messages')
     headers = create_authorization_header(encoded_jwt)
     response = request_handler('GET', url, headers=headers, params=message_args)
 
@@ -60,7 +62,7 @@ def update_label(encoded_jwt, message_id, label, action):
 def send_message(encoded_jwt, message_json):
     logger.debug('Sending message')
     headers = create_authorization_header(encoded_jwt)
-    url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'message/send')
+    url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'v2/messages')
     response = request_handler('POST', url, headers=headers, json=message_json)
 
     if response.status_code != 201:
@@ -107,28 +109,15 @@ def update_draft(encoded_jwt, message_json):
 
 def create_authorization_header(encoded_jwt):
     if current_app.config.get('USE_UAA'):
+        logger.info(f'Received token {encoded_jwt}')
         sm_token = convert_token(encoded_jwt)
     else:
         sm_token = jwt.encode({'party_id': 'BRES', 'role': 'internal'}, app.config['RAS_SECURE_MESSAGING_JWT_SECRET'], algorithm='HS256')
     return {"Authorization": sm_token}
 
 
-def decode_access_token(access_token):
-    decoded_jwt = jwt.decode(
-        access_token,
-        verify=True,
-        algorithms=None,
-        key=app.config['UAA_PUBLIC_KEY'],
-        audience='ras_backstage',
-        leeway=10,
-    )
-    return decoded_jwt
-
-
 def convert_token(access_token):
-    token = decode_access_token(access_token)
-
-    user_id = token.get('user_id')
+    user_id = token_decoder.get_user_id(access_token)
 
     secret = app.config['RAS_SECURE_MESSAGING_JWT_SECRET']
     return jwt.encode({'party_id': user_id, 'role': 'internal'}, secret, algorithm='HS256')

@@ -13,9 +13,6 @@ from ras_backstage.exception.exceptions import ApiError
 logger = wrap_logger(logging.getLogger(__name__))
 
 
-
-
-
 def sign_in(username, password):
     logger.debug('Retrieving OAuth2 token for sign-in')
     url = f'{app.config["UAA_SERVICE_URL"]}{"/oauth/token"}'
@@ -48,7 +45,9 @@ def sign_in(username, password):
 
         logger.debug('Successfully retrieved UAA token')
         token = response.json()
-        return token
+
+        access_token = token.get('access_token')
+        return access_token
     except KeyError:
         logger.exception("No access_token claim in jwt")
         raise ApiError(url, status_code=401)

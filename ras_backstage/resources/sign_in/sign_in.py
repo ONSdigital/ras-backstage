@@ -8,6 +8,7 @@ from structlog import wrap_logger
 
 from ras_backstage import app, sign_in_api, sign_in_api_v2
 from ras_backstage.controllers import django_controller, uaa_controller
+from ras_backstage.authentication import token_decoder
 
 logger = wrap_logger(logging.getLogger(__name__))
 
@@ -55,14 +56,16 @@ class SignInV2(Resource):
 
         if current_app.config.get('USE_UAA'):
             logger.info('Retrieving sign-in details')
-            oauth2_token = uaa_controller.sign_in(username, password)
+            access_token = uaa_controller.sign_in(username, password)
+
             logger.info('Successfully retrieved sign-in details')
-            return make_response(jsonify({"token": oauth2_token}), 200)
+            user_id = token_decoder.get_user_id(access_token)
+            return jsonify({"token": access_token, "user_id": user_id})
         else:
             #  TODO remove this once UAA fully deployed in all environments
             if username == current_app.config['USERNAME'] and password == current_app.config['PASSWORD']:
                 logger.info("Authentication successful", user=username)
-                return make_response(jsonify({"token": "1234abc"}), 200)
+                return jsonify({"token": "1234abc"})
             else:
                 logger.info("Authentication failed", user=username)
                 return make_response(
