@@ -10,11 +10,6 @@ class Config(object):
     SECURITY_USER_NAME = os.getenv('SECURITY_USER_NAME')
     SECURITY_USER_PASSWORD = os.getenv('SECURITY_USER_PASSWORD')
     BASIC_AUTH = (SECURITY_USER_NAME, SECURITY_USER_PASSWORD)
-    DJANGO_CLIENT_ID = os.getenv('DJANGO_CLIENT_ID')
-    DJANGO_CLIENT_SECRET = os.getenv('DJANGO_CLIENT_SECRET')
-    DJANGO_BASIC_AUTH = (DJANGO_CLIENT_ID, DJANGO_CLIENT_SECRET)
-    JWT_ALGORITHM = os.getenv('JWT_ALGORITHM', 'HS256')
-    JWT_SECRET = os.getenv('JWT_SECRET')
 
     # TODO: remove once UAA is implemented and use user supplied username/password
     USERNAME = os.getenv('RAS_BACKSTAGE_USERNAME')
@@ -111,10 +106,6 @@ class DevelopmentConfig(Config):
     SECURITY_USER_NAME = os.getenv('SECURITY_USER_NAME', 'admin')
     SECURITY_USER_PASSWORD = os.getenv('SECURITY_USER_PASSWORD', 'secret')
     BASIC_AUTH = (SECURITY_USER_NAME, SECURITY_USER_PASSWORD)
-    DJANGO_CLIENT_ID = os.getenv('DJANGO_CLIENT_ID', 'ons@ons.gov')
-    DJANGO_CLIENT_SECRET = os.getenv('DJANGO_CLIENT_SECRET', 'password')
-    DJANGO_BASIC_AUTH = (DJANGO_CLIENT_ID, DJANGO_CLIENT_SECRET)
-    JWT_SECRET = os.getenv('JWT_SECRET', 'testsecret')
     USERNAME = os.getenv('RAS_BACKSTAGE_USERNAME', 'user')
     PASSWORD = os.getenv('RAS_BACKSTAGE_PASSWORD', 'pass')
     USE_UAA = int(os.getenv('USE_UAA', '1'))
