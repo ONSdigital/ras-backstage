@@ -5,7 +5,6 @@ from flask_restplus import Resource
 from structlog import wrap_logger
 
 from ras_backstage import collection_instrument_api
-
 from ras_backstage.controllers.collection_instrument_controller import link_collection_instrument_to_exercise
 
 
