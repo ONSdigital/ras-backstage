@@ -22,6 +22,8 @@ url_ces = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
           f'collectionexercises/survey/{survey_id}'
 url_ce = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
          f'collectionexercises/{collection_exercise_id}'
+url_ce_execute = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
+         f'collectionexerciseexecution/{collection_exercise_id}'
 url_get_collection_instrument = f'{app.config["RAS_COLLECTION_INSTRUMENT_SERVICE"]}' \
                                    f'collection-instrument-api/1.0.2/collectioninstrument'
 
@@ -287,3 +289,72 @@ class TestCollectionExercise(unittest.TestCase):
 
         # Then
         self.assertEqual(response.status_code, 400)
+
+    @requests_mock.mock()
+    def test_execute_collection_exercise(self, mock_request):
+        # Given
+        mock_request.get(url_get_survey_by_short_name, json=self.survey)
+        mock_request.get(url_ces, json=self.collection_exercises)
+        mock_request.post(url_ce_execute, status_code=200)
+
+        # When
+        response = self.app.post(f'/backstage-api/v1/collection-exercise/{test_short_name}/{test_period}/execute')
+
+        # Then
+        self.assertEqual(response.status_code, 200)
+
+    @requests_mock.mock()
+    def test_execute_collection_exercise_not_found(self, mock_request):
+        # Given
+        mock_request.get(url_get_survey_by_short_name, json=self.survey)
+        mock_request.get(url_ces, json=[])
+
+        # When
+        response = self.app.post(f'/backstage-api/v1/collection-exercise/{test_short_name}/{test_period}/execute')
+        response_data = json.loads(response.data)
+
+        # Then
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response_data['message'], 'Collection exercise not found')
+
+    @requests_mock.mock()
+    def test_execute_collection_exercise_survey_fails(self, mock_request):
+        # Given
+        mock_request.get(url_get_survey_by_short_name, status_code=500)
+
+        # When
+        response = self.app.post(f'/backstage-api/v1/collection-exercise/{test_short_name}/{test_period}/execute')
+        response_data = json.loads(response.data)
+
+        # Then
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response_data['error']['status_code'], 500)
+
+    @requests_mock.mock()
+    def test_execute_collection_exercise_ces_fails(self, mock_request):
+        # Given
+        mock_request.get(url_get_survey_by_short_name, json=self.survey)
+        mock_request.get(url_ces, status_code=500)
+
+        # When
+        response = self.app.post(f'/backstage-api/v1/collection-exercise/{test_short_name}/{test_period}/execute')
+        response_data = json.loads(response.data)
+
+        # Then
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response_data['error']['status_code'], 500)
+
+    @requests_mock.mock()
+    def test_execute_collection_exercise_ce_fails(self, mock_request):
+        # Given
+        mock_request.get(url_get_survey_by_short_name, json=self.survey)
+        mock_request.get(url_ces, json=self.collection_exercises)
+        mock_request.post(url_ce_execute, status_code=500)
+
+        # When
+        response = self.app.post(f'/backstage-api/v1/collection-exercise/{test_short_name}/{test_period}/execute')
+        response_data = json.loads(response.data)
+
+        # Then
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response_data['error']['status_code'], 500)
