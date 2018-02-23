@@ -139,7 +139,6 @@ class TestCollectionExercise(unittest.TestCase):
                          'Business Register and Employment Survey')
         self.assertEqual(response_data['collection_exercise']['name'], '000000')
         self.assertEqual(response_data['events'][0]['tag'], "mps")
-        self.assertEqual(response_data['events'][0]['tag'], "mps")
         self.assertEqual(response_data['eq_ci_selectors'], self.collection_instruments)
 
     @requests_mock.mock()
