@@ -1,8 +1,5 @@
 import logging
 
-import pprint
-import jwt
-import requests
 from requests import HTTPError
 from structlog import wrap_logger
 
@@ -41,11 +38,8 @@ def sign_in(username, password):
         raise ApiError(url, response.status_code)
 
     try:
-        pprint.pprint(response.json())
-
         logger.debug('Successfully retrieved UAA token')
         token = response.json()
-
         access_token = token.get('access_token')
         return access_token
     except KeyError:

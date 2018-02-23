@@ -1,4 +1,5 @@
 import logging
+import uuid
 
 from flask import current_app, request, make_response, jsonify
 from flask_restplus import fields, Resource
@@ -35,10 +36,9 @@ class SignInV2(Resource):
             user_id = token_decoder.get_user_id(access_token)
             return jsonify({"token": access_token, "user_id": user_id})
         else:
-            #  TODO remove this once UAA fully deployed in all environments
             if username == current_app.config['USERNAME'] and password == current_app.config['PASSWORD']:
                 logger.info("Authentication successful", user=username)
-                return jsonify({"token": "1234abc", "user_id": username})
+                return jsonify({"token": uuid.uuid4(), "user_id": username})
             else:
                 logger.info("Authentication failed", user=username)
                 return make_response(
