@@ -112,7 +112,9 @@ def create_authorization_header(encoded_jwt):
         logger.info(f'Received token {encoded_jwt}')
         sm_token = convert_token(encoded_jwt)
     else:
-        sm_token = jwt.encode({'party_id': 'BRES', 'role': 'internal'}, app.config['RAS_SECURE_MESSAGING_JWT_SECRET'], algorithm='HS256')
+        sm_token = jwt.encode({'party_id': 'BRES', 'role': 'internal'},
+                              app.config['RAS_SECURE_MESSAGING_JWT_SECRET'],
+                              algorithm='HS256')
     return {"Authorization": sm_token}
 
 
@@ -121,5 +123,3 @@ def convert_token(access_token):
 
     secret = app.config['RAS_SECURE_MESSAGING_JWT_SECRET']
     return jwt.encode({'party_id': user_id, 'role': 'internal'}, secret, algorithm='HS256')
-
-

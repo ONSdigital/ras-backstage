@@ -1,5 +1,5 @@
-from flask import current_app
 import jwt
+from flask import current_app
 
 
 def decode_access_token(access_token):
@@ -17,4 +17,3 @@ def decode_access_token(access_token):
 def get_user_id(access_token):
     decoded_jwt = decode_access_token(access_token)
     return decoded_jwt.get('user_id')
-
