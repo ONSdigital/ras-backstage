@@ -43,13 +43,13 @@ def link_collection_instrument_to_exercise(collection_instrument_id, collection_
                  collection_instrument_id=collection_instrument_id, collection_exercise_id=collection_exercise_id)
 
 
-def get_collection_instruments_by_classifier(survey_id, collection_exercise_id):
+def get_collection_instruments_by_classifier(survey_id=None, collection_exercise_id=None, ci_type=None):
     logger.debug('Retrieving collection instruments', survey_id=survey_id,
-                 collection_exercise_id=collection_exercise_id)
+                 collection_exercise_id=collection_exercise_id, ci_type=ci_type)
     url = f'{app.config["RAS_COLLECTION_INSTRUMENT_SERVICE"]}' \
           f'collection-instrument-api/1.0.2/collectioninstrument'
 
-    classifiers = _build_classifiers(collection_exercise_id, survey_id)
+    classifiers = _build_classifiers(collection_exercise_id, survey_id, ci_type)
     response = request_handler(url=url, method='GET', auth=app.config['BASIC_AUTH'],
                                params={'searchString': json.dumps(classifiers)})
 
@@ -58,14 +58,16 @@ def get_collection_instruments_by_classifier(survey_id, collection_exercise_id):
         raise ApiError(url, response.status_code)
 
     logger.debug('Successfully retrieved collection instruments', survey_id=survey_id,
-                 collection_exercise_id=collection_exercise_id)
+                 collection_exercise_id=collection_exercise_id, ci_type=ci_type)
     return json.loads(response.text)
 
 
-def _build_classifiers(collection_exercise_id, survey_id):
+def _build_classifiers(collection_exercise_id=None, survey_id=None, ci_type=None):
     classifiers = {}
     if survey_id:
         classifiers['SURVEY_ID'] = survey_id
     if collection_exercise_id:
         classifiers['COLLECTION_EXERCISE'] = collection_exercise_id
+    if ci_type:
+        classifiers['TYPE'] = ci_type
     return classifiers
