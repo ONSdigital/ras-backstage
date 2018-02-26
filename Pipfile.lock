@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "58153aea0c47186e674149e3e88e9a21e9084e8243ed73a7bcfecff7ec285ef5"
+            "sha256": "7aa88e9be6f11d35956266711f3f867a3cd3a02f638c7fe585d2ade555089cf4"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -11,7 +11,7 @@
             "platform_python_implementation": "CPython",
             "platform_release": "16.7.0",
             "platform_system": "Darwin",
-            "platform_version": "Darwin Kernel Version 16.7.0: Mon Nov 13 21:56:25 PST 2017; root:xnu-3789.72.11~1/RELEASE_X86_64",
+            "platform_version": "Darwin Kernel Version 16.7.0: Thu Jun 15 17:36:27 PDT 2017; root:xnu-3789.70.16~2/RELEASE_X86_64",
             "python_full_version": "3.6.3",
             "python_version": "3.6",
             "sys_platform": "darwin"
@@ -31,9 +31,10 @@
     "default": {
         "aniso8601": {
             "hashes": [
-                "sha256:085786415d3550e89785ffbedaa9bb37d41de0707a1268bdbba11249064b71d1"
+                "sha256:cdf20d7f5172cf9a786fad94bbeaffe6dead415c99ab52800f744b1f8841e33d",
+                "sha256:b7215a41e5194a829dc87d1ea5039315be85a6158ba15c8157a284c29fa6808b"
             ],
-            "version": "==2.0.0"
+            "version": "==2.0.1"
         },
         "asn1crypto": {
             "hashes": [
@@ -153,12 +154,6 @@
             ],
             "version": "==3.2.3"
         },
-        "flask-jwt": {
-            "hashes": [
-                "sha256:49c0672fbde0f1cd3374bd834918d28956e3c521c7e00089cdc5380d323bd0ad"
-            ],
-            "version": "==0.3.2"
-        },
         "flask-jwt-extended": {
             "hashes": [
                 "sha256:164b08f85658b87f7c311cbbfb7b684667c4eb1c4b6f83dc2065359584aacfb6"
@@ -240,10 +235,10 @@
         },
         "pyjwt": {
             "hashes": [
-                "sha256:99fe612dbe5f41e07124d9002c118c14f3ee703574ffa9779fee78135b8b94b6",
-                "sha256:87a831b7a3bfa8351511961469ed0462a769724d4da48a501cb8c96d1e17f570"
+                "sha256:a4e5f1441e3ca7b382fd0c0b416777ced1f97c64ef0c33bfa39daf38505cfd2f",
+                "sha256:500be75b17a63f70072416843dc80c8821109030be824f4d14758f114978bae7"
             ],
-            "version": "==1.4.2"
+            "version": "==1.5.3"
         },
         "python-dateutil": {
             "hashes": [
