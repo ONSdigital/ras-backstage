@@ -10,6 +10,7 @@ from ras_backstage import reporting_unit_api
 from ras_backstage.common.filters import get_case_group_status_by_collection_exercise
 from ras_backstage.controllers import (case_controller, collection_exercise_controller, party_controller,
                                        survey_controller, iac_controller)
+from ras_backstage.controllers.case_controller import get_cases_by_business_party_id
 
 logger = wrap_logger(logging.getLogger(__name__))
 
@@ -71,6 +72,10 @@ def add_collection_exercise_details(collection_exercises, reporting_unit, cases)
 def link_respondents_to_survey(respondents, survey):
     survey['respondents'] = []
     for respondent in respondents:
+
+        # Collect the collection case.
+        json = get_cases_by_business_party_id(respondent.get('id'))
+        respondent['case_id'] = json[0].get('id')
         for association in respondent.get('associations'):
             for enrolment in association.get('enrolments'):
                 respondent['enrolmentStatus'] = enrolment.get('enrolmentStatus')
