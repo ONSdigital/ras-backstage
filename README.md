@@ -85,7 +85,7 @@ Environment variables available for configuration are listed below:
 | UAA_CLIENT_ID                   | Client ID for UAA OAuth service                    | None
 | UAA_CLIENT_SECRET               | Client secret for UAA OAuth service                | None
 
-For each external application which frontstage communicates with there are 3 environment variables e.g. for the RM case service:
+For each external application which frontstage communicates with there are 3 environment variables e.g. for the RM exercise service:
 
 | Environment Variable                           | Description                                      | Default
 |------------------------------------------------|--------------------------------------------------|-------------------------------
@@ -104,6 +104,8 @@ The services these variables exist for are listed below with the beginnings of t
 | Party service                   | RAS_PARTY_SERVICE           | https://github.com/ONSdigital/ras-party
 | Secure message service          | RAS_SECURE_MESSAGE_SERVICE  | https://github.com/ONSdigital/ras-secure-message
 | Oauth service                   | RAS_OAUTH_SERVICE           | https://github.com/ONSdigital/django-oauth2-test
+| Case service                    | RM_CASE_SERVICE             | https://github.com/ONSdigital/rm-case-service
+| IAC service                     | RM_IAC_SERVICE              | https://github.com/ONSdigital/iac-service
 
 ## Deployments
 The app is deployed automatically via jenkins on a commit to master. See [Jenkinsfile](Jenkinsfile) for the configuration.
