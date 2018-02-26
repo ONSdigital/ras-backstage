@@ -33,7 +33,11 @@ class GetSingleCollectionExercise(Resource):
 
         exercise_events = collection_exercise_controller.get_collection_exercise_events(exercise['id'])
 
-        collection_instruments = get_collection_instruments_by_classifier(survey['id'], exercise['id'])
+        collection_instruments = get_collection_instruments_by_classifier(survey_id=survey['id'],
+                                                                          collection_exercise_id=exercise['id'])
+
+        eq_ci_selectors = get_collection_instruments_by_classifier(survey_id=survey['id'],
+                                                                   ci_type='EQ')
 
         summary_id = collection_exercise_controller.get_linked_sample_summary_id(exercise['id'])
         sample_summary = sample_controller.get_sample_summary(summary_id) if summary_id else None
@@ -43,6 +47,7 @@ class GetSingleCollectionExercise(Resource):
             "collection_exercise": full_exercise,
             "events": exercise_events,
             "collection_instruments": collection_instruments,
+            "eq_ci_selectors": eq_ci_selectors,
             "sample_summary": sample_summary
         }
         logger.info('Successfully retrieved collection exercise details',
