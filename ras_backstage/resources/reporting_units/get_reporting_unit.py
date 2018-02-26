@@ -75,7 +75,12 @@ def link_respondents_to_survey(respondents, survey):
 
         # Collect the collection case.
         json = get_cases_by_business_party_id(respondent.get('id'))
-        respondent['case_id'] = json[0].get('id')
+        try:
+            respondent['case_id'] = json[0].get('id')
+        except IndexError:
+            respondent['case_id'] = ''
+            logger.warning(f"no case id for respondent {respondent.get('id')}")
+
         for association in respondent.get('associations'):
             for enrolment in association.get('enrolments'):
                 respondent['enrolmentStatus'] = enrolment.get('enrolmentStatus')
