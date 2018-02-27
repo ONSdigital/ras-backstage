@@ -72,6 +72,8 @@ def add_collection_exercise_details(collection_exercises, reporting_unit, cases)
 def link_respondents_to_survey(respondents, survey):
     survey['respondents'] = []
     for respondent in respondents:
+        # TODO : The way how we identify the collection case needs to be changed.
+        # This might imply change the UI so that the user can be allowed to choose the correct collection case
 
         # Collect the collection case.
         json = get_cases_by_business_party_id(respondent.get('id'))
