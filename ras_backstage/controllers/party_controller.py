@@ -62,3 +62,16 @@ def get_businesses_by_search(query):
 
     logger.debug('Successfully retrieved businesses by search query')
     return json.loads(response.text)
+
+
+def update_respondent_details(query):
+    logger.debug('Updating respondent details', query=query)
+    url = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/respondents/change_respondent_details'
+    response = request_handler('PUT', url, auth=app.config['BASIC_AUTH'], params={"query": query})
+
+    if response.status_code != 200:
+        logger.error('Error updating respondent details', query=query)
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully updated respondent details')
+    return json.loads(response.text)
