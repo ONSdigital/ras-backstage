@@ -1,14 +1,12 @@
 import os
 import logging
-
-
-import requests
-from requests import HTTPError
 from flask import Flask
 from flask_cors import CORS
 from flask_restplus import Api, Namespace
 
 from ras_backstage.logger_config import logger_initial_config
+from ras_backstage.authentication.uaa import request_uaa_public_key
+
 
 app = Flask(__name__)
 
@@ -20,32 +18,9 @@ app.url_map.strict_slashes = False
 logger_initial_config(service_name='ras-backstage', log_level=app.config['LOGGING_LEVEL'])
 logger = logging.getLogger(__name__)
 
-
-def get_public_key():
-    headers = {
-        'Accept': 'application/json',
-    }
-
-    public_key_url = f'{app.config["UAA_SERVICE_URL"]}{"/token_key"}'
-    response = requests.get(public_key_url, headers=headers)
-
-    try:
-        response.raise_for_status()
-    except HTTPError:
-        logger.exception("Error while retrieving public key")
-        raise
-
-    try:
-        key = response.json()['value']
-        return key
-    except KeyError:
-        logger.exception("No public key returned by UAA")
-        raise
-
-
 if app.config.get('USE_UAA'):
-    app.config['UAA_PUBLIC_KEY'] = get_public_key()
-
+    # cache the uaa public key on start up
+    app.config['UAA_PUBLIC_KEY'] = request_uaa_public_key(app)
 
 CORS(app)
 

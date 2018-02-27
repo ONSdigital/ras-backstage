@@ -1,7 +1,9 @@
 import logging
+from json import JSONDecodeError
 
 from requests import HTTPError
 from structlog import wrap_logger
+from flask_restplus import abort
 
 from ras_backstage import app
 from ras_backstage.common.requests_handler import request_handler
@@ -45,3 +47,6 @@ def sign_in(username, password):
     except KeyError:
         logger.exception("No access_token claim in jwt")
         raise ApiError(url, status_code=401)
+    except (JSONDecodeError, ValueError) as e:
+        logger.exception("Error decoding JSON response")
+        abort(500, error=str(e))
