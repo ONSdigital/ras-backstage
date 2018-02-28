@@ -4,7 +4,7 @@ import unittest
 import requests_mock
 
 from ras_backstage import app
-from ras_backstage.resources.case.reporting_unit_case_group_status import filter_statuses
+from ras_backstage.controllers.case_controller import filter_statuses
 
 url_get_party_by_ru_ref = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/parties/type/B/ref/12345'
 with open('test/test_data/party/business_party.json') as json_data:
@@ -65,60 +65,6 @@ class TestReportingUnits(unittest.TestCase):
         self.assertEqual(response_data['available_statuses']['COMPLETEDBYPHONE'], "COMPLETEDBYPHONE")
 
     @requests_mock.mock()
-    def test_filter_other_options_when_not_started(self, mock_request):
-        # Given
-        current_status = 'INPROGRESS'
-        statuses = {
-            'UPLOAD': 'COMPLETED',
-            'COMPLETEDBYPHONE': 'COMPLETEDBYPHONE',
-            'SOMETHING': 'SOMETHING',
-        }
-
-        # When
-        filtered_statuses = filter_statuses(current_status, statuses)
-
-        # Then
-        self.assertEqual(filtered_statuses['COMPLETEDBYPHONE'], 'COMPLETEDBYPHONE')
-        self.assertNotIn('COMPLETED', filtered_statuses.values())
-        self.assertNotIn('SOMETHING', filtered_statuses.values())
-
-    @requests_mock.mock()
-    def test_filter_other_options_when_in_progress(self, mock_request):
-        # Given
-        current_status = 'INPROGRESS'
-        statuses = {
-            'UPLOAD': 'COMPLETED',
-            'COMPLETEDBYPHONE': 'COMPLETEDBYPHONE',
-            'SOMETHING': 'SOMETHING',
-        }
-
-        # When
-        filtered_statuses = filter_statuses(current_status, statuses)
-
-        # Then
-        self.assertEqual(filtered_statuses['COMPLETEDBYPHONE'], 'COMPLETEDBYPHONE')
-        self.assertNotIn('COMPLETED', filtered_statuses.values())
-        self.assertNotIn('SOMETHING', filtered_statuses.values())
-
-    @requests_mock.mock()
-    def test_filter_other_options_when_reopened(self, mock_request):
-        # Given
-        current_status = 'REOPENED'
-        statuses = {
-            'UPLOAD': 'COMPLETED',
-            'COMPLETEDBYPHONE': 'COMPLETEDBYPHONE',
-            'SOMETHING': 'SOMETHING',
-        }
-
-        # When
-        filtered_statuses = filter_statuses(current_status, statuses)
-
-        # Then
-        self.assertEqual(filtered_statuses['COMPLETEDBYPHONE'], 'COMPLETEDBYPHONE')
-        self.assertNotIn('COMPLETED', filtered_statuses.values())
-        self.assertNotIn('SOMETHING', filtered_statuses.values())
-
-    @requests_mock.mock()
     def test_get_reporting_unit_statuses_fail(self, mock_request):
         # Given
         mock_request.get(url_get_party_by_ru_ref, json=party_business)
@@ -176,3 +122,58 @@ class TestReportingUnits(unittest.TestCase):
 
         # Then
         self.assertEqual(response.status_code, 400)
+
+
+    @requests_mock.mock()
+    def test_filter_other_options_when_not_started(self, mock_request):
+        # Given
+        current_status = 'INPROGRESS'
+        statuses = {
+            'UPLOAD': 'COMPLETED',
+            'COMPLETEDBYPHONE': 'COMPLETEDBYPHONE',
+            'SOMETHING': 'SOMETHING',
+        }
+
+        # When
+        filtered_statuses = filter_statuses(current_status, statuses)
+
+        # Then
+        self.assertEqual(filtered_statuses['COMPLETEDBYPHONE'], 'COMPLETEDBYPHONE')
+        self.assertNotIn('COMPLETED', filtered_statuses.values())
+        self.assertNotIn('SOMETHING', filtered_statuses.values())
+
+    @requests_mock.mock()
+    def test_filter_other_options_when_in_progress(self, mock_request):
+        # Given
+        current_status = 'INPROGRESS'
+        statuses = {
+            'UPLOAD': 'COMPLETED',
+            'COMPLETEDBYPHONE': 'COMPLETEDBYPHONE',
+            'SOMETHING': 'SOMETHING',
+        }
+
+        # When
+        filtered_statuses = filter_statuses(current_status, statuses)
+
+        # Then
+        self.assertEqual(filtered_statuses['COMPLETEDBYPHONE'], 'COMPLETEDBYPHONE')
+        self.assertNotIn('COMPLETED', filtered_statuses.values())
+        self.assertNotIn('SOMETHING', filtered_statuses.values())
+
+    @requests_mock.mock()
+    def test_filter_other_options_when_reopened(self, mock_request):
+        # Given
+        current_status = 'REOPENED'
+        statuses = {
+            'UPLOAD': 'COMPLETED',
+            'COMPLETEDBYPHONE': 'COMPLETEDBYPHONE',
+            'SOMETHING': 'SOMETHING',
+        }
+
+        # When
+        filtered_statuses = filter_statuses(current_status, statuses)
+
+        # Then
+        self.assertEqual(filtered_statuses['COMPLETEDBYPHONE'], 'COMPLETEDBYPHONE')
+        self.assertNotIn('COMPLETED', filtered_statuses.values())
+        self.assertNotIn('SOMETHING', filtered_statuses.values())

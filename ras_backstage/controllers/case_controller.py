@@ -26,7 +26,17 @@ def get_cases_by_business_party_id(business_party_id):
     return response.json()
 
 
-def get_available_statuses_for_ru_ref(collection_exercise_id, ru_ref):
+def filter_statuses(current_status, statuses):
+    manual_transisitions = {
+        'NOTSTARTED': ['COMPLETEDBYPHONE'],
+        'INPROGRESS': ['COMPLETEDBYPHONE'],
+        'REOPENED': ['COMPLETEDBYPHONE']
+    }
+    allowed_transitions = manual_transisitions.get(current_status)
+    return {event: status for event, status in statuses.items() if status in allowed_transitions}
+
+
+def get_available_statuses_for_ru_ref(current_status, collection_exercise_id, ru_ref):
     logger.debug('Retrieving statuses', collection_exercise_id=collection_exercise_id, ru_ref=ru_ref)
     url = f'{app.config["RM_CASE_SERVICE"]}casegroups/transitions/{collection_exercise_id}/{ru_ref}'
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
@@ -36,16 +46,17 @@ def get_available_statuses_for_ru_ref(collection_exercise_id, ru_ref):
         raise ApiError(url, response.status_code)
 
     logger.debug('Successfully retrieved statuses', collection_exercise_id=collection_exercise_id, ru_ref=ru_ref)
-    return response.json()
+    return filter_statuses(current_status, response.json())
 
 
 def update_case_group_status(collection_exercise_id, ru_ref, case_group_event):
-    logger.debug('Updating status', collection_exercise_id=collection_exercise_id, ru_ref=ru_ref, case_group_event=case_group_event)
+    logger.debug('Updating status', collection_exercise_id=collection_exercise_id, ru_ref=ru_ref,
+                 case_group_event=case_group_event)
     url = f'{app.config["RM_CASE_SERVICE"]}casegroups/transitions/{collection_exercise_id}/{ru_ref}'
     response = request_handler('PUT', url, auth=app.config['BASIC_AUTH'], json={'event': case_group_event})
 
     if response.status_code != 200:
-        logger.error('Error updating status', collection_exercise_id=collection_exercise_id,ru_ref=ru_ref,
+        logger.error('Error updating status', collection_exercise_id=collection_exercise_id, ru_ref=ru_ref,
                      case_group_event=case_group_event)
         raise ApiError(url, response.status_code)
 

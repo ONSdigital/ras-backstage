@@ -14,16 +14,6 @@ from ras_backstage.controllers.case_controller import get_available_statuses_for
 logger = wrap_logger(logging.getLogger(__name__))
 
 
-def filter_statuses(current_status, statuses):
-    manual_transisitions = {
-        'NOTSTARTED': ['COMPLETEDBYPHONE'],
-        'INPROGRESS': ['COMPLETEDBYPHONE'],
-        'REOPENED': ['COMPLETEDBYPHONE']
-    }
-    allowed_transitions = manual_transisitions.get(current_status)
-    return {event: status for event, status in statuses.items() if status in allowed_transitions}
-
-
 validate_enrolment_details = case_api.model('ValidateReportingUnitCaseGroupStatus', {
     'event': fields.String(required=True),
 })
@@ -52,9 +42,7 @@ class ReportingUnitCaseGroupStatus(Resource):
 
         current_status = get_case_group_status_by_collection_exercise(cases, exercise['id'])
 
-        statuses = get_available_statuses_for_ru_ref(exercise['id'], ru_ref)
-
-        statuses = filter_statuses(current_status, statuses)
+        statuses = get_available_statuses_for_ru_ref(current_status, exercise['id'], ru_ref)
 
         response = {
             'ru_ref': ru_ref,
@@ -86,4 +74,6 @@ class ReportingUnitCaseGroupStatus(Resource):
         exercise = get_collection_exercise_by_period(exercises, period)
         case_controller.update_case_group_status(exercise['id'], ru_ref, body['event'])
 
+        logger.info('Successfully updated case group status for reporting unit', short_name=short_name, period=period,
+                    ru_ref=ru_ref, case_group_event=body['event'])
         return Response(status=200)
