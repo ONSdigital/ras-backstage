@@ -172,7 +172,7 @@ class TestReportingUnits(unittest.TestCase):
 
         # When
         response = self.app.post("/backstage-api/v1/case/status/BRES/201801/12345",
-                                 data=json.dumps({}), content_type='application/json')
+                                 data=json.dumps(body), content_type='application/json')
 
         # Then
         self.assertEqual(response.status_code, 400)

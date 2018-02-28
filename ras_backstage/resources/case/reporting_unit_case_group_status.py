@@ -1,7 +1,7 @@
 import logging
 
 from flask import jsonify, make_response, Response, request
-from flask_restplus import Resource, reqparse, fields
+from flask_restplus import Resource, fields
 from structlog import wrap_logger
 
 from ras_backstage import case_api
@@ -10,7 +10,6 @@ from ras_backstage.common.mappers import format_short_name
 from ras_backstage.controllers import survey_controller, collection_exercise_controller, party_controller, \
     case_controller
 from ras_backstage.controllers.case_controller import get_available_statuses_for_ru_ref
-
 
 logger = wrap_logger(logging.getLogger(__name__))
 
