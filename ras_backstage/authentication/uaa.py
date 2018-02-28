@@ -13,7 +13,7 @@ def request_uaa_public_key(app):
         'Accept': 'application/json',
     }
 
-    public_key_url = f'{app.config["UAA_SERVICE_URL"]}{"/token_key"}'
+    public_key_url = f'{app.config["UAA_SERVICE_URL"]}/token_key'
     response = requests.get(public_key_url, headers=headers)
 
     try:
@@ -32,5 +32,4 @@ def request_uaa_public_key(app):
 def get_uaa_public_key():
     if not current_app.config.get('UAA_PUBLIC_KEY'):
         current_app.config['UAA_PUBLIC_KEY'] = request_uaa_public_key(current_app)
-
     return current_app.config['UAA_PUBLIC_KEY']

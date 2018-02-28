@@ -10,12 +10,12 @@ from ras_backstage.authentication.uaa import get_uaa_public_key
 logger = logging.getLogger(__name__)
 
 
-def decode_access_token(access_token):
+def decode_access_token(access_token, verify=True):
 
     try:
         decoded_jwt = jwt.decode(
             access_token,
-            verify=True,
+            verify=verify,
             algorithms=None,
             key=get_uaa_public_key(),
             audience='ras_backstage',
@@ -27,7 +27,7 @@ def decode_access_token(access_token):
         abort(500)
 
 
-def get_user_id(access_token):
-    decoded_jwt = decode_access_token(access_token)
+def get_user_id(access_token, verify=True):
+    decoded_jwt = decode_access_token(access_token, verify)
     if decoded_jwt:
         return decoded_jwt.get('user_id')
