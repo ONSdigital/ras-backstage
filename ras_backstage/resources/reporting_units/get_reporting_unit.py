@@ -10,6 +10,7 @@ from ras_backstage import reporting_unit_api
 from ras_backstage.common.filters import get_case_group_status_by_collection_exercise
 from ras_backstage.controllers import (case_controller, collection_exercise_controller, party_controller,
                                        survey_controller, iac_controller)
+from ras_backstage.controllers.case_controller import get_cases_by_business_party_id
 
 logger = wrap_logger(logging.getLogger(__name__))
 
@@ -71,6 +72,17 @@ def add_collection_exercise_details(collection_exercises, reporting_unit, cases)
 def link_respondents_to_survey(respondents, survey):
     survey['respondents'] = []
     for respondent in respondents:
+        # TODO : The way how we identify the collection case needs to be changed.
+        # This might imply change the UI so that the user can be allowed to choose the correct collection case
+
+        # Collect the collection case.
+        json = get_cases_by_business_party_id(respondent.get('id'))
+        try:
+            respondent['case_id'] = json[0].get('id')
+        except IndexError:
+            respondent['case_id'] = ''
+            logger.warning(f"no case id for respondent {respondent.get('id')}")
+
         for association in respondent.get('associations'):
             for enrolment in association.get('enrolments'):
                 respondent['enrolmentStatus'] = enrolment.get('enrolmentStatus')
