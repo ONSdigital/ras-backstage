@@ -109,7 +109,7 @@ class DevelopmentConfig(Config):
     USERNAME = os.getenv('RAS_BACKSTAGE_USERNAME', 'user')
     PASSWORD = os.getenv('RAS_BACKSTAGE_PASSWORD', 'pass')
     USE_UAA = int(os.getenv('USE_UAA', '1'))
-    UAA_SERVICE_URL = os.getenv('UAA_SERVICE_URL', 'http://localhost')
+    UAA_SERVICE_URL = os.getenv('UAA_SERVICE_URL', 'http://localhost:9080')
     UAA_CLIENT_ID = os.getenv('UAA_CLIENT_ID', 'ras_backstage')
     UAA_CLIENT_SECRET = os.getenv('UAA_CLIENT_SECRET', 'password')
     RAS_SECURE_MESSAGING_JWT_SECRET = os.getenv('RAS_SECURE_MESSAGING_JWT_SECRET', 'test_secret')
