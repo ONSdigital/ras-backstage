@@ -16,7 +16,7 @@ respondent_details = party_api.model('RespondentDetails', {
 })
 
 
-@party_api.route('/party-update-respondent-details')
+@party_api.route('/update-respondent-details')
 class UpdateRespondentDetails(Resource):
 
     @staticmethod
