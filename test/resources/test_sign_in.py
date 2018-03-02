@@ -9,8 +9,7 @@ from ras_backstage import app
 
 class TestSignIn(unittest.TestCase):
     def setUp(self):
-        self.url_get_token = '{}{}'.format(app.config['RAS_OAUTH_SERVICE'],
-                                           'api/v1/tokens/')
+        self.url_get_token = f"{app.config['RAS_OAUTH_SERVICE']}api/v1/tokens/"
         self.app = app.test_client()
         self.headers = {
             'Content-Type': 'application/json',

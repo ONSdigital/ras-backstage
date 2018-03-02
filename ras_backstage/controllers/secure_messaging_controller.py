@@ -13,7 +13,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 def get_messages_list(encoded_jwt, message_args):
     logger.debug('Retrieving messages list', label=message_args.get('label'))
-    url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'messages')
+    url = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}messages"
     headers = {"Authorization": encoded_jwt}
     response = request_handler('GET', url, headers=headers, params=message_args)
 
@@ -28,7 +28,7 @@ def get_messages_list(encoded_jwt, message_args):
 def get_message(encoded_jwt, message_id, is_draft):
     logger.debug('Retrieving message', message_id=message_id, is_draft=is_draft)
     endpoint = 'draft/' if is_draft == 'true' else 'message/'
-    url = '{}{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], endpoint, message_id)
+    url = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}{endpoint}{message_id}"
     headers = {"Authorization": encoded_jwt}
     response = request_handler('GET', url, headers=headers)
 
@@ -42,8 +42,7 @@ def get_message(encoded_jwt, message_id, is_draft):
 
 def update_label(encoded_jwt, message_id, label, action):
     logger.debug('Updating label', message_id=message_id, label=label, action=action)
-    url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'],
-                        'message/{}/modify'.format(message_id))
+    url = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}message/{message_id}/modify"
     headers = {"Authorization": encoded_jwt}
     data = {"label": label, "action": action}
     response = request_handler('PUT', url, headers=headers, json=data)
@@ -58,7 +57,7 @@ def update_label(encoded_jwt, message_id, label, action):
 def send_message(encoded_jwt, message_json):
     logger.debug('Sending message')
     headers = {"Authorization": encoded_jwt}
-    url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'message/send')
+    url = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}message/send"
     response = request_handler('POST', url, headers=headers, json=message_json)
 
     if response.status_code != 201:
@@ -74,7 +73,7 @@ def save_draft(encoded_jwt, message_json):
     logger.debug('Saving draft')
     headers = {"Authorization": encoded_jwt}
 
-    url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'draft/save')
+    url = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}draft/save"
     response = request_handler('POST', url, headers=headers, json=message_json)
 
     if response.status_code != 201:
@@ -90,8 +89,7 @@ def update_draft(encoded_jwt, message_json):
     logger.debug('Updating draft', message_id=message_json['msg_id'])
     headers = {"Authorization": encoded_jwt}
 
-    url = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'],
-                        'draft/{}/modify'.format(message_json['msg_id']))
+    url = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}draft/{message_json['msg_id']}/modify"
     response = request_handler('PUT', url, headers=headers, json=message_json)
 
     if response.status_code != 200:
