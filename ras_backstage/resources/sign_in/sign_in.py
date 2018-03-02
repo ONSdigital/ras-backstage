@@ -1,8 +1,9 @@
 import logging
 import uuid
 
-from flask import current_app, request, make_response, jsonify
+from flask import current_app, request, make_response, jsonify, abort
 from flask_restplus import fields, Resource
+from jwt import DecodeError
 from structlog import wrap_logger
 
 from ras_backstage import sign_in_api_v2
@@ -29,12 +30,16 @@ class SignInV2(Resource):
         password = message_json.get('password')
 
         if current_app.config.get('USE_UAA'):
-            logger.info('Retrieving sign-in details')
-            access_token = uaa_controller.sign_in(username, password)
+            try:
+                logger.info('Retrieving sign-in details')
+                access_token = uaa_controller.sign_in(username, password)
 
-            logger.info('Successfully retrieved sign-in details')
-            user_id = token_decoder.get_user_id(access_token)
-            return jsonify({"token": access_token, "user_id": user_id})
+                logger.info('Successfully retrieved sign-in details')
+                user_id = token_decoder.get_user_id(access_token)
+                return jsonify({"token": access_token, "user_id": user_id})
+            except DecodeError:
+                logger.error(f"Unable to decode token {access_token} - confirm the UAA public key is correct")
+                abort(500)
         else:
             if username == current_app.config['USERNAME'] and password == current_app.config['PASSWORD']:
                 logger.info("Authentication successful", user=username)

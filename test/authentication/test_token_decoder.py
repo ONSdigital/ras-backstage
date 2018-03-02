@@ -59,10 +59,5 @@ class TestTokenDecode(unittest.TestCase):
             user_id = get_user_id(TOKEN, False)
             self.assertEqual(VALID_USER_ID, user_id)
 
-    def test_raise_500_on_decode_error(self):
-        with app.app_context():
-            with self.assertRaises(InternalServerError):
-                decode_access_token("invalid_token", False)
-
 
 
