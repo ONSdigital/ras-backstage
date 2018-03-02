@@ -1,38 +1,15 @@
 import logging
+from json import JSONDecodeError
 
-import jwt
-import requests
 from requests import HTTPError
 from structlog import wrap_logger
+from flask_restplus import abort
 
 from ras_backstage import app
 from ras_backstage.common.requests_handler import request_handler
 from ras_backstage.exception.exceptions import ApiError
 
 logger = wrap_logger(logging.getLogger(__name__))
-
-
-def get_public_key():
-    # TODO: this needs to be done at start up
-    headers = {
-        'Accept': 'application/json',
-    }
-
-    public_key_url = f'{app.config["UAA_SERVICE_URL"]}{"/token_key"}'
-    response = requests.get(public_key_url, headers=headers)
-
-    try:
-        response.raise_for_status()
-    except HTTPError:
-        logger.exception("Error while retrieving public key")
-        raise ApiError(public_key_url, response.status_code)
-
-    try:
-        key = response.json()['value']
-        return key
-    except KeyError:
-        logger.exception("No public key returned by UAA")
-        raise ApiError(public_key_url, response.status_code)
 
 
 def sign_in(username, password):
@@ -45,7 +22,7 @@ def sign_in(username, password):
         'client_secret': app.config['UAA_CLIENT_SECRET'],
         'username': username,
         'password': password,
-        'response_type': 'token_id',
+        'response_type': 'token',
         'token_format': 'jwt',
     }
 
@@ -63,17 +40,13 @@ def sign_in(username, password):
         raise ApiError(url, response.status_code)
 
     try:
-        decoded_jwt = jwt.decode(
-            response.json()["access_token"],
-            algorithms=response.json().get('alg'),
-            verify=True,
-            key=get_public_key(),
-            audience='ras_backstage',
-            leeway=10,
-        )
-
         logger.debug('Successfully retrieved UAA token')
-        return decoded_jwt
+        token = response.json()
+        access_token = token.get('access_token')
+        return access_token
     except KeyError:
         logger.exception("No access_token claim in jwt")
         raise ApiError(url, status_code=401)
+    except (JSONDecodeError, ValueError) as e:
+        logger.exception("Error decoding JSON response")
+        abort(500, error=str(e))
