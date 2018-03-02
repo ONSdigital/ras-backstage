@@ -11,12 +11,12 @@ url_get_message = '{}{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'],
 with open('test/test_data/secure_messaging/message.json') as json_data:
     message = json.load(json_data)
 url_get_messages = '{}{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'],
-                                   'messages', '?label=INBOX&limit=1000')
+                                   'v2/messages', '?label=INBOX&limit=1000')
 with open('test/test_data/secure_messaging/messages_list.json') as json_data:
     messages_list = json.load(json_data)
 url_update_label = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'],
                                  'message/{}/modify'.format('dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b'))
-url_send_message = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'message/send')
+url_send_message = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'v2/messages')
 url_save_draft = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'], 'draft/save')
 url_modify_draft = '{}{}'.format(app.config['RAS_SECURE_MESSAGING_SERVICE'],
                                  'draft/{}/modify'.format('test_msg_id'))

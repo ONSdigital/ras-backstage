@@ -1,10 +1,11 @@
 import os
-
+import logging
 from flask import Flask
 from flask_cors import CORS
 from flask_restplus import Api, Namespace
 
 from ras_backstage.logger_config import logger_initial_config
+from ras_backstage.authentication.uaa import request_uaa_public_key
 
 
 app = Flask(__name__)
@@ -15,6 +16,11 @@ app.config.from_object(app_config)
 app.url_map.strict_slashes = False
 
 logger_initial_config(service_name='ras-backstage', log_level=app.config['LOGGING_LEVEL'])
+logger = logging.getLogger(__name__)
+
+if app.config.get('USE_UAA'):
+    # cache the uaa public key on start up
+    app.config['UAA_PUBLIC_KEY'] = request_uaa_public_key(app)
 
 CORS(app)
 
@@ -61,7 +67,6 @@ from ras_backstage.resources.secure_messaging.get_message import GetMessage  # N
 from ras_backstage.resources.secure_messaging.update_label import RemoveUnreadLabel  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.secure_messaging.send_message import SendMessage  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.secure_messaging.save_draft import SaveDraft  # NOQA # pylint: disable=wrong-import-position
-from ras_backstage.resources.sign_in.sign_in import SignIn  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.sign_in.sign_in import SignInV2  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.survey.get_survey_list import GetSurveyList  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.survey.get_survey_by_short_name import GetSurveyByShortName  # NOQA # pylint: disable=wrong-import-position
