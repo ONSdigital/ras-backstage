@@ -108,7 +108,8 @@ def update_draft(encoded_jwt, message_json):
 def _create_authorization_header(access_token):
     if current_app.config.get('USE_UAA'):
         logger.info(f'Received token {access_token}')
-        user_id = token_decoder.get_user_id(access_token)
+        token = token_decoder.decode_access_token(access_token)
+        user_id = token.get('user_id')
     else:
         user_id = "BRES"
     secret = app.config['RAS_SECURE_MESSAGING_JWT_SECRET']

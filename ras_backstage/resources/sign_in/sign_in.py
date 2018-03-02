@@ -35,7 +35,8 @@ class SignInV2(Resource):
                 access_token = uaa_controller.sign_in(username, password)
 
                 logger.info('Successfully retrieved sign-in details')
-                user_id = token_decoder.get_user_id(access_token)
+                token = token_decoder.decode_access_token(access_token)
+                user_id = token.get('user_id')
                 return jsonify({"token": access_token, "user_id": user_id})
             except DecodeError:
                 logger.error(f"Unable to decode token {access_token} - confirm the UAA public key is correct")
