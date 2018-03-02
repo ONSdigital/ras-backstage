@@ -10,7 +10,7 @@ from ras_backstage.authentication.uaa import request_uaa_public_key
 
 app = Flask(__name__)
 
-app_config = 'config.{}'.format(os.environ.get('APP_SETTINGS', 'Config'))
+app_config = f"config.{os.environ.get('APP_SETTINGS', 'Config')}"
 app.config.from_object(app_config)
 
 app.url_map.strict_slashes = False

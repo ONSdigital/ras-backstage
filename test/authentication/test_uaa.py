@@ -18,7 +18,7 @@ class TestUaa(unittest.TestCase):
 
     @requests_mock.mock()
     def test_get_uaa_public_key_with_no_config_set(self, mock_request):
-        mock_request.get(f'{app.config["UAA_SERVICE_URL"]}/token_key', json={'value':'Test'})
+        mock_request.get(f'{app.config["UAA_SERVICE_URL"]}/token_key', json={'value': 'Test'})
         app.config["UAA_PUBLIC_KEY"] = None
         with self.app.app_context():
             self.assertEqual("Test", uaa.get_uaa_public_key())

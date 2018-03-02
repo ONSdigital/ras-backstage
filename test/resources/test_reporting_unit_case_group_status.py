@@ -123,7 +123,6 @@ class TestReportingUnits(unittest.TestCase):
         # Then
         self.assertEqual(response.status_code, 400)
 
-
     @requests_mock.mock()
     def test_filter_other_options_when_not_started(self, mock_request):
         # Given
