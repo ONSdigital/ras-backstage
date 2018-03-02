@@ -8,8 +8,6 @@ from ras_backstage.authentication.uaa import get_uaa_public_key
 
 logger = logging.getLogger(__name__)
 
-USER_ID_CLAIM = "user_id"
-
 
 def decode_access_token(access_token, verify=True):
 
@@ -30,6 +28,6 @@ def decode_access_token(access_token, verify=True):
 
 def get_user_id(access_token, verify=True):
     decoded_jwt = decode_access_token(access_token, verify)
-    user_id = decoded_jwt.get(USER_ID_CLAIM)
+    user_id = decoded_jwt.get("user_id")
     logger.debug(f"Retrieved user_id from access token {user_id}")
     return user_id
