@@ -7,6 +7,7 @@ from structlog import wrap_logger
 from ras_backstage import party_api
 from ras_backstage.controllers import party_controller
 
+
 logger = wrap_logger(logging.getLogger(__name__))
 
 respondent_details = party_api.model('RespondentDetails', {
@@ -16,12 +17,11 @@ respondent_details = party_api.model('RespondentDetails', {
 })
 
 
-@party_api.route('/update-respondent-details')
+@party_api.route('/update-respondent-details', methods=['POST'])
 class UpdateRespondentDetails(Resource):
-
     @staticmethod
     @party_api.expect(respondent_details)
-    def put(id):
+    def post(id):
 
         logger.info('Retrieving updated respondent details')
         message_json = request.get_json()
