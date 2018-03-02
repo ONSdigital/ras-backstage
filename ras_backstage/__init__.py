@@ -26,6 +26,7 @@ collection_instrument_api = Namespace('collection-instrument',
                                       path='/backstage-api/v1/collection-instrument')
 party_api = Namespace('party', path='/backstage-api/v1/party')
 reporting_unit_api = Namespace('reporting-unit', path='/backstage-api/v1/reporting-unit')
+case_api = Namespace('case', path='/backstage-api/v1/case')
 sample_api = Namespace('sample', path='/backstage-api/v1/sample')
 secure_messaging_api = Namespace('secure-messaging',
                                  path='/backstage-api/v1/secure-message')
@@ -33,6 +34,7 @@ sign_in_api = Namespace('sign-in', path='/backstage-api/v1/sign-in')
 sign_in_api_v2 = Namespace('sign-in-v2', path='/backstage-api/v2/sign-in')
 survey_api = Namespace('survey', path='/backstage-api/v1/survey')
 
+api.add_namespace(case_api)
 api.add_namespace(collection_exercise_api)
 api.add_namespace(collection_instrument_api)
 api.add_namespace(party_api)
@@ -51,6 +53,7 @@ from ras_backstage.resources.collection_instrument.link_exercise import LinkExer
 from ras_backstage.resources.info import Info  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.party.get_party_details import PartyDetails  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.reporting_units.get_reporting_unit import GetReportingUnit  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.resources.case.reporting_unit_case_group_status import ReportingUnitCaseGroupStatus  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.reporting_units.search_reporting_units import SearchReportingUnits  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.sample.sample import Sample  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.secure_messaging.get_message_list import GetMessagesList  # NOQA # pylint: disable=wrong-import-position
