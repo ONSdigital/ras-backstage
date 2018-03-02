@@ -1,8 +1,6 @@
 import unittest
 import logging
 
-from werkzeug.exceptions import InternalServerError
-
 from ras_backstage import app
 from ras_backstage.authentication.token_decoder import decode_access_token, get_user_id
 
