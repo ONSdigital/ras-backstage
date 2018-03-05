@@ -43,6 +43,21 @@ def get_message(encoded_jwt, message_id, is_draft):
     return json.loads(response.text)
 
 
+def get_threads_list(encoded_jwt, message_args):
+    logger.debug('Retrieving threads list', label=message_args.get('label'))
+    url = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}threads"
+    headers = _create_authorization_header(encoded_jwt)
+
+    response = request_handler('GET', url, headers=headers, params=message_args)
+
+    if response.status_code != 200:
+        logger.error('Error retrieving the threads list', label=message_args.get('label'))
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully retrieved the threads list', label=message_args.get('label'))
+    return json.loads(response.text)
+
+
 def update_label(encoded_jwt, message_id, label, action):
     logger.debug('Updating label', message_id=message_id, label=label, action=action)
     url = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}message/{message_id}/modify"
