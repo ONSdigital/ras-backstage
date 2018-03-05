@@ -17,11 +17,11 @@ respondent_details = party_api.model('RespondentDetails', {
 })
 
 
-@party_api.route('/update-respondent-details', methods=['POST'])
+@party_api.route('/update-respondent-details')
 class UpdateRespondentDetails(Resource):
     @staticmethod
     @party_api.expect(respondent_details)
-    def post(id):
+    def post():
 
         logger.info('Retrieving updated respondent details')
         message_json = request.get_json()
@@ -29,7 +29,7 @@ class UpdateRespondentDetails(Resource):
         last_name = message_json.get('lastName')
         telephone = message_json.get('telephone')
 
-        party_controller.update_respondent_details(first_name, last_name, telephone)
+        party_controller.update_respondent_details(id, first_name, last_name, telephone)
         logger.info('Successfully updated user details')
 
         return Response(status=200)

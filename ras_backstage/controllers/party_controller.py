@@ -68,8 +68,8 @@ def update_respondent_details(id, first_name, last_name, telephone):
     logger.debug('Updating respondent details', id=id)
     url = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/respondents/change_respondent_details'
     response = request_handler('PUT', url, auth=app.config['BASIC_AUTH'], params={"first_name": first_name,
-                                                                                  "last_name": last_name,
-                                                                                  "telephone": telephone})
+                                                                                   "last_name": last_name,
+                                                                                   "telephone": telephone})
 
     if response.status_code != 200:
         logger.error('Error updating respondent details', id=id)
