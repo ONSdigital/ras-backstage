@@ -1,0 +1,148 @@
+{
+  "_links": {
+    "first": {
+      "href": "http://localhost:5050/thread/78e3caa6-2e27-4ad3-bd38-168b2cc3ef5d"
+    },
+    "self": {
+      "href": "http://localhost:5050/thread/78e3caa6-2e27-4ad3-bd38-168b2cc3ef5d?page=1&limit=20"
+    }
+  },
+  "messages": [
+    {
+      "@msg_from": {
+        "emailAddress": "cblanc@hotmail.co.uk",
+        "firstName": "Chandana",
+        "id": "01b51fcc-ed43-4cdb-ad1c-450f9986859b",
+        "lastName": "Blanchet",
+        "sampleUnitType": "BI",
+        "status": "ACTIVE",
+        "telephone": "+443069990854"
+      },
+      "@msg_to": [
+        {
+          "emailAddress": "mock@email.com",
+          "firstName": "BRES",
+          "id": "BRES",
+          "lastName": ""
+        }
+      ],
+      "@ru_id": {
+        "id": "f1a5e99c-8edf-489a-9c72-6cabe6c387fc",
+        "name": "Apple"
+      },
+      "_links": {
+        "self": {
+          "href": "http://localhost:5050/message/c3b0418e-d723-41e9-9a89-4bacac6e8f0b"
+        }
+      },
+      "body": "Test",
+      "collection_case": "collection case1",
+      "collection_exercise": "collection exercise1",
+      "from_internal": "False",
+      "labels": [
+        "SENT"
+      ],
+      "msg_from": "01b51fcc-ed43-4cdb-ad1c-450f9986859b",
+      "msg_id": "c3b0418e-d723-41e9-9a89-4bacac6e8f0b",
+      "msg_to": [
+        "BRES"
+      ],
+      "ru_id": "f1a5e99c-8edf-489a-9c72-6cabe6c387fc",
+      "sent_date": "2018-02-22 15:02:07.230759",
+      "subject": "Hello World",
+      "survey": "33333333-22222-3333-4444-88dc018a1a4c",
+      "thread_id": "78e3caa6-2e27-4ad3-bd38-168b2cc3ef5d"
+    },
+    {
+      "@msg_from": {
+        "emailAddress": "mock@email.com",
+        "firstName": "BRES",
+        "id": "BRES",
+        "lastName": ""
+      },
+      "@msg_to": [
+        {
+          "emailAddress": "cblanc@hotmail.co.uk",
+          "firstName": "Chandana",
+          "id": "01b51fcc-ed43-4cdb-ad1c-450f9986859b",
+          "lastName": "Blanchet",
+          "sampleUnitType": "BI",
+          "status": "ACTIVE",
+          "telephone": "+443069990854"
+        }
+      ],
+      "@ru_id": {
+        "id": "f1a5e99c-8edf-489a-9c72-6cabe6c387fc",
+        "name": "Apple"
+      },
+      "_links": {
+        "self": {
+          "href": "http://localhost:5050/message/1238dfa6-24e5-46d0-9992-338637080672"
+        }
+      },
+      "body": "Test",
+      "collection_case": "collection case1",
+      "collection_exercise": "collection exercise1",
+      "from_internal": "True",
+      "labels": [
+        "INBOX",
+        "UNREAD"
+      ],
+      "msg_from": "BRES",
+      "msg_id": "1238dfa6-24e5-46d0-9992-338637080672",
+      "msg_to": [
+        "01b51fcc-ed43-4cdb-ad1c-450f9986859b"
+      ],
+      "ru_id": "f1a5e99c-8edf-489a-9c72-6cabe6c387fc",
+      "sent_date": "2018-02-22 15:02:07.190032",
+      "subject": "Hello World",
+      "survey": "33333333-22222-3333-4444-88dc018a1a4c",
+      "thread_id": "78e3caa6-2e27-4ad3-bd38-168b2cc3ef5d"
+    },
+    {
+      "@msg_from": {
+        "emailAddress": "cblanc@hotmail.co.uk",
+        "firstName": "Chandana",
+        "id": "01b51fcc-ed43-4cdb-ad1c-450f9986859b",
+        "lastName": "Blanchet",
+        "sampleUnitType": "BI",
+        "status": "ACTIVE",
+        "telephone": "+443069990854"
+      },
+      "@msg_to": [
+        {
+          "emailAddress": "mock@email.com",
+          "firstName": "BRES",
+          "id": "BRES",
+          "lastName": ""
+        }
+      ],
+      "@ru_id": {
+        "id": "f1a5e99c-8edf-489a-9c72-6cabe6c387fc",
+        "name": "Apple"
+      },
+      "_links": {
+        "self": {
+          "href": "http://localhost:5050/message/78e3caa6-2e27-4ad3-bd38-168b2cc3ef5d"
+        }
+      },
+      "body": "Test",
+      "collection_case": "collection case1",
+      "collection_exercise": "collection exercise1",
+      "from_internal": "False",
+      "labels": [
+        "SENT"
+      ],
+      "msg_from": "01b51fcc-ed43-4cdb-ad1c-450f9986859b",
+      "msg_id": "78e3caa6-2e27-4ad3-bd38-168b2cc3ef5d",
+      "msg_to": [
+        "BRES"
+      ],
+      "ru_id": "f1a5e99c-8edf-489a-9c72-6cabe6c387fc",
+      "sent_date": "2018-02-22 15:02:07.133519",
+      "subject": "Hello World",
+      "survey": "33333333-22222-3333-4444-88dc018a1a4c",
+      "thread_id": "78e3caa6-2e27-4ad3-bd38-168b2cc3ef5d"
+    }
+  ]
+}

@@ -43,6 +43,28 @@ def get_message(encoded_jwt, message_id, is_draft):
     return json.loads(response.text)
 
 
+def get_thread_by_id(encoded_jwt, thread_id):
+    """
+    The method return all the message part of a thread.
+    :param encoded_jwt:  is the security token.
+    :param thread_id: is the id of the thread selected.
+    :return: a list of messages sent/received part of conversation thread
+    """
+    endpoint = '/v2/threads/'
+
+    url = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}{endpoint}{thread_id}"
+
+    headers = _create_authorization_header(encoded_jwt)
+    response = request_handler('GET', url, headers=headers)
+
+    if response.status_code != 200:
+        logger.error('Error retrieving the messages', thread_id=thread_id)
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully retrieved message', thread_id=thread_id)
+    return json.loads(response.text)
+
+
 def update_label(encoded_jwt, message_id, label, action):
     logger.debug('Updating label', message_id=message_id, label=label, action=action)
     url = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}message/{message_id}/modify"
