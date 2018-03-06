@@ -55,7 +55,12 @@ def get_threads_list(encoded_jwt, message_args):
         raise ApiError(url, response.status_code)
 
     logger.debug('Successfully retrieved the threads list')
-    return json.loads(response.text)
+
+    try:
+        return response.json()
+    except ValueError:
+        logger.error('Failed to decode response json from get threads')
+        raise ApiError(url=url)
 
 
 def update_label(encoded_jwt, message_id, label, action):
