@@ -25,7 +25,7 @@ class UpdateRespondentDetails(Resource):
 
         logger.info('Retrieving updated respondent details')
         message_json = request.get_json()
-        respondent_id = message_json.get('id')
+        respondent_id = message_json.get('respondent_id')
         first_name = message_json.get('first_name')
         last_name = message_json.get('last_name')
         telephone = message_json.get('telephone')
