@@ -22,8 +22,7 @@ class GetThread(Resource):
     @secure_messaging_api.expect(parser)
     @secure_messaging_api.header('Authorization',
                                  'JWT to pass to secure messaging service', required=True)
-    def get(encoded_jwt):
-        thread_id = request.args.get('thread_id')
+    def get(encoded_jwt, thread_id):
 
         conversation_thread = secure_messaging_controller.get_thread_by_id(encoded_jwt, thread_id)
 

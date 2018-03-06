@@ -50,9 +50,8 @@ def get_thread_by_id(encoded_jwt, thread_id):
     :param thread_id: is the id of the thread selected.
     :return: a list of messages sent/received part of conversation thread
     """
-    endpoint = '/v2/threads/'
 
-    url = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}{endpoint}{thread_id}"
+    url = f"{app.config['RAS_SECURE_MESSAGING_SERVICE_THREAD']}{thread_id}"
 
     headers = _create_authorization_header(encoded_jwt)
     response = request_handler('GET', url, headers=headers)
