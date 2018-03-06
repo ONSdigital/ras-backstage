@@ -26,14 +26,13 @@ class GetThreadsList(Resource):
                                  'JWT to pass to secure messaging service', required=True)
     def get(encoded_jwt):
         message_args = {
-            'label': request.args.get('label'),
             'limit': request.args.get('limit', 1000),
             'survey': request.args.get('survey')
         }
 
-        logger.info('Retrieving threads list', label=message_args.get('label'))
+        logger.info('Retrieving threads list')
 
         messages = secure_messaging_controller.get_threads_list(encoded_jwt, message_args)
 
-        logger.info('Successfully retrieved threads list', label=message_args.get('label'))
+        logger.info('Successfully retrieved threads list')
         return make_response(jsonify(messages), 200)
