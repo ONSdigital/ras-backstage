@@ -95,7 +95,7 @@ class DevelopmentConfig(Config):
     UAA_SERVICE_URL = os.getenv('UAA_SERVICE_URL', 'http://localhost:9080')
     UAA_CLIENT_ID = os.getenv('UAA_CLIENT_ID', 'ras_backstage')
     UAA_CLIENT_SECRET = os.getenv('UAA_CLIENT_SECRET', 'password')
-    RAS_SECURE_MESSAGING_JWT_SECRET = os.getenv('RAS_SECURE_MESSAGING_JWT_SECRET', 'test_secret')
+    RAS_SECURE_MESSAGING_JWT_SECRET = os.getenv('RAS_SECURE_MESSAGING_JWT_SECRET', 'testsecret')
 
 
 class TestingConfig(DevelopmentConfig):
