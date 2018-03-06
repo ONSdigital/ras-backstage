@@ -9,6 +9,7 @@ from ras_backstage import app
 url_get_business_party = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/businesses/id/testid'
 url_get_reporting_unit = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/parties/type/B/ref/test_ru'
 url_search_businesses = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/businesses/search'
+url_update_respondent_details = f'{app.config["RAS_PARTY_SERVICE"]}/party-api/v1/respondents/change_respondent_details'
 with open('test/test_data/party/business_party.json') as json_data:
     business_party = json.load(json_data)
 url_get_respondent_party = f'{app.config["RAS_PARTY_SERVICE"]}' \
@@ -62,3 +63,22 @@ class TestParty(unittest.TestCase):
 
         self.assertEqual(response.status_code, 500)
         self.assertEqual(response_data['error']['status_code'], 500)
+
+    @requests_mock.mock()
+    def test_update_respondent_details(self, mock_request):
+        mock_request.put(url_update_respondent_details)
+        url = '/backstage-api/v1/party/update_respondent_details/cd592e0f-8d07-407b-b75d-e01fbdae8233'
+
+        response = self.app.put(url, headers=self.headers, data=json.dumps({"firstName": 'John', "lastName": 'Snow'
+                                                                            }))
+
+        self.assertEqual(response.status_code, 200)
+
+    @requests_mock.mock()
+    def test_update_respondent_details_fail(self, mock_request):
+        mock_request.put(url_update_respondent_details)
+        url = '/backstage-api/v1/party/update_respondent_details/'
+
+        response = self.app.put(url, headers=self.headers, data=json.dumps({}))
+
+        self.assertEqual(response.status_code, 500)

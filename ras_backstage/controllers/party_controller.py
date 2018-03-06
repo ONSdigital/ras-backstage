@@ -64,16 +64,21 @@ def get_businesses_by_search(query):
     return json.loads(response.text)
 
 
-def update_respondent_details(id, first_name, last_name, telephone):
-    logger.debug('Updating respondent details', id=id)
+def update_respondent_details(respondent_id, first_name, last_name, telephone):
+    logger.debug('Updating respondent details', respondent_id=respondent_id)
     url = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/respondents/change_respondent_details'
-    response = request_handler('PUT', url, auth=app.config['BASIC_AUTH'], params={"first_name": first_name,
-                                                                                   "last_name": last_name,
-                                                                                   "telephone": telephone})
+    payload = {
+        "respondent_id": respondent_id,
+        "firstName": first_name,
+        "lastName": last_name,
+        "telephone": telephone
+    }
+
+    response = request_handler('PUT', url, json=payload, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:
-        logger.error('Error updating respondent details', id=id)
+        logger.error('Error updating respondent details', respondent_id=respondent_id)
         raise ApiError(url, response.status_code)
 
-    logger.debug('Successfully updated respondent details')
-    return json.loads(response.text)
+    logger.debug('Successfully updated respondent details', respondent_id=respondent_id)
+    return response.json()
