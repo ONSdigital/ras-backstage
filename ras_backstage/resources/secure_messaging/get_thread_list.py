@@ -30,9 +30,9 @@ class GetThreadsList(Resource):
             'survey': request.args.get('survey')
         }
 
-        logger.info('Retrieving threads list')
+        logger.debug('Retrieving threads list')
 
         messages = secure_messaging_controller.get_threads_list(encoded_jwt, message_args)
 
-        logger.info('Successfully retrieved threads list')
+        logger.debug('Successfully retrieved threads list')
         return make_response(jsonify(messages), 200)
