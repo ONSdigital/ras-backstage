@@ -1,4 +1,5 @@
 import logging
+from json import JSONDecodeError
 
 from flask import jsonify, make_response, request
 from flask_restplus import reqparse, Resource
@@ -7,7 +8,7 @@ from structlog import wrap_logger
 from ras_backstage import secure_messaging_api
 from ras_backstage.controllers import secure_messaging_controller
 from ras_backstage.decorators.jwt_decorators import get_jwt
-
+from ras_backstage.exception.exceptions import ApiError
 
 logger = wrap_logger(logging.getLogger(__name__))
 
@@ -24,8 +25,14 @@ class GetThread(Resource):
                                  'JWT to pass to secure messaging service', required=True)
     def get(encoded_jwt, thread_id):
 
-        conversation_thread = secure_messaging_controller.get_thread_by_id(encoded_jwt, thread_id)
+        try:
+            return make_response(jsonify(secure_messaging_controller.get_thread_by_id(encoded_jwt, thread_id)), 200)
+        except ApiError:
+            err_msg = f"Failed to retrieve Thread data with thread id: {thread_id}"
 
-        # Create json response
-        logger.info('Successfully retrieved conversation thread', thread_id=thread_id)
-        return make_response(jsonify(conversation_thread), 200)
+        except JSONDecodeError:
+            err_msg = f"Secure message returned a malformed Json for id: {thread_id}"
+
+        logger.exception(err_msg)
+
+        return make_response(jsonify({'error': err_msg}), 500)

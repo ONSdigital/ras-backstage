@@ -1,5 +1,6 @@
 import json
 import logging
+from json import JSONDecodeError
 
 import jwt
 from flask import current_app
@@ -60,8 +61,11 @@ def get_thread_by_id(encoded_jwt, thread_id):
         logger.error('Error retrieving the messages', thread_id=thread_id)
         raise ApiError(url, response.status_code)
 
-    logger.debug('Successfully retrieved message', thread_id=thread_id)
-    return json.loads(response.text)
+    try:
+        return json.loads(response.text)
+    except (JSONDecodeError, ValueError):
+        logger.exception("Error decoding JSON response")
+        raise JSONDecodeError
 
 
 def update_label(encoded_jwt, message_id, label, action):
