@@ -24,7 +24,7 @@ class UpdateRespondentDetails(Resource):
     def post():
 
         logger.info('Retrieving updated respondent details')
-        message_json = request.get_json()
+        message_json = request.get_json(force=True)
         respondent_id = message_json.get('respondent_id')
         first_name = message_json.get('first_name')
         last_name = message_json.get('last_name')
@@ -34,4 +34,4 @@ class UpdateRespondentDetails(Resource):
 
         logger.info('Successfully updated user details')
 
-        return Response(status=200)
+        return 200
