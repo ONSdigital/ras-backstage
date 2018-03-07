@@ -1,12 +1,12 @@
-import os
 import logging
+import os
+
 from flask import Flask
 from flask_cors import CORS
 from flask_restplus import Api, Namespace
 
-from ras_backstage.logger_config import logger_initial_config
 from ras_backstage.authentication.uaa import request_uaa_public_key
-
+from ras_backstage.logger_config import logger_initial_config
 
 app = Flask(__name__)
 

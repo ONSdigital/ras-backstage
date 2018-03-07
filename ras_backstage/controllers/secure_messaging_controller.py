@@ -14,6 +14,7 @@ from ras_backstage.exception.exceptions import ApiError
 logger = wrap_logger(logging.getLogger(__name__))
 
 
+
 def get_messages_list(encoded_jwt, message_args):
     logger.debug('Retrieving messages list', label=message_args.get('label'))
     url = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}v2/messages"
@@ -51,8 +52,7 @@ def get_thread_by_id(encoded_jwt, thread_id):
     :param thread_id: is the id of the thread selected.
     :return: a list of messages sent/received part of conversation thread
     """
-
-    url = f"{app.config['RAS_SECURE_MESSAGING_SERVICE_THREAD']}{thread_id}"
+    url = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}v2/threads/{thread_id}"
 
     headers = _create_authorization_header(encoded_jwt)
     response = request_handler('GET', url, headers=headers)
@@ -62,7 +62,7 @@ def get_thread_by_id(encoded_jwt, thread_id):
         raise ApiError(url, response.status_code)
 
     try:
-        return json.loads(response.text)
+        return response.json()
     except (JSONDecodeError, ValueError):
         logger.exception("Error decoding JSON response")
         raise JSONDecodeError

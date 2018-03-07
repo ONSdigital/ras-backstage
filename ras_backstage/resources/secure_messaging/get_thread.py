@@ -33,6 +33,6 @@ class GetThread(Resource):
         except JSONDecodeError:
             err_msg = f"Secure message returned a malformed Json for id: {thread_id}"
 
-        logger.exception(err_msg)
+        logger.error(err_msg)
 
         return make_response(jsonify({'error': err_msg}), 500)

@@ -5,7 +5,8 @@ import requests_mock
 
 from ras_backstage import app
 
-url_get_thread = f"{app.config['RAS_SECURE_MESSAGING_SERVICE_THREAD']}78e3caa6-2e27-4ad3-bd38-168b2cc3ef5d"
+url_get_thread = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}v2/threads/78e3caa6-2e27-4ad3-bd38-168b2cc3ef5d"
+
 with open('test/test_data/secure_messaging/thread.json') as json_data:
     thread = json.load(json_data)
 
