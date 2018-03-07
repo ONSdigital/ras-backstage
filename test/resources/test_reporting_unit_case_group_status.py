@@ -80,6 +80,24 @@ class TestReportingUnits(unittest.TestCase):
         self.assertEqual(response_data['error']['status_code'], 500)
 
     @requests_mock.mock()
+    def test_get_reporting_unit_statuses_no_statuses(self, mock_request):
+        # Given
+        mock_request.get(url_get_party_by_ru_ref, json=party_business)
+        mock_request.get(url_get_cases_by_business_id, json=case_list)
+        mock_request.get(url_get_survey_by_short_name, json=self.survey)
+        mock_request.get(url_get_collection_exercises_by_survey, json=collection_exercises)
+        mock_request.get(url_get_statuses_for_ru_ref, status_code=404)
+
+        # When
+        response = self.app.get("/backstage-api/v1/case/status/BRES/201801/12345")
+        response_data = json.loads(response.data)
+
+        # Then
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_data['current_status'], 'NOTSTARTED')
+        self.assertEqual(response_data['available_statuses'], [])
+
+    @requests_mock.mock()
     def test_should_update_status_to_completed_by_phone(self, mock_request):
         # Given
         mock_request.get(url_get_party_by_ru_ref, json=party_business)

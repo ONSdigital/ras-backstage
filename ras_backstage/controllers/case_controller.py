@@ -41,6 +41,10 @@ def get_available_statuses_for_ru_ref(current_status, collection_exercise_id, ru
     url = f'{app.config["RM_CASE_SERVICE"]}casegroups/transitions/{collection_exercise_id}/{ru_ref}'
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
+    if response.status_code == 404:
+        logger.debug('No statuses found', collection_exercise_id=collection_exercise_id, ru_ref=ru_ref)
+        return []
+
     if response.status_code != 200:
         logger.error('Error retrieving statuses', collection_exercise_id=collection_exercise_id, ru_ref=ru_ref)
         raise ApiError(url, response.status_code)
