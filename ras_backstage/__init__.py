@@ -62,6 +62,7 @@ from ras_backstage.resources.reporting_units.get_reporting_unit import GetReport
 from ras_backstage.resources.reporting_units.generate_new_enrolment_code import GenerateNewEnrolmentCode  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.case.reporting_unit_case_group_status import ReportingUnitCaseGroupStatus  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.reporting_units.search_reporting_units import SearchReportingUnits  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.resources.reporting_units.resend_verification_email import ResendVerificationEmail  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.sample.sample import Sample  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.secure_messaging.get_message_list import GetMessagesList  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.secure_messaging.get_message import GetMessage  # NOQA # pylint: disable=wrong-import-position
