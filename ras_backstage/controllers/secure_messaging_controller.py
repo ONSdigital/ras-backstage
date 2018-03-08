@@ -63,7 +63,7 @@ def get_threads_list(encoded_jwt, message_args):
         logger.error('Failed to decode response json from get threads')
         raise ApiError(url=url)
 
-        
+
 def get_thread_by_id(encoded_jwt, thread_id):
     """
     The method return all the message part of a thread.
