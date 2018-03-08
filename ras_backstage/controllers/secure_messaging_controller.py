@@ -14,7 +14,6 @@ from ras_backstage.exception.exceptions import ApiError
 logger = wrap_logger(logging.getLogger(__name__))
 
 
-
 def get_messages_list(encoded_jwt, message_args):
     logger.debug('Retrieving messages list', label=message_args.get('label'))
     url = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}v2/messages"
