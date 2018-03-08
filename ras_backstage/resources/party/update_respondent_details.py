@@ -1,6 +1,6 @@
 import logging
 
-from flask import Response, request
+from flask import request
 from flask_restplus import Resource, fields
 from structlog import wrap_logger
 
