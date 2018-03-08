@@ -81,3 +81,16 @@ def update_respondent_details(respondent_id, first_name, last_name, telephone):
         raise ApiError(url, response.status_code)
 
     logger.debug('Successfully updated respondent details')
+
+
+def resend_verification_email(party_id):
+    logger.debug('Resending verification email', party_id=party_id)
+    url = app.config['RAS_PARTY_RESEND_VERIFICATION_EMAIL'].format(party_id)
+    response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
+
+    if response.status_code != 200:
+        logger.error('Failed to resend verification email', party_id=party_id)
+        raise ApiError(url=url, status_code=response.status_code)
+
+    logger.debug('Successfully resent verification email')
+
