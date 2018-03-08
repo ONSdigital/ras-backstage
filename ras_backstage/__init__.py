@@ -59,6 +59,7 @@ from ras_backstage.resources.collection_instrument.link_exercise import LinkExer
 from ras_backstage.resources.info import Info  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.party.get_party_details import PartyDetails  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.reporting_units.get_reporting_unit import GetReportingUnit  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.resources.reporting_units.generate_new_enrolment_code import GenerateNewEnrolmentCode  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.case.reporting_unit_case_group_status import ReportingUnitCaseGroupStatus  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.reporting_units.search_reporting_units import SearchReportingUnits  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.sample.sample import Sample  # NOQA # pylint: disable=wrong-import-position
