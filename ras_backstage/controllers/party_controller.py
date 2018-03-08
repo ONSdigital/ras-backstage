@@ -62,3 +62,15 @@ def get_businesses_by_search(query):
 
     logger.debug('Successfully retrieved businesses by search query')
     return json.loads(response.text)
+
+
+def resend_verification_email(party_id):
+    logger.debug('Resending verification email')
+    url = app.config['RAS_PARTY_RESEND_VERIFICATION_EMAIL'].format(party_id)
+    response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
+
+    if response.status_code != 200:
+        logger.error('Failed to resend verification email')
+        raise ApiError(url=url, status_code=response.status_code)
+
+    logger.debug('Successfully resent verification email')
