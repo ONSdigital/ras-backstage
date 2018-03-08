@@ -1,12 +1,12 @@
-import os
 import logging
+import os
+
 from flask import Flask
 from flask_cors import CORS
 from flask_restplus import Api, Namespace
 
-from ras_backstage.logger_config import logger_initial_config
 from ras_backstage.authentication.uaa import request_uaa_public_key
-
+from ras_backstage.logger_config import logger_initial_config
 
 app = Flask(__name__)
 
@@ -68,6 +68,7 @@ from ras_backstage.resources.secure_messaging.get_message import GetMessage  # N
 from ras_backstage.resources.secure_messaging.update_label import RemoveUnreadLabel  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.secure_messaging.send_message import SendMessage  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.secure_messaging.save_draft import SaveDraft  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.resources.secure_messaging.get_thread import GetThread  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.sign_in.sign_in import SignInV2  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.survey.get_survey_list import GetSurveyList  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.survey.get_survey_by_short_name import GetSurveyByShortName  # NOQA # pylint: disable=wrong-import-position
