@@ -24,6 +24,10 @@ class TestParty(unittest.TestCase):
 
     def setUp(self):
         self.app = app.test_client()
+        self.headers = {
+            'Authorization': 'test_jwt',
+            'Content-Type': 'application/json',
+        }
 
     @requests_mock.mock()
     def test_get_party_details(self, mock_request):
@@ -66,24 +70,24 @@ class TestParty(unittest.TestCase):
 
     @requests_mock.mock()
     def test_update_respondent_details(self, mock_request):
-        mock_request.get(url_get_respondent_party, json=respondent_party)
         mock_request.put(url_update_respondent_details)
         url = '/backstage-api/v1/party/update-respondent-details'
-        response = self.app.post(url, data=json.dumps({"respondent_id": 'cd592e0f-8d07-407b-b75d-e01fbdae8233',
-                                                       "first_name": 'John',
-                                                       "last_name": 'Snow',
-                                                       "telephone": '07437240752'}))
+        response = self.app.put(url, headers=self.headers, data=json.dumps({
+                                                      "respondent_id": 'cd592e0f-8d07-407b-b75d-e01fbdae8233',
+                                                      "first_name": 'John',
+                                                      "last_name": 'Snow',
+                                                      "telephone": '07437240752'}))
 
         self.assertEqual(response.status_code, 200)
 
     @requests_mock.mock()
     def test_update_respondent_details_fail(self, mock_request):
-        mock_request.get(url_get_respondent_party, json=respondent_party)
         mock_request.put(url_update_respondent_details, status_code=500)
         url = '/backstage-api/v1/party/update-respondent-details'
-        response = self.app.post(url, data=json.dumps({"respondent_id": 'cd592e0f-8d07-407b-b75d-e01fbdae8233',
-                                                       "first_name": 'John',
-                                                       "last_name": 'Snow',
-                                                       "telephone": '07437240752'}))
+        response = self.app.put(url, headers=self.headers, data=json.dumps({
+                                                      "respondent_id": 'cd592e0f-8d07-407b-b75d-e01fbdae8233',
+                                                      "first_name": 'John',
+                                                      "last_name": 'Snow',
+                                                      "telephone": '07437240752'}))
 
         self.assertEqual(response.status_code, 500)

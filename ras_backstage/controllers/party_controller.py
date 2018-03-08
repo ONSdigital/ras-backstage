@@ -79,3 +79,5 @@ def update_respondent_details(respondent_id, first_name, last_name, telephone):
     if response.status_code != 200:
         logger.error('Error updating respondent details', respondent_id=respondent_id)
         raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully updated respondent details')

@@ -11,8 +11,9 @@ from ras_backstage.controllers import party_controller
 logger = wrap_logger(logging.getLogger(__name__))
 
 respondent_details = party_api.model('RespondentDetails', {
-    'firstName': fields.String(required=True),
-    'lastName': fields.String(required=True),
+    'respondent_id': fields.String(required=True),
+    'first_name': fields.String(required=True),
+    'last_name': fields.String(required=True),
     'telephone': fields.String(required=True),
 })
 
@@ -20,11 +21,11 @@ respondent_details = party_api.model('RespondentDetails', {
 @party_api.route('/update-respondent-details')
 class UpdateRespondentDetails(Resource):
     @staticmethod
-    @party_api.expect(respondent_details)
-    def post():
+    @party_api.expect(respondent_details, validate=True)
+    def put():
 
         logger.info('Retrieving updated respondent details')
-        message_json = request.get_json(force=True)
+        message_json = request.get_json()
         respondent_id = message_json.get('respondent_id')
         first_name = message_json.get('first_name')
         last_name = message_json.get('last_name')
