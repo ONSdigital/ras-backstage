@@ -26,6 +26,22 @@ def get_cases_by_business_party_id(business_party_id):
     return response.json()
 
 
+def get_case_groups_by_business_party_id(business_party_id):
+    logger.debug('Retrieving case groups', business_party_id=business_party_id)
+    url = f'{app.config["RM_CASE_SERVICE"]}casegroups/partyid/{business_party_id}'
+    response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
+
+    if response.status_code == 204:
+        logger.debug('No caseGroups found for business', business_party_id=business_party_id)
+        return []
+    if response.status_code != 200:
+        logger.error('Error retrieving cases', business_party_id=business_party_id)
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully retrieved caseGroups', business_party_id=business_party_id)
+    return response.json()
+
+
 def filter_statuses(current_status, statuses):
     manual_transisitions = {
         'NOTSTARTED': ['COMPLETEDBYPHONE'],
