@@ -68,7 +68,6 @@ def update_respondent_details(respondent_id, first_name, last_name, telephone):
     logger.debug('Updating respondent details', respondent_id=respondent_id)
     url = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/respondents/change_respondent_details/{respondent_id}'
     payload = {
-        "respondent_id": respondent_id,
         "firstName": first_name,
         "lastName": last_name,
         "telephone": telephone

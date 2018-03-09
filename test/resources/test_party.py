@@ -9,7 +9,7 @@ from ras_backstage import app
 url_get_business_party = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/businesses/id/testid'
 url_get_reporting_unit = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/parties/type/B/ref/test_ru'
 url_search_businesses = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/businesses/search'
-url_update_respondent_details = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/respondents/change_respondent_details'
+url_update_respondent_details = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/respondents/change_respondent_details/cd592e0f-8d07-407b-b75d-e01fbdae8233'
 with open('test/test_data/party/business_party.json') as json_data:
     business_party = json.load(json_data)
 url_get_respondent_party = f'{app.config["RAS_PARTY_SERVICE"]}' \
@@ -70,10 +70,9 @@ class TestParty(unittest.TestCase):
 
     @requests_mock.mock()
     def test_update_respondent_details(self, mock_request):
-        mock_request.put(url_update_respondent_details)
-        url = '/backstage-api/v1/party/update-respondent-details'
+        mock_request.put(url_update_respondent_details, status_code=200)
+        url = '/backstage-api/v1/party/update-respondent-details/cd592e0f-8d07-407b-b75d-e01fbdae8233'
         response = self.app.put(url, headers=self.headers, data=json.dumps({
-                                                      "respondent_id": 'cd592e0f-8d07-407b-b75d-e01fbdae8233',
                                                       "first_name": 'John',
                                                       "last_name": 'Snow',
                                                       "telephone": '07437240752'}))
@@ -83,9 +82,8 @@ class TestParty(unittest.TestCase):
     @requests_mock.mock()
     def test_update_respondent_details_fail(self, mock_request):
         mock_request.put(url_update_respondent_details, status_code=500)
-        url = '/backstage-api/v1/party/update-respondent-details'
+        url = '/backstage-api/v1/party/update-respondent-details/cd592e0f-8d07-407b-b75d-e01fbdae8233'
         response = self.app.put(url, headers=self.headers, data=json.dumps({
-                                                      "respondent_id": 'cd592e0f-8d07-407b-b75d-e01fbdae8233',
                                                       "first_name": 'John',
                                                       "last_name": 'Snow',
                                                       "telephone": '07437240752'}))
