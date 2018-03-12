@@ -64,6 +64,24 @@ def get_businesses_by_search(query):
     return json.loads(response.text)
 
 
+def update_respondent_details(respondent_id, first_name, last_name, telephone):
+    logger.debug('Updating respondent details', respondent_id=respondent_id)
+    url = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/respondents/id/{respondent_id}'
+    payload = {
+        "firstName": first_name,
+        "lastName": last_name,
+        "telephone": telephone
+        }
+
+    response = request_handler('PUT', url, json=payload, auth=app.config['BASIC_AUTH'])
+
+    if response.status_code != 200:
+        logger.error('Error updating respondent details', respondent_id=respondent_id)
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully updated respondent details')
+
+
 def resend_verification_email(party_id):
     logger.debug('Resending verification email', party_id=party_id)
     url = app.config['RAS_PARTY_RESEND_VERIFICATION_EMAIL'].format(party_id)
@@ -74,3 +92,4 @@ def resend_verification_email(party_id):
         raise ApiError(url=url, status_code=response.status_code)
 
     logger.debug('Successfully resent verification email')
+
