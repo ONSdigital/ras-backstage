@@ -93,3 +93,19 @@ def resend_verification_email(party_id):
 
     logger.debug('Successfully resent verification email')
 
+
+def update_respondent_email_address(old_email, new_email, party_id):
+    logger.debug('Updating respondent email address', party_id=party_id)
+    url = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/respondents/change_email'
+    payload = {
+        "email_address": old_email,
+        "old_email_address": new_email
+    }
+
+    response = request_handler('PUT', url, json=payload, auth=app.config['BASIC_AUTH'])
+
+    if response.status_code != 200:
+        logger.error('Error updating respondent email address', party_id=party_id)
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully updated respondent email address', party_id=party_id)

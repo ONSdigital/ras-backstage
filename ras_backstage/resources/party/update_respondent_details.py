@@ -14,6 +14,7 @@ respondent_details = party_api.model('RespondentDetails', {
     'first_name': fields.String(required=True),
     'last_name': fields.String(required=True),
     'telephone': fields.String(required=True),
+    'email': fields.String(required=True)       # TODO: Check if this is needed
 })
 
 
@@ -30,6 +31,12 @@ class UpdateRespondentDetails(Resource):
         telephone = message_json.get('telephone')
 
         party_controller.update_respondent_details(respondent_id, first_name, last_name, telephone)
+
+        # TODO: This block can just get passed from the UI (saves an API call to the party service)
+        stored_email = party_controller.get_party_by_respondent_id(respondent_id).get('emailAddress')
+        email = message_json.get('email')
+        if email != stored_email:
+            party_controller.update_respondent_email_address(respondent_id, stored_email, email)
 
         logger.info('Successfully updated user details', respondent_id=respondent_id)
 
