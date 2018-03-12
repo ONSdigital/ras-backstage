@@ -32,7 +32,7 @@ def filter_statuses(current_status, statuses):
         'INPROGRESS': ['COMPLETEDBYPHONE'],
         'REOPENED': ['COMPLETEDBYPHONE']
     }
-    allowed_transitions = manual_transisitions.get(current_status)
+    allowed_transitions = manual_transisitions.get(current_status, [])
     return {event: status for event, status in statuses.items() if status in allowed_transitions}
 
 
