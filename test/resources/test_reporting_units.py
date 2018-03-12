@@ -35,6 +35,9 @@ with open('test/test_data/collection_exercise/collection_exercise.json') as json
 url_get_iac_by_code = f'{app.config["RM_IAC_SERVICE"]}iacs/jkbvyklkwj88'
 with open('test/test_data/iac_details.json') as json_data:
     iac_details = json.load(json_data)
+url_get_case_groups_by_business_id = f'{app.config["RM_CASE_SERVICE"]}casegroups/partyid/b3ba864b-7cbc-4f44-84fe-88dc018a1a4c'
+with open('test/test_data/case/case_groups.json') as json_data:
+    case_group_list = json.load(json_data)
 
 
 class TestReportingUnits(unittest.TestCase):
@@ -68,6 +71,7 @@ class TestReportingUnits(unittest.TestCase):
         mock_request.get(url_get_party_by_ru_ref, json=party_business)
         mock_request.get(url_get_collection_exercises_by_party, json=collection_exercise_list)
         mock_request.get(url_get_cases_by_business_id, json=case_list)
+        mock_request.get(url_get_case_groups_by_business_id, json=case_group_list)
         mock_request.get(url_get_party_by_business_id, json=party_business)
         mock_request.get(url_get_survey_by_id, json=survey_list[0])
         mock_request.get(url_get_party_by_respondent_id, json=party_respondent)
@@ -86,6 +90,7 @@ class TestReportingUnits(unittest.TestCase):
         mock_request.get(url_get_party_by_ru_ref, json=party_business)
         mock_request.get(url_get_collection_exercises_by_party, json=collection_exercise_list)
         mock_request.get(url_get_cases_by_business_id, status_code=404)
+        mock_request.get(url_get_case_groups_by_business_id, json=case_group_list)
         mock_request.get(url_get_party_by_business_id, json=party_business)
         mock_request.get(url_get_survey_by_id, json=survey_list[0])
         mock_request.get(url_get_party_by_respondent_id, json=party_respondent)
@@ -101,6 +106,7 @@ class TestReportingUnits(unittest.TestCase):
         mock_request.get(url_get_party_by_ru_ref, json=party_business)
         mock_request.get(url_get_collection_exercises_by_party, status_code=204)
         mock_request.get(url_get_cases_by_business_id, json=case_list)
+        mock_request.get(url_get_case_groups_by_business_id, json=case_group_list)
         mock_request.get(url_get_party_by_business_id, json=party_business)
         mock_request.get(url_get_survey_by_id, json=survey_list[0])
         mock_request.get(url_get_party_by_respondent_id, json=party_respondent)
@@ -136,6 +142,10 @@ class TestReportingUnits(unittest.TestCase):
     def test_get_reporting_unit_cases_fail(self, mock_request):
         mock_request.get(url_get_party_by_ru_ref, json=party_business)
         mock_request.get(url_get_collection_exercises_by_party, json=collection_exercise_list)
+        mock_request.get(url_get_case_groups_by_business_id, json=case_group_list)
+        mock_request.get(url_get_party_by_business_id, json=party_business)
+        mock_request.get(url_get_survey_by_id, json=survey_list[0])
+        mock_request.get(url_get_party_by_respondent_id, json=party_respondent)
         mock_request.get(url_get_cases_by_business_id, status_code=500)
 
         response = self.app.get("/backstage-api/v1/reporting-unit/12345")
@@ -149,6 +159,7 @@ class TestReportingUnits(unittest.TestCase):
         mock_request.get(url_get_party_by_ru_ref, json=party_business)
         mock_request.get(url_get_collection_exercises_by_party, json=collection_exercise_list)
         mock_request.get(url_get_cases_by_business_id, json=case_list)
+        mock_request.get(url_get_case_groups_by_business_id, json=case_group_list)
         mock_request.get(url_get_party_by_business_id, status_code=500)
 
         response = self.app.get("/backstage-api/v1/reporting-unit/12345")
@@ -162,6 +173,7 @@ class TestReportingUnits(unittest.TestCase):
         mock_request.get(url_get_party_by_ru_ref, json=party_business)
         mock_request.get(url_get_collection_exercises_by_party, json=collection_exercise_list)
         mock_request.get(url_get_cases_by_business_id, json=case_list)
+        mock_request.get(url_get_case_groups_by_business_id, json=case_group_list)
         mock_request.get(url_get_party_by_business_id, json=party_business)
         mock_request.get(url_get_survey_by_id, status_code=500)
 
@@ -176,6 +188,7 @@ class TestReportingUnits(unittest.TestCase):
         mock_request.get(url_get_party_by_ru_ref, json=party_business)
         mock_request.get(url_get_collection_exercises_by_party, json=collection_exercise_list)
         mock_request.get(url_get_cases_by_business_id, json=case_list)
+        mock_request.get(url_get_case_groups_by_business_id, json=case_group_list)
         mock_request.get(url_get_party_by_business_id, json=party_business)
         mock_request.get(url_get_survey_by_id, json=survey_list[0])
         mock_request.get(url_get_party_by_respondent_id, status_code=500)
@@ -191,6 +204,7 @@ class TestReportingUnits(unittest.TestCase):
         mock_request.get(url_get_party_by_ru_ref, json=party_business)
         mock_request.get(url_get_collection_exercises_by_party, json=collection_exercise_list)
         mock_request.get(url_get_cases_by_business_id, json=case_list)
+        mock_request.get(url_get_case_groups_by_business_id, json=case_group_list)
         mock_request.get(url_get_party_by_business_id, json=party_business)
         mock_request.get(url_get_survey_by_id, json=survey_list[0])
         mock_request.get(url_get_party_by_respondent_id, json=party_respondent)

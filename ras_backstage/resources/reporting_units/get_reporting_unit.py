@@ -31,8 +31,8 @@ class GetReportingUnit(Resource):
                                 if parse_date(collection_exercise['scheduledStartDateTime']) < now]
 
         # Add extra collection exercise details using data from case service
-        cases = case_controller.get_cases_by_business_party_id(reporting_unit['id'])
-        add_collection_exercise_details(collection_exercises, reporting_unit, cases)
+        case_groups = case_controller.get_case_groups_by_business_party_id(reporting_unit['id'])
+        add_collection_exercise_details(collection_exercises, reporting_unit, case_groups)
 
         # Get all surveys for gathered collection exercises
         survey_ids = {collection_exercise['surveyId']
@@ -45,6 +45,7 @@ class GetReportingUnit(Resource):
                        for respondent in reporting_unit.get('associations')]
 
         # Link collection exercises and respondents to surveys
+        cases = case_controller.get_cases_by_business_party_id(reporting_unit['id'])
         for survey in surveys:
             survey['collection_exercises'] = [collection_exercise
                                               for collection_exercise in collection_exercises
@@ -60,9 +61,9 @@ class GetReportingUnit(Resource):
         return make_response(jsonify(response_json), 200)
 
 
-def add_collection_exercise_details(collection_exercises, reporting_unit, cases):
+def add_collection_exercise_details(collection_exercises, reporting_unit, case_groups):
     for exercise in collection_exercises:
-        exercise['responseStatus'] = get_case_group_status_by_collection_exercise(cases, exercise['id'])
+        exercise['responseStatus'] = get_case_group_status_by_collection_exercise(case_groups, exercise['id'])
         reporting_unit_ce = party_controller.get_party_by_business_id(reporting_unit['id'], exercise['id'])
         exercise['companyName'] = reporting_unit_ce['name']
         exercise['companyRegion'] = reporting_unit_ce['region']
