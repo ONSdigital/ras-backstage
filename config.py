@@ -2,9 +2,9 @@ import os
 
 
 class Config(object):
-    DEBUG = os.getenv('DEBUG', False)
+    DEBUG = False
     TESTING = False
-    VERSION = os.getenv('VERSION', '0.0.3')
+    VERSION = '0.0.3'
     PORT = os.getenv('PORT', 8001)
     LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'INFO')
     SECURITY_USER_NAME = os.getenv('SECURITY_USER_NAME')
@@ -85,7 +85,7 @@ class Config(object):
 
 
 class DevelopmentConfig(Config):
-    DEBUG = os.getenv('DEBUG', True)
+    DEBUG = True
     LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'DEBUG')
     SECURITY_USER_NAME = os.getenv('SECURITY_USER_NAME', 'admin')
     SECURITY_USER_PASSWORD = os.getenv('SECURITY_USER_PASSWORD', 'secret')
