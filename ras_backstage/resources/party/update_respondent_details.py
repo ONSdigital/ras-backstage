@@ -31,6 +31,6 @@ class UpdateRespondentDetails(Resource):
 
         party_controller.update_respondent_details(respondent_id, first_name, last_name, telephone)
 
-        logger.info('Successfully updated user details')
+        logger.info('Successfully updated user details', respondent_id=respondent_id)
 
         return 200

@@ -9,7 +9,7 @@ from ras_backstage import app
 url_get_business_party = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/businesses/id/testid'
 url_get_reporting_unit = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/parties/type/B/ref/test_ru'
 url_search_businesses = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/businesses/search'
-url_update_respondent_details = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/respondents/change_respondent_details/cd592e0f-8d07-407b-b75d-e01fbdae8233'
+url_update_respondent_details = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/respondents/id/cd592e0f-8d07-407b-b75d-e01fbdae8233'
 with open('test/test_data/party/business_party.json') as json_data:
     business_party = json.load(json_data)
 url_get_respondent_party = f'{app.config["RAS_PARTY_SERVICE"]}' \
