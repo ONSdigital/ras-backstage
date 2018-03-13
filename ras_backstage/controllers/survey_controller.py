@@ -50,3 +50,35 @@ def get_survey_by_shortname(short_name):
 
     logger.debug('Successfully retrieved survey', short_name=short_name)
     return response.json()
+
+
+def get_survey_ci_classifier(survey_id):
+    logger.debug('Retrieving classifier type selectors', survey_id=survey_id)
+    url = f'{app.config["RM_SURVEY_SERVICE"]}surveys/{survey_id}/classifiertypeselectors'
+    response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
+
+    if response.status_code != 200:
+        logger.error('Error classifier type selectors', survey_id=survey_id)
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully retrieved classifier type selectors', survey_id=survey_id)
+
+    classifier_type_selectors = response.json()
+    ci_selector = None
+    for selector in classifier_type_selectors:
+        if selector['name'] == "COLLECTION_INSTRUMENT":
+            ci_selector = selector
+
+    logger.debug('Retrieving classifiers for CI selector type', survey_id=survey_id, ci_selector=ci_selector['id'])
+    url = f'{app.config["RM_SURVEY_SERVICE"]}surveys/{survey_id}/classifiertypeselectors/{ci_selector["id"]}'
+    response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
+
+    if response.status_code != 200:
+        logger.error('Error retrieving classifiers for CI selector type', survey_id=survey_id,
+                     ci_selector=ci_selector['id'])
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully retrieved classifiers for CI selector type', survey_id=survey_id,
+                 ci_selector=ci_selector['id'])
+
+    return response.json()
