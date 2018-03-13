@@ -4,7 +4,7 @@ import os
 class Config(object):
     DEBUG = os.getenv('DEBUG', False)
     TESTING = False
-    VERSION = os.getenv('VERSION', '0.1.0')
+    VERSION = os.getenv('VERSION', '0.1.1')
     PORT = os.getenv('PORT', 8001)
     LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'INFO')
     SECURITY_USER_NAME = os.getenv('SECURITY_USER_NAME')
