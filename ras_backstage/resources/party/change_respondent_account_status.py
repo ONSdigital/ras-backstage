@@ -23,7 +23,7 @@ class ChangeAccountStatus(Resource):
         request_json = request.get_json()
         logger.info('Changing respondent account status')
 
-        response = party_controller.change_respondent_account_status(request_json)
+        party_controller.change_respondent_account_status(request_json)
 
         logger.info('Successfully changed respondent account status', party_id=request_json['party_id'])
-        return make_response(jsonify(response), 200)
+        return make_response(jsonify('OK'), 200)
