@@ -98,8 +98,8 @@ def update_respondent_email_address(old_email, new_email, party_id):
     logger.debug('Updating respondent email address', party_id=party_id)
     url = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/respondents/change_email'
     payload = {
-        "email_address": old_email,
-        "old_email_address": new_email
+        "new_email_address": new_email,
+        "email_address": old_email
     }
 
     response = request_handler('PUT', url, json=payload, auth=app.config['BASIC_AUTH'])
