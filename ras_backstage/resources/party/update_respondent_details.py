@@ -13,8 +13,9 @@ logger = wrap_logger(logging.getLogger(__name__))
 respondent_details = party_api.model('RespondentDetails', {
     'first_name': fields.String(required=True),
     'last_name': fields.String(required=True),
-    'telephone': fields.String(required=True)
-    # 'email': fields.String(required=True)       # TODO: Check if this is needed
+    'telephone': fields.String(required=True),
+    'email_address': fields.String(required=True),
+    'new_email_address': fields.String(required=True)
 })
 
 
@@ -23,20 +24,8 @@ class UpdateRespondentDetails(Resource):
     @staticmethod
     @party_api.expect(respondent_details, validate=True)
     def put(respondent_id):
-
-        logger.info('Retrieving updated respondent details')
-        message_json = request.get_json()
-        first_name = message_json.get('first_name')
-        last_name = message_json.get('last_name')
-        telephone = message_json.get('telephone')
-        old_email = message_json.get('old_email')
-        new_email = message_json.get('new_email')
-
-        party_controller.update_respondent_details(respondent_id, first_name, last_name, telephone)
-
-        if old_email != new_email:
-            party_controller.update_respondent_email_address(old_email, new_email, respondent_id)
-
+        logger.info('Retrieving updated respondent details', respondent_id=respondent_id)
+        respondent_contact_details = request.get_json()
+        party_controller.update_respondent_details(respondent_id, respondent_contact_details)
         logger.info('Successfully updated user details', respondent_id=respondent_id)
-
         return 200
