@@ -4,7 +4,7 @@ def get_collection_exercise_by_period(exercises, period):
             return exercise
 
 
-def get_case_group_status_by_collection_exercise(cases, collection_exercise_id):
-    for case in cases:
-        if case['caseGroup']['collectionExerciseId'] == collection_exercise_id:
-            return case['caseGroup']['caseGroupStatus']
+def get_case_group_status_by_collection_exercise(case_groups, collection_exercise_id):
+    for case_group in case_groups:
+        if case_group['collectionExerciseId'] == collection_exercise_id:
+            return case_group['caseGroupStatus']
