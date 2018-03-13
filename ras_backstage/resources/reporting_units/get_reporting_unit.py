@@ -50,7 +50,7 @@ class GetReportingUnit(Resource):
             survey['collection_exercises'] = [collection_exercise
                                               for collection_exercise in collection_exercises
                                               if survey['id'] == collection_exercise['surveyId']]
-            link_respondents_to_survey(respondents, survey)
+            link_respondents_to_survey(respondents, survey, ru_ref)
             survey['activeIacCode'] = get_latest_active_iac_code(survey['id'], cases, collection_exercises)
 
         response_json = {
@@ -69,14 +69,15 @@ def add_collection_exercise_details(collection_exercises, reporting_unit, case_g
         exercise['companyRegion'] = reporting_unit_ce['region']
 
 
-def link_respondents_to_survey(respondents, survey):
+def link_respondents_to_survey(respondents, survey, ru_ref):
     survey['respondents'] = []
     for respondent in respondents:
         for association in respondent.get('associations'):
-            for enrolment in association.get('enrolments'):
-                respondent['enrolmentStatus'] = enrolment.get('enrolmentStatus')
-                if survey['id'] == enrolment['surveyId'] and respondent not in survey['respondents']:
-                    survey['respondents'].append(respondent)
+            if association['sampleUnitRef'] == ru_ref:
+                for enrolment in association.get('enrolments'):
+                    respondent['enrolmentStatus'] = enrolment.get('enrolmentStatus')
+                    if survey['id'] == enrolment['surveyId'] and respondent not in survey['respondents']:
+                        survey['respondents'].append(respondent)
 
 
 def get_latest_active_iac_code(survey_id, cases, ces_for_survey):
