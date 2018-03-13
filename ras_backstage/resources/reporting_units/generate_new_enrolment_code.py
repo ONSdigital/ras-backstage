@@ -16,5 +16,6 @@ class GenerateNewEnrolmentCode(Resource):
     def post(collection_exercise_id, ru_ref):
         logger.info('Generating new enrolment code', collection_exercise_id=collection_exercise_id, ru_ref=ru_ref)
         case = case_controller.generate_new_enrolment_code(collection_exercise_id, ru_ref)
-        logger.info('Successfully generated new enrolment code', collection_exercise_id=collection_exercise_id, ru_ref=ru_ref)
+        logger.info('Successfully generated new enrolment code',
+                    collection_exercise_id=collection_exercise_id, ru_ref=ru_ref)
         return case
