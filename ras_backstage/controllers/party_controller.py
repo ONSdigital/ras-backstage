@@ -92,4 +92,3 @@ def resend_verification_email(party_id):
         raise ApiError(url=url, status_code=response.status_code)
 
     logger.debug('Successfully resent verification email')
-
