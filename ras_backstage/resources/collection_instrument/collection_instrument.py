@@ -14,6 +14,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 parser = reqparse.RequestParser()
 parser.add_argument('file', location='files', required=True)
+parser.add_argument('classifiers', location='args')
 
 
 @collection_instrument_api.route('/<short_name>/<period>')
