@@ -90,8 +90,10 @@ def generate_new_enrolment_code(collection_exercise_id, ru_ref):
     response = request_handler('POST', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:
-        logger.error('Failed to generate new enrolment code', collection_exercise_id=collection_exercise_id, ru_ref=ru_ref)
+        logger.error('Failed to generate new enrolment code',
+                     collection_exercise_id=collection_exercise_id, ru_ref=ru_ref)
         raise ApiError(url, response.status_code)
 
-    logger.debug('Successfully generated new enrolment code', collection_exercise_id=collection_exercise_id, ru_ref=ru_ref)
+    logger.debug('Successfully generated new enrolment code',
+                 collection_exercise_id=collection_exercise_id, ru_ref=ru_ref)
     return response.json()
