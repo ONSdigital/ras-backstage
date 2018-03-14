@@ -10,13 +10,13 @@ from ras_backstage.exception.exceptions import ApiError
 logger = wrap_logger(logging.getLogger(__name__))
 
 
-def upload_collection_instrument(collection_exercise_id, file):
+def upload_collection_instrument(collection_exercise_id, file, params=None):
     logger.debug('Uploading collection instrument', collection_exercise_id=collection_exercise_id)
     url = f'{app.config["RAS_COLLECTION_INSTRUMENT_SERVICE"]}' \
           f'collection-instrument-api/1.0.2/upload/{collection_exercise_id}'
 
     files = {"file": (file.filename, file.stream, file.mimetype)}
-    response = request_handler(url=url, method='POST', auth=app.config['BASIC_AUTH'], files=files)
+    response = request_handler(url=url, method='POST', auth=app.config['BASIC_AUTH'], files=files, params=params)
 
     if response.status_code != 200:
         logger.error('Error uploading collection instrument')

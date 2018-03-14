@@ -68,6 +68,7 @@ def get_survey_ci_classifier(survey_id):
     for selector in classifier_type_selectors:
         if selector['name'] == "COLLECTION_INSTRUMENT":
             ci_selector = selector
+            break
 
     logger.debug('Retrieving classifiers for CI selector type', survey_id=survey_id, ci_selector=ci_selector['id'])
     url = f'{app.config["RM_SURVEY_SERVICE"]}surveys/{survey_id}/classifiertypeselectors/{ci_selector["id"]}'
