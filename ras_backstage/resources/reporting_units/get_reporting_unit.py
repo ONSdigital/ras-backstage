@@ -35,8 +35,6 @@ class GetReportingUnit(Resource):
         case_groups = case_controller.get_case_groups_by_business_party_id(reporting_unit['id'])
         add_collection_exercise_details(collection_exercises, reporting_unit, case_groups)
 
-        reporting_unit['tradingAs'] = get_most_recent_trading_as(collection_exercises)
-
         # Get all surveys for gathered collection exercises
         survey_ids = {collection_exercise['surveyId']
                       for collection_exercise in collection_exercises}
@@ -99,9 +97,3 @@ def get_latest_active_iac_code(survey_id, cases, ces_for_survey):
         iac_details = iac_controller.get_iac(case.get('iac'))
         if iac_details.get('active'):
             return case.get('iac')
-
-
-def get_most_recent_trading_as(collection_exercises):
-    if collection_exercises:
-        latest_collection_exercise = max(*collection_exercises, key=lambda e: e['created'])
-        return latest_collection_exercise['tradingAs']
