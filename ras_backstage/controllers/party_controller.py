@@ -73,7 +73,7 @@ def update_respondent_details(respondent_id, respondent_contact_details):
         "telephone": respondent_contact_details['telephone'],
         "email_address": respondent_contact_details['email_address'],
         "new_email_address": respondent_contact_details['new_email_address']
-    }
+        }
 
     response = request_handler('PUT', url, json=payload, auth=app.config['BASIC_AUTH'])
 
