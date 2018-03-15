@@ -68,7 +68,7 @@ def add_collection_exercise_details(collection_exercises, reporting_unit, case_g
         reporting_unit_ce = party_controller.get_party_by_business_id(reporting_unit['id'], exercise['id'])
         exercise['companyName'] = reporting_unit_ce['name']
         exercise['companyRegion'] = reporting_unit_ce['region']
-        exercise['tradingAs'] = f"{reporting_unit_ce['entname1']} {reporting_unit_ce['entname2']} {reporting_unit_ce['entname3']}"
+        exercise['tradingAs'] = f"{reporting_unit_ce['tradstyle1']} {reporting_unit_ce['tradstyle2']} {reporting_unit_ce['tradstyle3']}"
 
 
 def link_respondents_to_survey(respondents, survey, ru_ref):

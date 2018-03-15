@@ -17,7 +17,7 @@
   "sampleUnitRef": "50012345678",
   "sampleUnitType": "B",
   "region": "YY",
-  "entname1": "tradingAs1",
-  "entname2": "tradingAs2",
-  "entname3": "tradingAs3"
+  "tradstyle1": "tradingAs1",
+  "tradstyle2": "tradingAs2",
+  "tradstyle3": "tradingAs3"
 }
