@@ -24,6 +24,7 @@ class GetReportingUnit(Resource):
         # Get all collection exercises for ru_ref
         reporting_unit = party_controller.get_party_by_ru_ref(ru_ref)
         collection_exercises = collection_exercise_controller.get_collection_exercises_by_party_id(reporting_unit['id'])
+
         # We only want collection exercises which are live
         now = datetime.now(timezone.utc)
         collection_exercises = [collection_exercise
@@ -33,6 +34,9 @@ class GetReportingUnit(Resource):
         # Add extra collection exercise details using data from case service
         case_groups = case_controller.get_case_groups_by_business_party_id(reporting_unit['id'])
         add_collection_exercise_details(collection_exercises, reporting_unit, case_groups)
+
+        if collection_exercises:
+            reporting_unit['tradingAs'] = get_most_recent_trading_as(collection_exercises)
 
         # Get all surveys for gathered collection exercises
         survey_ids = {collection_exercise['surveyId']
@@ -67,6 +71,7 @@ def add_collection_exercise_details(collection_exercises, reporting_unit, case_g
         reporting_unit_ce = party_controller.get_party_by_business_id(reporting_unit['id'], exercise['id'])
         exercise['companyName'] = reporting_unit_ce['name']
         exercise['companyRegion'] = reporting_unit_ce['region']
+        exercise['tradingAs'] = f"{reporting_unit_ce['entname1']} {reporting_unit_ce['entname2']} {reporting_unit_ce['entname3']}"
 
 
 def link_respondents_to_survey(respondents, survey, ru_ref):
@@ -95,3 +100,8 @@ def get_latest_active_iac_code(survey_id, cases, ces_for_survey):
         iac_details = iac_controller.get_iac(case.get('iac'))
         if iac_details.get('active'):
             return case.get('iac')
+
+
+def get_most_recent_trading_as(collection_exercises):
+    latest_collection_exercise = max(*collection_exercises, key=lambda e: e['created'])
+    return latest_collection_exercise['tradingAs']

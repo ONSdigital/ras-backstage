@@ -16,5 +16,8 @@
   "id": "b3ba864b-7cbc-4f44-84fe-88dc018a1a4c",
   "sampleUnitRef": "50012345678",
   "sampleUnitType": "B",
-  "region": "YY"
+  "region": "YY",
+  "entname1": "tradingAs1",
+  "entname2": "tradingAs2",
+  "entname3": "tradingAs3"
 }
