@@ -24,6 +24,7 @@ class GetReportingUnit(Resource):
         # Get all collection exercises for ru_ref
         reporting_unit = party_controller.get_party_by_ru_ref(ru_ref)
         collection_exercises = collection_exercise_controller.get_collection_exercises_by_party_id(reporting_unit['id'])
+
         # We only want collection exercises which are live
         now = datetime.now(timezone.utc)
         collection_exercises = [collection_exercise
@@ -67,6 +68,7 @@ def add_collection_exercise_details(collection_exercises, reporting_unit, case_g
         reporting_unit_ce = party_controller.get_party_by_business_id(reporting_unit['id'], exercise['id'])
         exercise['companyName'] = reporting_unit_ce['name']
         exercise['companyRegion'] = reporting_unit_ce['region']
+        exercise['tradingAs'] = f"{reporting_unit_ce['tradstyle1']} {reporting_unit_ce['tradstyle2']} {reporting_unit_ce['tradstyle3']}"
 
 
 def link_respondents_to_survey(respondents, survey, ru_ref):
