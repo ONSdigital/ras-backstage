@@ -12,6 +12,9 @@ with open('test/test_data/secure_messaging/message.json') as json_data:
 url_get_messages = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}v2/messages?label=INBOX&limit=1000"
 with open('test/test_data/secure_messaging/messages_list.json') as json_data:
     messages_list = json.load(json_data)
+url_get_threads = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}threads?limit=1000"
+with open('test/test_data/secure_messaging/threads_list.json') as json_data:
+    threads_list = json.load(json_data)
 url_update_label = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}message/dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b/modify"
 url_send_message = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}v2/messages"
 url_save_draft = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}draft/save"
@@ -77,6 +80,29 @@ class TestSecureMessaging(unittest.TestCase):
     def test_get_message_list_fail(self, mock_request):
         mock_request.get(url_get_messages, status_code=500)
         message_url = "/backstage-api/v1/secure-message/messages?limit=1000&label=INBOX"
+
+        response = self.app.get(message_url, headers=self.headers)
+        response_data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response_data['error']['status_code'], 500)
+
+    @requests_mock.mock()
+    def test_get_thread_list(self, mock_request):
+        mock_request.get(url_get_threads, json=threads_list)
+        message_url = "/backstage-api/v1/secure-message/threads?limit=1000"
+
+        response = self.app.get(message_url, headers=self.headers)
+        response_data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_data['messages'][0]['body'], "TEsdfdsfST")
+        self.assertEqual(len(response_data['messages']), 2)
+
+    @requests_mock.mock()
+    def test_get_thread_list_fail(self, mock_request):
+        mock_request.get(url_get_threads, status_code=500)
+        message_url = "/backstage-api/v1/secure-message/threads?limit=1000"
 
         response = self.app.get(message_url, headers=self.headers)
         response_data = json.loads(response.data)

@@ -2,9 +2,9 @@ import os
 
 
 class Config(object):
-    DEBUG = os.getenv('DEBUG', False)
+    DEBUG = False
     TESTING = False
-    VERSION = os.getenv('VERSION', '0.1.1')
+    VERSION = '0.1.1'
     PORT = os.getenv('PORT', 8001)
     LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'INFO')
     SECURITY_USER_NAME = os.getenv('SECURITY_USER_NAME')
@@ -62,6 +62,7 @@ class Config(object):
     RAS_PARTY_SERVICE_PORT = os.getenv('RAS_PARTY_SERVICE_PORT', 8081)
     RAS_PARTY_SERVICE_PROTOCOL = os.getenv('RAS_PARTY_SERVICE_PROTOCOL', 'http')
     RAS_PARTY_SERVICE = f"{RAS_PARTY_SERVICE_PROTOCOL}://{RAS_PARTY_SERVICE_HOST}:{RAS_PARTY_SERVICE_PORT}/"
+    RAS_PARTY_RESEND_VERIFICATION_EMAIL = '{}party-api/v1/resend-verification-email/{}'.format(RAS_PARTY_SERVICE, '{}')
 
     RM_SURVEY_SERVICE_HOST = os.getenv('RM_SURVEY_SERVICE_HOST', 'localhost')
     RM_SURVEY_SERVICE_PORT = os.getenv('RM_SURVEY_SERVICE_PORT', 8080)
@@ -70,7 +71,7 @@ class Config(object):
 
     RM_SAMPLE_SERVICE_HOST = os.getenv('RM_SAMPLE_SERVICE_HOST', 'localhost')
     RM_SAMPLE_SERVICE_PORT = os.getenv('RM_SAMPLE_SERVICE_PORT', 8125)
-    RM_SAMPLE_SERVICE_PROTOCOL = os.getenv('RM_SAMPLE_SERVICE_PROTOCOL','http')
+    RM_SAMPLE_SERVICE_PROTOCOL = os.getenv('RM_SAMPLE_SERVICE_PROTOCOL', 'http')
     RM_SAMPLE_SERVICE = f"{RM_SAMPLE_SERVICE_PROTOCOL}://{RM_SAMPLE_SERVICE_HOST}:{RM_SAMPLE_SERVICE_PORT}/"
     RM_IAC_SERVICE_HOST = os.getenv('RM_IAC_SERVICE_HOST', 'localhost')
     RM_IAC_SERVICE_PORT = os.getenv('RM_IAC_SERVICE_PORT', 8121)
@@ -84,7 +85,7 @@ class Config(object):
 
 
 class DevelopmentConfig(Config):
-    DEBUG = os.getenv('DEBUG', True)
+    DEBUG = True
     LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'DEBUG')
     SECURITY_USER_NAME = os.getenv('SECURITY_USER_NAME', 'admin')
     SECURITY_USER_PASSWORD = os.getenv('SECURITY_USER_PASSWORD', 'secret')
@@ -95,7 +96,7 @@ class DevelopmentConfig(Config):
     UAA_SERVICE_URL = os.getenv('UAA_SERVICE_URL', 'http://localhost:9080')
     UAA_CLIENT_ID = os.getenv('UAA_CLIENT_ID', 'ras_backstage')
     UAA_CLIENT_SECRET = os.getenv('UAA_CLIENT_SECRET', 'password')
-    RAS_SECURE_MESSAGING_JWT_SECRET = os.getenv('RAS_SECURE_MESSAGING_JWT_SECRET', 'test_secret')
+    RAS_SECURE_MESSAGING_JWT_SECRET = os.getenv('RAS_SECURE_MESSAGING_JWT_SECRET', 'testsecret')
 
 
 class TestingConfig(DevelopmentConfig):
