@@ -5,24 +5,25 @@ import requests_mock
 
 from ras_backstage import app
 
+party_id = "b3ba864b-7cbc-4f44-84fe-88dc018a1a4c"
 
 url_search_businesses = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/businesses/search'
 with open('test/test_data/party/reporting_unit_search.json') as json_data:
     business_search = json.load(json_data)
 url_get_party_by_ru_ref = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/parties/type/B/ref/12345'
 url_get_party_by_business_id = f'{app.config["RAS_PARTY_SERVICE"]}' \
-                               f'party-api/v1/businesses/id/b3ba864b-7cbc-4f44-84fe-88dc018a1a4c'
+                               f'party-api/v1/businesses/id/{party_id}'
 with open('test/test_data/party/business_party.json') as json_data:
     party_business = json.load(json_data)
 url_get_collection_exercises_by_party = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
-                                       f'collectionexercises/party/b3ba864b-7cbc-4f44-84fe-88dc018a1a4c'
+                                       f'collectionexercises/party/{party_id}'
 with open('test/test_data/collection_exercise/collection_exercise_list.json') as json_data:
     collection_exercise_list = json.load(json_data)
 url_get_party_by_respondent_id = f'{app.config["RAS_PARTY_SERVICE"]}' \
                                f'party-api/v1/respondents/id/cd592e0f-8d07-407b-b75d-e01fbdae8233'
 with open('test/test_data/party/business_party.json') as json_data:
     party_respondent = json.load(json_data)
-url_get_cases_by_business_id = f'{app.config["RM_CASE_SERVICE"]}cases/partyid/b3ba864b-7cbc-4f44-84fe-88dc018a1a4c'
+url_get_cases_by_business_id = f'{app.config["RM_CASE_SERVICE"]}cases/partyid/{party_id}'
 with open('test/test_data/case/case_list.json') as json_data:
     case_list = json.load(json_data)
 url_get_survey_by_id = f'{app.config["RM_SURVEY_SERVICE"]}surveys/cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87'
@@ -35,7 +36,7 @@ with open('test/test_data/collection_exercise/collection_exercise.json') as json
 url_get_iac_by_code = f'{app.config["RM_IAC_SERVICE"]}iacs/jkbvyklkwj88'
 with open('test/test_data/iac_details.json') as json_data:
     iac_details = json.load(json_data)
-url_get_case_groups_by_business_id = f'{app.config["RM_CASE_SERVICE"]}casegroups/partyid/b3ba864b-7cbc-4f44-84fe-88dc018a1a4c'
+url_get_case_groups_by_business_id = f'{app.config["RM_CASE_SERVICE"]}casegroups/partyid/{party_id}'
 with open('test/test_data/case/case_groups.json') as json_data:
     case_group_list = json.load(json_data)
 
