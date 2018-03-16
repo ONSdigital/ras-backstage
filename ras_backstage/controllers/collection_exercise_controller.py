@@ -127,3 +127,18 @@ def execute_collection_exercise(collection_exercise_id):
         raise ApiError(url, response.status_code)
 
     logger.debug('Successfully executed collection exercise', collection_exercise_id=collection_exercise_id)
+
+
+def update_collection_exercise_details(collection_exercise_id):
+    logger.debug('Updating collection exercise', collection_exercise_id=collection_exercise_id)
+    url = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}collectionexercises/update/{collection_exercise_id}'
+    response = request_handler('PUT', url, auth=app.config['BASIC_AUTH'])
+
+    if response.status_code == 404:
+        logger.error('Error retrieving collection exercise', collection_exercise_id=collection_exercise_id)
+        raise ApiError(url, response.status_code)
+    if response.status_code not in (200, 201, 202):
+        logger.error('Error updating collection exercise', collection_exercise_id=collection_exercise_id)
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully updated collection exercise', collection_exercise_id=collection_exercise_id)
