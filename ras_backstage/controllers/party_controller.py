@@ -64,13 +64,15 @@ def get_businesses_by_search(query):
     return json.loads(response.text)
 
 
-def update_respondent_details(respondent_id, first_name, last_name, telephone):
+def update_respondent_details(respondent_id, respondent_contact_details):
     logger.debug('Updating respondent details', respondent_id=respondent_id)
     url = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/respondents/id/{respondent_id}'
     payload = {
-        "firstName": first_name,
-        "lastName": last_name,
-        "telephone": telephone
+        "firstName": respondent_contact_details['first_name'],
+        "lastName": respondent_contact_details['last_name'],
+        "telephone": respondent_contact_details['telephone'],
+        "email_address": respondent_contact_details['email_address'],
+        "new_email_address": respondent_contact_details['new_email_address']
         }
 
     response = request_handler('PUT', url, json=payload, auth=app.config['BASIC_AUTH'])

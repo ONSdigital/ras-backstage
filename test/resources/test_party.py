@@ -75,7 +75,9 @@ class TestParty(unittest.TestCase):
         response = self.app.put(url, headers=self.headers, data=json.dumps({
                                                       "first_name": 'John',
                                                       "last_name": 'Snow',
-                                                      "telephone": '07437240752'}))
+                                                      "telephone": '07437240752',
+                                                      "email_address": 'old_address@example.com',
+                                                      "new_email_address": 'new_address@example.com'}))
 
         self.assertEqual(response.status_code, 200)
 
@@ -86,6 +88,8 @@ class TestParty(unittest.TestCase):
         response = self.app.put(url, headers=self.headers, data=json.dumps({
                                                       "first_name": 'John',
                                                       "last_name": 'Snow',
-                                                      "telephone": '07437240752'}))
+                                                      "telephone": '07437240752',
+                                                      "email_address": 'old_address@example.com',
+                                                      "new_email_address": 'new_address@example.com'}))
 
         self.assertEqual(response.status_code, 500)
