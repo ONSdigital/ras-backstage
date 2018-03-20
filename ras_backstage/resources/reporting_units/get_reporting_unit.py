@@ -88,8 +88,9 @@ def get_latest_active_iac_code(survey_id, cases, ces_for_survey):
     ces_ids = [ce['id'] for ce in ces_for_survey if survey_id == ce['surveyId']]
 
     for case in cases:
-        if case.get('caseGroup', {}).get('collectionExerciseId') in ces_ids:
-            cases_for_survey.append(case)
+        if case.get('state') == "ACTIONABLE":
+            if case.get('caseGroup', {}).get('collectionExerciseId') in ces_ids:
+                cases_for_survey.append(case)
 
     cases_for_survey = sorted(cases_for_survey, key=lambda c: c['createdDateTime'], reverse=True)
 
