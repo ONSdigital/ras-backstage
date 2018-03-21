@@ -89,7 +89,7 @@ def get_thread_by_id(encoded_jwt, thread_id):
 
 def update_label(encoded_jwt, message_id, label, action):
     logger.debug('Updating label', message_id=message_id, label=label, action=action)
-    url = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}message/{message_id}/modify"
+    url = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}v2/messages/modify/{message_id}"
     headers = _create_authorization_header(encoded_jwt)
     data = {"label": label, "action": action}
     response = request_handler('PUT', url, headers=headers, json=data)

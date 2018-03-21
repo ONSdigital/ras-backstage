@@ -15,7 +15,8 @@ with open('test/test_data/secure_messaging/messages_list.json') as json_data:
 url_get_threads = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}threads?limit=1000"
 with open('test/test_data/secure_messaging/threads_list.json') as json_data:
     threads_list = json.load(json_data)
-url_update_label = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}message/dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b/modify"
+url_update_label = (f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}"
+                    f"v2/messages/modify/dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b")
 url_send_message = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}v2/messages"
 url_save_draft = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}draft/save"
 url_modify_draft = f"{app.config['RAS_SECURE_MESSAGING_SERVICE']}draft/test_msg_id/modify"
