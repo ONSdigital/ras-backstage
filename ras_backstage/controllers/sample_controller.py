@@ -31,8 +31,9 @@ def upload_sample(collection_exercise_id, sample_file, survey_type='B'):
                  collection_exercise_id=collection_exercise_id,
                  survey_type=survey_type)
     url = f'{app.config["RM_SAMPLE_SERVICE"]}samples/{survey_type}/fileupload'
-
-    response = request_handler(url=url, method='POST', auth=app.config['BASIC_AUTH'], files={'file': sample_file})
+    params = {"collectionExerciseId": collection_exercise_id}
+    response = request_handler(url=url, method='POST', auth=app.config['BASIC_AUTH'],
+                               files={'file': sample_file}, params=params)
 
     # Sample service *should* return something other than 201 when upload / ingest fails
     if response.status_code != 201:
