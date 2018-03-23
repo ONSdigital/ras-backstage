@@ -494,7 +494,7 @@ class TestCollectionExercise(unittest.TestCase):
         self.assertEqual(response.status_code, 500)
 
     @requests_mock.mock()
-    def test_update_collection_exercise_details_no_found(self, mock_request):
+    def test_update_collection_exercise_details_not_found(self, mock_request):
         mock_request.put(url_update_ce_details, status_code=404)
         url = f'backstage-api/v1/collection-exercise/update-collection-exercise-details/{collection_exercise_id}'
         response = self.app.put(url, headers=self.headers, data=json.dumps({
