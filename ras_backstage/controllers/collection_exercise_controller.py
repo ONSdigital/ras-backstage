@@ -129,10 +129,12 @@ def execute_collection_exercise(collection_exercise_id):
     logger.debug('Successfully executed collection exercise', collection_exercise_id=collection_exercise_id)
 
 
-def update_collection_exercise_details(collection_exercise_id):
-    logger.debug('Updating collection exercise', collection_exercise_id=collection_exercise_id)
-    url = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}collectionexercises/update/{collection_exercise_id}'
-    response = request_handler('PUT', url, auth=app.config['BASIC_AUTH'])
+def update_collection_exercise_user_description(collection_exercise_id, user_description):
+    logger.debug('Updating collection exercise', collection_exercise_id=collection_exercise_id,
+                 user_description=user_description)
+    header = {'Content-Type': "text/plain"}
+    url = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}collectionexercises/{collection_exercise_id}/userDescription'
+    response = request_handler('PUT', url, headers=header, data=user_description, auth=app.config['BASIC_AUTH'])
 
     if response.status_code == 404:
         logger.error('Error retrieving collection exercise', collection_exercise_id=collection_exercise_id)

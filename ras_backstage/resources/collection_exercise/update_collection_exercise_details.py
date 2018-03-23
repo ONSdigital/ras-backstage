@@ -10,25 +10,21 @@ from ras_backstage.controllers import collection_exercise_controller
 logger = wrap_logger(logging.getLogger(__name__))
 
 collection_exercise_details = collection_exercise_api.model('CollectionExerciseDetails', {
-    'collectionExerciseID': fields.String(required=True),
-    'exerciseRef': fields.String(required=True),
-    'userDescription': fields.String(required=True)
+    'user_description': fields.String(required=True)
 })
 
 
-@collection_exercise_api.route('/update-collection-exercise-details/')
+@collection_exercise_api.route('/update-collection-exercise-details/<collection_exercise_id>')
 class UpdateCollectionExerciseDetails(Resource):
     @staticmethod
     @collection_exercise_api.expect(collection_exercise_details, validate=True)
     def put(collection_exercise_id):
 
-        logger.info('Retrieving updated collection exercise details')
-        message_json = request.get_json()
-        collection_exercise_id = message_json.get('collectionExerciseID')
-        period = message_json.get('exerciseRef')
-        shown_to_respondent_date = message_json.get('userDescription')
+        logger.info('Retrieving updated collection exercise details', collection_exercise_id=collection_exercise_id)
+        user_description = request.json["user_description"]
 
-        collection_exercise_controller.update_collection_exercise_details(collection_exercise_id)
+        collection_exercise_controller.update_collection_exercise_user_description(collection_exercise_id,
+                                                                                   user_description)
 
         logger.info('Successfully updated user details', collection_exercise_id=collection_exercise_id)
 
