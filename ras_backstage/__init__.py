@@ -69,7 +69,7 @@ from ras_backstage.resources.sample.sample import Sample  # NOQA # pylint: disab
 from ras_backstage.resources.secure_messaging.get_message_list import GetMessagesList  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.secure_messaging.get_message import GetMessage  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.secure_messaging.get_thread_list import GetThreadsList  # NOQA # pylint: disable=wrong-import-position
-from ras_backstage.resources.secure_messaging.update_label import RemoveUnreadLabel  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.resources.secure_messaging.update_label import UpdateLabel  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.secure_messaging.send_message import SendMessage  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.secure_messaging.save_draft import SaveDraft  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.secure_messaging.get_thread import GetThread  # NOQA # pylint: disable=wrong-import-position
