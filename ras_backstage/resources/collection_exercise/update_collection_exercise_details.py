@@ -26,6 +26,6 @@ class UpdateCollectionExerciseDetails(Resource):
         collection_exercise_controller.update_collection_exercise_user_description(collection_exercise_id,
                                                                                    user_description)
 
-        logger.info('Successfully updated user details', collection_exercise_id=collection_exercise_id)
+        logger.info('Successfully updated collection exercise details', collection_exercise_id=collection_exercise_id)
 
         return 200
