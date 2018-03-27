@@ -102,11 +102,10 @@ def get_respondent_by_email(email):
 
     response = request_handler('GET', url, json=email, auth=app.config['BASIC_AUTH'])
 
-    if response.status_code != 200:
-        if response.status_code == 404:
-            return {"Response": "No respondent found"}
-        else:
-            logger.error('Error retrieving respondent')
-            raise ApiError(url, response.status_code)
+    if response.status_code == 404:
+        return {"Response": "No respondent found"}
+    elif response.status_code != 200:
+        logger.error('Error retrieving respondent')
+        raise ApiError(url, response.status_code)
 
     return response.json()
