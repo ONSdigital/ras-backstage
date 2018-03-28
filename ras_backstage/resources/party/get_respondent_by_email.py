@@ -21,7 +21,7 @@ class RespondentByEmail(Resource):
     @staticmethod
     @party_api.expect(respondent_email, validate=True)
     def get():
-        logger.info('Get responddent by email')
+        logger.info('Get respondent by email')
         email = request.get_json()
         response = party_controller.get_respondent_by_email(email)
 
