@@ -22,9 +22,12 @@ class UpdateCollectionExerciseDetails(Resource):
 
         logger.info('Retrieving updated collection exercise details', collection_exercise_id=collection_exercise_id)
         user_description = request.json["user_description"]
+        period = request.json["period"]
 
         collection_exercise_controller.update_collection_exercise_user_description(collection_exercise_id,
                                                                                    user_description)
+
+        collection_exercise_controller.update_collection_exercise_period(collection_exercise_id, period)
 
         logger.info('Successfully updated collection exercise details', collection_exercise_id=collection_exercise_id)
 
