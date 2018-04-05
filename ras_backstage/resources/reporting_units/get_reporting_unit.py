@@ -69,8 +69,8 @@ def add_collection_exercise_details(collection_exercises, reporting_unit, case_g
         exercise['companyName'] = reporting_unit_ce['name']
         exercise['companyRegion'] = reporting_unit_ce['region']
         exercise['tradingAs'] = f"{reporting_unit_ce['tradstyle1']}" \
-                                f"{reporting_unit_ce['tradstyle2']} " \
-                                f"{reporting_unit_ce['tradstyle3']}"
+                                f" {reporting_unit_ce['tradstyle2']}" \
+                                f" {reporting_unit_ce['tradstyle3']}"
 
 
 def link_respondents_to_survey(respondents, survey, ru_ref):
