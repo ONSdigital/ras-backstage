@@ -28,8 +28,10 @@ url_ce = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
          f'collectionexercises/{collection_exercise_id}'
 url_ce_execute = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
          f'collectionexerciseexecution/{collection_exercise_id}'
-url_update_ce_details = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
+url_update_ce_details_user_description = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
                         f'collectionexercises/{collection_exercise_id}/userDescription'
+url_update_ce_details_period = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
+                        f'collectionexercises/{collection_exercise_id}/exerciseRef'
 url_get_collection_instrument = f'{app.config["RAS_COLLECTION_INSTRUMENT_SERVICE"]}' \
                                    f'collection-instrument-api/1.0.2/collectioninstrument'
 
@@ -67,7 +69,6 @@ class TestCollectionExercise(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
         self.headers = {
-            'Authorization': 'test_jwt',
             'Content-Type': 'application/json',
         }
         self.survey = {
@@ -477,27 +478,66 @@ class TestCollectionExercise(unittest.TestCase):
 
     @requests_mock.mock()
     def test_update_collection_exercise_details_success(self, mock_request):
-        mock_request.put(url_update_ce_details, status_code=200)
+        mock_request.put(url_update_ce_details_user_description, status_code=200)
+        mock_request.put(url_update_ce_details_period, status_code=200)
         url = f'backstage-api/v1/collection-exercise/update-collection-exercise-details/{collection_exercise_id}'
         response = self.app.put(url, headers=self.headers, data=json.dumps({
-            "user_description": '201901'
+            "user_description": 'June 2018',
+            "period": '201806'
         }))
         self.assertEqual(response.status_code, 200)
 
     @requests_mock.mock()
     def test_update_collection_exercise_details_fail(self, mock_request):
-        mock_request.put(url_update_ce_details, status_code=500)
+        mock_request.put(url_update_ce_details_user_description, status_code=500)
+        mock_request.put(url_update_ce_details_period, status_code=500)
         url = f'backstage-api/v1/collection-exercise/update-collection-exercise-details/{collection_exercise_id}'
         response = self.app.put(url, headers=self.headers, data=json.dumps({
-            "user_description": '201901'
+            "user_description": 'June 2018',
+            "period": '201806'
         }))
         self.assertEqual(response.status_code, 500)
 
     @requests_mock.mock()
     def test_update_collection_exercise_details_not_found(self, mock_request):
-        mock_request.put(url_update_ce_details, status_code=404)
+        mock_request.put(url_update_ce_details_user_description, status_code=404)
+        mock_request.put(url_update_ce_details_period, status_code=404)
         url = f'backstage-api/v1/collection-exercise/update-collection-exercise-details/{collection_exercise_id}'
         response = self.app.put(url, headers=self.headers, data=json.dumps({
-            "user_description": '201901'
+            "user_description": 'June 2018',
+            "period": '201806'
+        }))
+        self.assertEqual(response.status_code, 404)
+
+    @requests_mock.mock()
+    def test_update_collection_exercise_details_no_user_description(self, mock_request):
+        mock_request.put(url_update_ce_details_user_description, status_code=404)
+        mock_request.put(url_update_ce_details_period, status_code=200)
+        url = f'backstage-api/v1/collection-exercise/update-collection-exercise-details/{collection_exercise_id}'
+        response = self.app.put(url, headers=self.headers, data=json.dumps({
+            "user_description": '',
+            "period": '201806'
+        }))
+        self.assertEqual(response.status_code, 404)
+
+    @requests_mock.mock()
+    def test_update_collection_exercise_details_no_period(self, mock_request):
+        mock_request.put(url_update_ce_details_user_description, status_code=200)
+        mock_request.put(url_update_ce_details_period, status_code=404)
+        url = f'backstage-api/v1/collection-exercise/update-collection-exercise-details/{collection_exercise_id}'
+        response = self.app.put(url, headers=self.headers, data=json.dumps({
+            "user_description": 'June 2018',
+            "period": ''
+        }))
+        self.assertEqual(response.status_code, 404)
+
+    @requests_mock.mock()
+    def test_update_collection_exercise_details_no_data(self, mock_request):
+        mock_request.put(url_update_ce_details_user_description, status_code=404)
+        mock_request.put(url_update_ce_details_period, status_code=404)
+        url = f'backstage-api/v1/collection-exercise/update-collection-exercise-details/{collection_exercise_id}'
+        response = self.app.put(url, headers=self.headers, data=json.dumps({
+            "user_description": '',
+            "period": ''
         }))
         self.assertEqual(response.status_code, 404)

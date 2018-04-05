@@ -140,7 +140,8 @@ def update_collection_exercise_user_description(collection_exercise_id, user_des
         logger.error('Error retrieving collection exercise', collection_exercise_id=collection_exercise_id)
         raise ApiError(url, response.status_code)
     if response.status_code not in (200, 201, 202):
-        logger.error('Error updating collection exercise user description', collection_exercise_id=collection_exercise_id)
+        logger.error('Error updating collection exercise user description',
+                     collection_exercise_id=collection_exercise_id)
         raise ApiError(url, response.status_code)
 
     logger.debug('Successfully updated collection exercise user description',

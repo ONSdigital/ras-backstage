@@ -10,7 +10,8 @@ from ras_backstage.controllers import collection_exercise_controller
 logger = wrap_logger(logging.getLogger(__name__))
 
 collection_exercise_details = collection_exercise_api.model('CollectionExerciseDetails', {
-    'user_description': fields.String(required=True)
+    'user_description': fields.String(required=True),
+    'period': fields.String(required=True)
 })
 
 
