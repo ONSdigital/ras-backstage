@@ -27,7 +27,7 @@ class GetThreadsList(Resource):
     def get(encoded_jwt):
         message_args = {
             'limit': request.args.get('limit', 1000),
-            'survey': request.args.get('survey')
+            'survey': request.args.getlist('survey')
         }
 
         logger.info('Retrieving threads list')
