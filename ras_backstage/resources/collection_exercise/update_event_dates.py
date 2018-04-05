@@ -17,8 +17,31 @@ validate_event_timestamp = collection_exercise_api.model('ValidateUpdateEventDat
 })
 
 
-@collection_exercise_api.route('/<short_name>/<period>/<tag>')
+@collection_exercise_api.route('/<short_name>/<period>/update-events')
+@collection_exercise_api.route('/<short_name>/<period>/update-events/<tag>')
 class UpdateEventDate(Resource):
+
+    @staticmethod
+    def get(short_name, period):
+        logger.info('Retrieving data for update event date page',
+                    shortname=short_name, period=period)
+
+        survey = survey_controller.get_survey_by_shortname(short_name)
+        exercises = collection_exercise_controller.get_collection_exercises_by_survey(survey['id'])
+        # Find the collection exercise for the given period
+        exercise = get_collection_exercise_by_period(exercises, period)
+        if not exercise:
+            return make_response(jsonify({"message": "Collection exercise not found"}), 404)
+        events = collection_exercise_controller.get_collection_exercise_events(exercise['id'])
+
+        response_json = {
+            "collection_exercise": exercise,
+            "events": events,
+            "survey": survey,
+        }
+        logger.info('Successfully retrieved data for update event date page',
+                    shortname=short_name, period=period)
+        return make_response(jsonify(response_json), 200)
 
     @staticmethod
     @collection_exercise_api.expect(validate_event_timestamp)
@@ -34,7 +57,8 @@ class UpdateEventDate(Resource):
             return make_response(jsonify({"message": "Collection exercise not found"}), 404)
 
         # Update the event timestamp
-        timestamp = request.get_json().get('timestamp')
+        json = request.get_json()
+        timestamp = json.get('timestamp')
         collection_exercise_controller.update_event_date(exercise['id'], tag, timestamp)
 
         logger.info('Successfully updated event date', shortname=short_name, period=period, tag=tag)

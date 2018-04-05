@@ -93,7 +93,7 @@ def get_linked_sample_summary_id(collection_exercise_id):
 def update_event_date(collection_exercise_id, tag, timestamp):
     logger.debug('Updating event',
                  collection_exercise_id=collection_exercise_id, tag=tag)
-    url = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}collectionexercises/{collection_exercise_id}/{tag}'
+    url = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}collectionexercises/{collection_exercise_id}/events/{tag}'
     response = request_handler('PUT', url, auth=app.config['BASIC_AUTH'],
                                headers={'content-type': 'text/plain'}, data=timestamp)
 
@@ -102,9 +102,8 @@ def update_event_date(collection_exercise_id, tag, timestamp):
                      collection_exercise_id=collection_exercise_id, tag=tag)
         raise ApiError(url, response.status_code)
 
-    logger.debug('Successfully retrieved linked sample summary',
+    logger.debug('Successfully updated event',
                  collection_exercise_id=collection_exercise_id, tag=tag)
-    return response.json()
 
 
 def link_sample_summary_to_collection_exercise(collection_exercise_id, sample_summary_id):
