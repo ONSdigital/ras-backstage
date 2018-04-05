@@ -18,7 +18,7 @@ label_details = secure_messaging_api.model('LabelDetails', {
 
 
 @secure_messaging_api.route('/update-label/<message_id>')
-class RemoveUnreadLabel(Resource):
+class UpdateLabel(Resource):
     method_decorators = [get_jwt(request)]
 
     @staticmethod

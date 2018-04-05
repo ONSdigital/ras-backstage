@@ -94,3 +94,19 @@ def resend_verification_email(party_id):
         raise ApiError(url=url, status_code=response.status_code)
 
     logger.debug('Successfully resent verification email')
+
+
+def get_respondent_by_email(email):
+    logger.debug('Getting respondent by email')
+    url = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/respondents/email'
+
+    response = request_handler('GET', url, json=email, auth=app.config['BASIC_AUTH'])
+
+    if response.status_code == 404:
+        logger.debug("No respondent found", status_code=response.status_code)
+        return {"Response": "No respondent found"}
+    elif response.status_code != 200:
+        logger.error('Error retrieving respondent')
+        raise ApiError(url, response.status_code)
+    logger.debug("Successfully retrieved respondent")
+    return response.json()
