@@ -3,7 +3,9 @@ import logging
 from structlog import wrap_logger
 
 from ras_backstage import app
+from ras_backstage.common.filters import get_collection_exercise_by_period
 from ras_backstage.common.requests_handler import request_handler
+from ras_backstage.controllers import survey_controller
 from ras_backstage.exception.exceptions import ApiError
 
 
@@ -37,6 +39,16 @@ def get_collection_exercises_by_survey(survey_id):
 
     logger.debug('Successfully retrieved collection exercises', survey_id=survey_id)
     return response.json()
+
+
+def get_collection_exercise_and_survey(short_name, period):
+    survey = survey_controller.get_survey_by_shortname(short_name)
+    exercises = get_collection_exercises_by_survey(survey['id'])
+    exercise = get_collection_exercise_by_period(exercises, period)
+    return {
+        "collection_exercise": exercise,
+        "survey": survey
+    }
 
 
 def get_collection_exercises_by_party_id(party_id):

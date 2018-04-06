@@ -22,14 +22,12 @@ class GetSingleCollectionExercise(Resource):
     def get(short_name, period):
         logger.info('Retrieving collection exercise details', shortname=short_name, period=period)
 
-        survey = survey_controller.get_survey_by_shortname(short_name)
-        survey['shortName'] = format_short_name(survey['shortName'])
-
-        exercises = collection_exercise_controller.get_collection_exercises_by_survey(survey['id'])
-        # Find the collection exercise for the given period
-        exercise = get_collection_exercise_by_period(exercises, period)
+        survey_exercise = collection_exercise_controller.get_collection_exercise_and_survey(short_name, period)
+        survey, exercise = survey_exercise['survey'], survey_exercise['collection_exercise']
         if not exercise:
             return make_response(jsonify({"message": "Collection exercise not found"}), 404)
+
+        survey['shortName'] = format_short_name(survey['shortName'])
         full_exercise = collection_exercise_controller.get_collection_exercise_by_id(exercise['id'])
 
         exercise_events = collection_exercise_controller.get_collection_exercise_events(exercise['id'])

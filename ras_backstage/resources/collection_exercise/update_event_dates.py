@@ -5,8 +5,8 @@ from flask_restplus import fields, Resource
 from structlog import wrap_logger
 
 from ras_backstage import collection_exercise_api
-from ras_backstage.common.filters import get_collection_exercise_by_period
-from ras_backstage.controllers import collection_exercise_controller, survey_controller
+from ras_backstage.controllers.collection_exercise_controller import get_collection_exercise_and_survey, \
+    get_collection_exercise_events, update_event_date
 
 
 logger = wrap_logger(logging.getLogger(__name__))
@@ -26,18 +26,15 @@ class UpdateEventDate(Resource):
         logger.info('Retrieving data for update event date page',
                     shortname=short_name, period=period)
 
-        survey = survey_controller.get_survey_by_shortname(short_name)
-        exercises = collection_exercise_controller.get_collection_exercises_by_survey(survey['id'])
-        # Find the collection exercise for the given period
-        exercise = get_collection_exercise_by_period(exercises, period)
-        if not exercise:
+        survey_exercise = get_collection_exercise_and_survey(short_name, period)
+        collection_exercise = survey_exercise['collection_exercise']
+        if not collection_exercise:
             return make_response(jsonify({"message": "Collection exercise not found"}), 404)
-        events = collection_exercise_controller.get_collection_exercise_events(exercise['id'])
+        events = get_collection_exercise_events(collection_exercise['id'])
 
         response_json = {
-            "collection_exercise": exercise,
-            "events": events,
-            "survey": survey,
+            **survey_exercise,
+            "events": events
         }
         logger.info('Successfully retrieved data for update event date page',
                     shortname=short_name, period=period)
@@ -49,17 +46,14 @@ class UpdateEventDate(Resource):
         logger.info('Updating event date', shortname=short_name, period=period, tag=tag)
 
         # Find the collection exercise id from shortname and period
-        survey = survey_controller.get_survey_by_shortname(short_name)
-        exercises = collection_exercise_controller.get_collection_exercises_by_survey(survey['id'])
-        # Find the collection exercise for the given period
-        exercise = get_collection_exercise_by_period(exercises, period)
-        if not exercise:
+        collection_exercise = get_collection_exercise_and_survey(short_name, period)['collection_exercise']
+        if not collection_exercise:
             return make_response(jsonify({"message": "Collection exercise not found"}), 404)
 
         # Update the event timestamp
         json = request.get_json()
         timestamp = json.get('timestamp')
-        collection_exercise_controller.update_event_date(exercise['id'], tag, timestamp)
+        update_event_date(collection_exercise['id'], tag, timestamp)
 
         logger.info('Successfully updated event date', shortname=short_name, period=period, tag=tag)
         return Response(status=201)
