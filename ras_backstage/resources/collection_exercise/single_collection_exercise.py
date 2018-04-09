@@ -76,3 +76,12 @@ class ExecuteSingleCollectionExercise(Resource):
 
         logger.info('Successfully executed collection exercise', shortname=short_name, period=period)
         return Response(status=200)
+
+@collection_exercise_api.route('/download-report/<ce_id>')
+class DownLoadCollectionExerciseReport(Resource):
+
+    @staticmethod
+    def get(ce_id):
+        logger.info('Download report gor collection exercise', ce_id=ce_id)
+        report, headers = collection_exercise_controller.download_collection_exercise_report(ce_id)
+        return Response(report, headers=headers)
