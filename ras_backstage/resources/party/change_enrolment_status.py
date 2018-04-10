@@ -10,8 +10,8 @@ from ras_backstage.controllers import party_controller
 logger = wrap_logger(logging.getLogger(__name__))
 
 enrolment_details = party_api.model('EnrolmentDetails', {
-    'respondent_party_id': fields.String(required=True),
-    'business_party_id': fields.String(required=True),
+    'respondent_id': fields.String(required=True),
+    'business_id': fields.String(required=True),
     'survey_id': fields.String(required=True),
     'change_flag': fields.String(required=True)
 }
