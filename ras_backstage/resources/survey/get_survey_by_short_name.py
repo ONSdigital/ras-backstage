@@ -40,5 +40,5 @@ class GetSurveyByShortName(Resource):
     def add_sample_summary(ce_list):
         for ce in ce_list:
             sample_summary_id = collection_exercise_controller.get_linked_sample_summary_id(ce['id'])
-            if sample_summary_id is not None:
+            if sample_summary_id:
                 ce['sample_summary'] = sample_controller.get_sample_summary(sample_summary_id)
