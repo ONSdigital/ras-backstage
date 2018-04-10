@@ -64,6 +64,26 @@ def get_businesses_by_search(query):
     return json.loads(response.text)
 
 
+def update_respondent_details(respondent_id, respondent_contact_details):
+    logger.debug('Updating respondent details', respondent_id=respondent_id)
+    url = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/respondents/id/{respondent_id}'
+    payload = {
+        "firstName": respondent_contact_details['first_name'],
+        "lastName": respondent_contact_details['last_name'],
+        "telephone": respondent_contact_details['telephone'],
+        "email_address": respondent_contact_details['email_address'],
+        "new_email_address": respondent_contact_details['new_email_address']
+        }
+
+    response = request_handler('PUT', url, json=payload, auth=app.config['BASIC_AUTH'])
+
+    if response.status_code != 200:
+        logger.error('Error updating respondent details', respondent_id=respondent_id)
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully updated respondent details')
+
+
 def resend_verification_email(party_id):
     logger.debug('Resending verification email', party_id=party_id)
     url = app.config['RAS_PARTY_RESEND_VERIFICATION_EMAIL'].format(party_id)
@@ -74,6 +94,22 @@ def resend_verification_email(party_id):
         raise ApiError(url=url, status_code=response.status_code)
 
     logger.debug('Successfully resent verification email')
+
+
+def get_respondent_by_email(email):
+    logger.debug('Getting respondent by email')
+    url = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/respondents/email'
+
+    response = request_handler('GET', url, json=email, auth=app.config['BASIC_AUTH'])
+
+    if response.status_code == 404:
+        logger.debug("No respondent found", status_code=response.status_code)
+        return {"Response": "No respondent found"}
+    elif response.status_code != 200:
+        logger.error('Error retrieving respondent')
+        raise ApiError(url, response.status_code)
+    logger.debug("Successfully retrieved respondent")
+    return response.json()
 
 
 def put_respondent_enrolment_status(enrolment):

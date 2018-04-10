@@ -2,9 +2,9 @@ import os
 
 
 class Config(object):
-    DEBUG = os.getenv('DEBUG', False)
+    DEBUG = False
     TESTING = False
-    VERSION = os.getenv('VERSION', '0.0.3')
+    VERSION = '0.1.1'
     PORT = os.getenv('PORT', 8001)
     LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'INFO')
     SECURITY_USER_NAME = os.getenv('SECURITY_USER_NAME')
@@ -71,7 +71,7 @@ class Config(object):
 
     RM_SAMPLE_SERVICE_HOST = os.getenv('RM_SAMPLE_SERVICE_HOST', 'localhost')
     RM_SAMPLE_SERVICE_PORT = os.getenv('RM_SAMPLE_SERVICE_PORT', 8125)
-    RM_SAMPLE_SERVICE_PROTOCOL = os.getenv('RM_SAMPLE_SERVICE_PROTOCOL','http')
+    RM_SAMPLE_SERVICE_PROTOCOL = os.getenv('RM_SAMPLE_SERVICE_PROTOCOL', 'http')
     RM_SAMPLE_SERVICE = f"{RM_SAMPLE_SERVICE_PROTOCOL}://{RM_SAMPLE_SERVICE_HOST}:{RM_SAMPLE_SERVICE_PORT}/"
     RM_IAC_SERVICE_HOST = os.getenv('RM_IAC_SERVICE_HOST', 'localhost')
     RM_IAC_SERVICE_PORT = os.getenv('RM_IAC_SERVICE_PORT', 8121)
@@ -85,7 +85,7 @@ class Config(object):
 
 
 class DevelopmentConfig(Config):
-    DEBUG = os.getenv('DEBUG', True)
+    DEBUG = True
     LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'DEBUG')
     SECURITY_USER_NAME = os.getenv('SECURITY_USER_NAME', 'admin')
     SECURITY_USER_PASSWORD = os.getenv('SECURITY_USER_PASSWORD', 'secret')

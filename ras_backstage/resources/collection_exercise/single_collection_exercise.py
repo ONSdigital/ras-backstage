@@ -42,13 +42,16 @@ class GetSingleCollectionExercise(Resource):
         summary_id = collection_exercise_controller.get_linked_sample_summary_id(exercise['id'])
         sample_summary = sample_controller.get_sample_summary(summary_id) if summary_id else None
 
+        ci_classifiers = survey_controller.get_survey_ci_classifier(survey['id'])
+
         response_json = {
             "survey": survey,
             "collection_exercise": full_exercise,
             "events": exercise_events,
             "collection_instruments": collection_instruments,
             "eq_ci_selectors": eq_ci_selectors,
-            "sample_summary": sample_summary
+            "sample_summary": sample_summary,
+            "ci_classifiers": ci_classifiers
         }
         logger.info('Successfully retrieved collection exercise details',
                     shortname=short_name, period=period)

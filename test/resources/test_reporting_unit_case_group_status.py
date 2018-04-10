@@ -6,13 +6,14 @@ import requests_mock
 from ras_backstage import app
 from ras_backstage.controllers.case_controller import filter_statuses
 
+party_id = "b3ba864b-7cbc-4f44-84fe-88dc018a1a4c"
 url_get_party_by_ru_ref = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/parties/type/B/ref/12345'
 with open('test/test_data/party/business_party.json') as json_data:
     party_business = json.load(json_data)
 
-url_get_cases_by_business_id = f'{app.config["RM_CASE_SERVICE"]}cases/partyid/b3ba864b-7cbc-4f44-84fe-88dc018a1a4c'
-with open('test/test_data/case/case_list.json') as json_data:
-    case_list = json.load(json_data)
+url_get_case_groups_by_business_id = f'{app.config["RM_CASE_SERVICE"]}casegroups/partyid/{party_id}'
+with open('test/test_data/case/case_groups.json') as json_data:
+    case_group_list = json.load(json_data)
 
 url_get_statuses_for_ru_ref = f'{app.config["RM_CASE_SERVICE"]}' \
                               f'casegroups/transitions/14fb3e68-4dca-46db-bf49-04b84e07e77c/12345'
@@ -46,7 +47,7 @@ class TestReportingUnits(unittest.TestCase):
     def test_get_reporting_unit_statuses(self, mock_request):
         # Given
         mock_request.get(url_get_party_by_ru_ref, json=party_business)
-        mock_request.get(url_get_cases_by_business_id, json=case_list)
+        mock_request.get(url_get_case_groups_by_business_id, json=case_group_list)
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_get_collection_exercises_by_survey, json=collection_exercises)
         self.statuses = {
@@ -68,7 +69,7 @@ class TestReportingUnits(unittest.TestCase):
     def test_get_reporting_unit_statuses_fail(self, mock_request):
         # Given
         mock_request.get(url_get_party_by_ru_ref, json=party_business)
-        mock_request.get(url_get_cases_by_business_id, json=case_list)
+        mock_request.get(url_get_case_groups_by_business_id, json=case_group_list)
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_get_collection_exercises_by_survey, json=collection_exercises)
         mock_request.get(url_get_statuses_for_ru_ref, status_code=500)
@@ -83,7 +84,7 @@ class TestReportingUnits(unittest.TestCase):
     def test_get_reporting_unit_statuses_no_statuses(self, mock_request):
         # Given
         mock_request.get(url_get_party_by_ru_ref, json=party_business)
-        mock_request.get(url_get_cases_by_business_id, json=case_list)
+        mock_request.get(url_get_case_groups_by_business_id, json=case_group_list)
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_get_collection_exercises_by_survey, json=collection_exercises)
         mock_request.get(url_get_statuses_for_ru_ref, status_code=404)
@@ -101,7 +102,7 @@ class TestReportingUnits(unittest.TestCase):
     def test_should_update_status_to_completed_by_phone(self, mock_request):
         # Given
         mock_request.get(url_get_party_by_ru_ref, json=party_business)
-        mock_request.get(url_get_cases_by_business_id, json=case_list)
+        mock_request.get(url_get_case_groups_by_business_id, json=case_group_list)
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_get_collection_exercises_by_survey, json=collection_exercises)
         mock_request.put(url_update_status_for_ru_ref,
@@ -118,7 +119,7 @@ class TestReportingUnits(unittest.TestCase):
     def test_should_return_api_error_code_when_update_status_fails(self, mock_request):
         # Given
         mock_request.get(url_get_party_by_ru_ref, json=party_business)
-        mock_request.get(url_get_cases_by_business_id, json=case_list)
+        mock_request.get(url_get_case_groups_by_business_id, json=case_group_list)
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_get_collection_exercises_by_survey, json=collection_exercises)
         mock_request.put(url_update_status_for_ru_ref, status_code=503)

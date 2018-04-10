@@ -54,10 +54,13 @@ api.add_namespace(survey_api)
 
 import ras_backstage.error_handlers  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.collection_exercise.single_collection_exercise import GetSingleCollectionExercise, ExecuteSingleCollectionExercise  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.resources.collection_exercise.update_collection_exercise_details import UpdateCollectionExerciseDetails  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.collection_instrument.collection_instrument import CollectionInstrument  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.collection_instrument.link_exercise import LinkExercise  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.info import Info  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.party.get_party_details import PartyDetails  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.resources.party.get_respondent_by_email import RespondentByEmail  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.resources.party.update_respondent_details import UpdateRespondentDetails  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.reporting_units.get_reporting_unit import GetReportingUnit  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.reporting_units.generate_new_enrolment_code import GenerateNewEnrolmentCode  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.case.reporting_unit_case_group_status import ReportingUnitCaseGroupStatus  # NOQA # pylint: disable=wrong-import-position
@@ -67,7 +70,7 @@ from ras_backstage.resources.sample.sample import Sample  # NOQA # pylint: disab
 from ras_backstage.resources.secure_messaging.get_message_list import GetMessagesList  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.secure_messaging.get_message import GetMessage  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.secure_messaging.get_thread_list import GetThreadsList  # NOQA # pylint: disable=wrong-import-position
-from ras_backstage.resources.secure_messaging.update_label import RemoveUnreadLabel  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.resources.secure_messaging.update_label import UpdateLabel  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.secure_messaging.send_message import SendMessage  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.secure_messaging.save_draft import SaveDraft  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.secure_messaging.get_thread import GetThread  # NOQA # pylint: disable=wrong-import-position
