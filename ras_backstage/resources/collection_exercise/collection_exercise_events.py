@@ -16,15 +16,35 @@ validate_event_timestamp = collection_exercise_api.model('ValidateUpdateEvent', 
     'timestamp': fields.String(required=True)
 })
 
-validate_create_event = collection_exercise_api.model('ValidateCreateEvent', {
-    'timestamp': fields.String(required=True),
+validate_create_event = collection_exercise_api.inherit('ValidateCreateEvent',  validate_event_timestamp, {
     'tag': fields.String(required=True)
 })
 
 
-@collection_exercise_api.route('/<short_name>/<period>/events')
 @collection_exercise_api.route('/<short_name>/<period>/events/<tag>')
 class CollectionExerciseEvents(Resource):
+
+    @staticmethod
+    @collection_exercise_api.expect(validate_event_timestamp, validate=True)
+    def put(short_name, period, tag):
+        logger.info('Updating event', shortname=short_name, period=period, tag=tag)
+
+        # Find the collection exercise id from shortname and period
+        collection_exercise = get_collection_exercise_and_survey(short_name, period)['collection_exercise']
+        if not collection_exercise:
+            return make_response(jsonify({"message": "Collection exercise not found"}), 404)
+
+        # Update the event timestamp
+        json = request.get_json()
+        timestamp = json.get('timestamp')
+        update_event(collection_exercise['id'], tag, timestamp)
+
+        logger.info('Successfully updated event', shortname=short_name, period=period, tag=tag)
+        return Response(status=201)
+
+
+@collection_exercise_api.route('/<short_name>/<period>/events')
+class CollectionExerciseEvent(Resource):
 
     @staticmethod
     def get(short_name, period):
@@ -46,29 +66,10 @@ class CollectionExerciseEvents(Resource):
         return make_response(jsonify(response_json), 200)
 
     @staticmethod
-    @collection_exercise_api.expect(validate_event_timestamp)
-    def put(short_name, period, tag):
-        logger.info('Updating event', shortname=short_name, period=period, tag=tag)
-
-        # Find the collection exercise id from shortname and period
-        collection_exercise = get_collection_exercise_and_survey(short_name, period)['collection_exercise']
-        if not collection_exercise:
-            return make_response(jsonify({"message": "Collection exercise not found"}), 404)
-
-        # Update the event timestamp
-        json = request.get_json()
-        timestamp = json.get('timestamp')
-        update_event(collection_exercise['id'], tag, timestamp)
-
-        logger.info('Successfully updated event', shortname=short_name, period=period, tag=tag)
-        return Response(status=201)
-
-    @staticmethod
-    @collection_exercise_api.expect(validate_create_event)
+    @collection_exercise_api.expect(validate_create_event, validate=True)
     def post(short_name, period):
-        json = request.get_json()
-        timestamp = json.get('timestamp')
-        tag = json.get('tag')
+        event = request.get_json()
+        tag = event.get('tag')
 
         logger.info('Creating event', short_name=short_name, period=period, tag=tag)
 
@@ -77,13 +78,7 @@ class CollectionExerciseEvents(Resource):
         if not collection_exercise:
             return make_response(jsonify({"message": "Collection exercise not found"}), 404)
 
-        event = {
-            'tag': tag,
-            'timestamp': timestamp,
-            'collectionExerciseId': collection_exercise['id']
-        }
         create_event(collection_exercise['id'], tag, event)
 
         logger.info('Successfully created event', shortname=short_name, period=period, tag=tag)
         return Response(status=201)
-

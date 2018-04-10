@@ -112,6 +112,21 @@ class TestCollectionExerciseEvents(unittest.TestCase):
         self.assertEqual(response_data['error']['status_code'], 500)
 
     @requests_mock.mock()
+    def test_put_invalid_event(self, mock_request):
+        # Given
+        mock_request.get(url_get_survey, json=survey)
+        mock_request.get(url_get_collection_exercises_for_survey, json=collection_exercise_list)
+        mock_request.put(url_go_live_event, status_code=201)
+
+        # When
+        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{period}/events/go_live'
+        response = self.app.put(url, headers=self.headers,
+                                data=json.dumps({"not_timestamp": ''}))
+
+        # Then
+        self.assertEqual(response.status_code, 400)
+
+    @requests_mock.mock()
     def test_put_event(self, mock_request):
         # Given
         mock_request.get(url_get_survey, json=survey)
@@ -161,7 +176,24 @@ class TestCollectionExerciseEvents(unittest.TestCase):
         self.assertEqual(response_data['error']['status_code'], 500)
 
     @requests_mock.mock()
-    def test_create_event(self, mock_request):
+    def test_create_invalid_event(self, mock_request):
+        # Given
+        mock_request.get(url_get_survey, json=survey)
+        mock_request.get(url_get_collection_exercises_for_survey, json=collection_exercise_list)
+        mock_request.post(url_events, json=events[1])
+
+        incomplete_event = {"timestamp": '2018-05-22T00:00:00.000+0000'}
+
+        # When
+        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{period}/events'
+        response = self.app.post(url, headers=self.headers,
+                                data=json.dumps(incomplete_event))
+
+        # Then
+        self.assertEqual(response.status_code, 400)
+
+    @requests_mock.mock()
+    def test_create_event_test_valid(self, mock_request):
         # Given
         mock_request.get(url_get_survey, json=survey)
         mock_request.get(url_get_collection_exercises_for_survey, json=collection_exercise_list)
@@ -170,7 +202,7 @@ class TestCollectionExerciseEvents(unittest.TestCase):
         # When
         url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{period}/events'
         response = self.app.post(url, headers=self.headers,
-                                data=json.dumps({"timestamp": '2018-05-22T00:00:00.000+0000'}))
+                                data=json.dumps({"timestamp": '2018-05-22T00:00:00.000+0000', "tag": "go_live"}))
 
         # Then
         self.assertEqual(response.status_code, 201)
@@ -185,7 +217,7 @@ class TestCollectionExerciseEvents(unittest.TestCase):
         # When
         url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{invalid_ce_period}/events'
         response = self.app.post(url, headers=self.headers,
-                                data=json.dumps({"timestamp": '2018-05-22T00:00:00.000+0000'}))
+                                data=json.dumps({"timestamp": '2018-05-22T00:00:00.000+0000', "tag": "go_live"}))
         response_data = json.loads(response.data)
 
         # Then
@@ -202,7 +234,7 @@ class TestCollectionExerciseEvents(unittest.TestCase):
         # When
         url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{period}/events'
         response = self.app.post(url, headers=self.headers,
-                                data=json.dumps({"timestamp": '2018-05-22T00:00:00.000+0000'}))
+                                data=json.dumps({"timestamp": '2018-05-22T00:00:00.000+0000', "tag": "go_live"}))
         response_data = json.loads(response.data)
 
         # Then
