@@ -12,8 +12,13 @@ from ras_backstage.controllers.collection_exercise_controller import get_collect
 logger = wrap_logger(logging.getLogger(__name__))
 
 
-validate_event_timestamp = collection_exercise_api.model('ValidateUpdateEventDate', {
+validate_event_timestamp = collection_exercise_api.model('ValidateUpdateEvent', {
     'timestamp': fields.String(required=True)
+})
+
+validate_create_event = collection_exercise_api.model('ValidateCreateEvent', {
+    'timestamp': fields.String(required=True),
+    'tag': fields.String(required=True)
 })
 
 
@@ -59,8 +64,12 @@ class CollectionExerciseEvents(Resource):
         return Response(status=201)
 
     @staticmethod
-    @collection_exercise_api.expect(validate_event_timestamp)
-    def post(short_name, period, tag):
+    @collection_exercise_api.expect(validate_create_event)
+    def post(short_name, period):
+        json = request.get_json()
+        timestamp = json.get('timestamp')
+        tag = json.get('tag')
+
         logger.info('Creating event', short_name=short_name, period=period, tag=tag)
 
         # Find the collection exercise id from shortname and period
@@ -68,12 +77,10 @@ class CollectionExerciseEvents(Resource):
         if not collection_exercise:
             return make_response(jsonify({"message": "Collection exercise not found"}), 404)
 
-        json = request.get_json()
-        timestamp = json.get('timestamp')
         event = {
             'tag': tag,
             'timestamp': timestamp,
-            'collectionExerciseId': collection_exercise['id']  # Don't actually need it gets set again in the end point
+            'collectionExerciseId': collection_exercise['id']
         }
         create_event(collection_exercise['id'], tag, event)
 

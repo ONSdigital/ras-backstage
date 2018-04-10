@@ -168,7 +168,7 @@ class TestCollectionExerciseEvents(unittest.TestCase):
         mock_request.post(url_events, json=events[1])
 
         # When
-        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{period}/events/go_live'
+        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{period}/events'
         response = self.app.post(url, headers=self.headers,
                                 data=json.dumps({"timestamp": '2018-05-22T00:00:00.000+0000'}))
 
@@ -183,7 +183,7 @@ class TestCollectionExerciseEvents(unittest.TestCase):
         invalid_ce_period = 201813
 
         # When
-        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{invalid_ce_period}/events/go_live'
+        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{invalid_ce_period}/events'
         response = self.app.post(url, headers=self.headers,
                                 data=json.dumps({"timestamp": '2018-05-22T00:00:00.000+0000'}))
         response_data = json.loads(response.data)
@@ -200,7 +200,7 @@ class TestCollectionExerciseEvents(unittest.TestCase):
         mock_request.post(url_go_live_event, status_code=500)
 
         # When
-        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{period}/events/go_live'
+        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{period}/events'
         response = self.app.post(url, headers=self.headers,
                                 data=json.dumps({"timestamp": '2018-05-22T00:00:00.000+0000'}))
         response_data = json.loads(response.data)
