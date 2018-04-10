@@ -17,14 +17,14 @@ url_get_collection_exercises_for_survey = f'{app.config["RM_COLLECTION_EXERCISE_
                                           f'/survey/{survey_id}'
 with open('test/test_data/collection_exercise/collection_exercise_list.json') as json_data:
     collection_exercise_list = json.load(json_data)
-url_get_events = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}collectionexercises/{collection_exercise_id}/events'
+url_events = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}collectionexercises/{collection_exercise_id}/events'
 with open('test/test_data/collection_exercise/collection_exercise_events.json') as json_data:
     events = json.load(json_data)
-url_put_update_event = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}collectionexercises' \
+url_go_live_event = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}collectionexercises' \
                        f'/{collection_exercise_id}/events/go_live'
 
 
-class TestUpdateEventDate(unittest.TestCase):
+class TestCollectionExerciseEvents(unittest.TestCase):
 
     def setUp(self):
         self.app = app.test_client()
@@ -33,14 +33,14 @@ class TestUpdateEventDate(unittest.TestCase):
         }
 
     @requests_mock.mock()
-    def test_get_update_event_date(self, mock_request):
+    def test_get_events(self, mock_request):
         # Given
         mock_request.get(url_get_survey, json=survey)
         mock_request.get(url_get_collection_exercises_for_survey, json=collection_exercise_list)
-        mock_request.get(url_get_events, json=events)
+        mock_request.get(url_events, json=events)
 
         # When
-        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{period}/update-events'
+        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{period}/events'
         response = self.app.get(url)
         response_data = json.loads(response.data)
 
@@ -51,14 +51,14 @@ class TestUpdateEventDate(unittest.TestCase):
         self.assertEqual(response_data['events'][0]['tag'], 'mps')
 
     @requests_mock.mock()
-    def test_get_update_event_date_no_ce(self, mock_request):
+    def test_get_event_no_ce(self, mock_request):
         # Given
         mock_request.get(url_get_survey, json=survey)
         mock_request.get(url_get_collection_exercises_for_survey, json=collection_exercise_list)
-        mock_request.get(url_get_events, json=events)
+        mock_request.get(url_events, json=events)
 
         # When
-        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/201813/update-events'
+        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/201813/events'
         response = self.app.get(url)
         response_data = json.loads(response.data)
 
@@ -67,12 +67,12 @@ class TestUpdateEventDate(unittest.TestCase):
         self.assertEqual(response_data['message'], "Collection exercise not found")
 
     @requests_mock.mock()
-    def test_get_update_event_date_survey_fail(self, mock_request):
+    def test_get_event_survey_fail(self, mock_request):
         # Given
         mock_request.get(url_get_survey, status_code=500)
 
         # When
-        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{period}/update-events'
+        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{period}/events'
         response = self.app.get(url)
         response_data = json.loads(response.data)
 
@@ -81,13 +81,13 @@ class TestUpdateEventDate(unittest.TestCase):
         self.assertEqual(response_data['error']['status_code'], 500)
 
     @requests_mock.mock()
-    def test_get_update_event_date_exercises_fail(self, mock_request):
+    def test_get_event_exercises_fail(self, mock_request):
         # Given
         mock_request.get(url_get_survey, json=survey)
         mock_request.get(url_get_collection_exercises_for_survey, status_code=500)
 
         # When
-        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{period}/update-events'
+        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{period}/events'
         response = self.app.get(url)
         response_data = json.loads(response.data)
 
@@ -96,14 +96,14 @@ class TestUpdateEventDate(unittest.TestCase):
         self.assertEqual(response_data['error']['status_code'], 500)
 
     @requests_mock.mock()
-    def test_get_update_event_date_events_fail(self, mock_request):
+    def test_get_event_events_fail(self, mock_request):
         # Given
         mock_request.get(url_get_survey, json=survey)
         mock_request.get(url_get_collection_exercises_for_survey, json=collection_exercise_list)
-        mock_request.get(url_get_events, status_code=500)
+        mock_request.get(url_events, status_code=500)
 
         # When
-        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{period}/update-events'
+        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{period}/events'
         response = self.app.get(url)
         response_data = json.loads(response.data)
 
@@ -112,14 +112,14 @@ class TestUpdateEventDate(unittest.TestCase):
         self.assertEqual(response_data['error']['status_code'], 500)
 
     @requests_mock.mock()
-    def test_put_update_event_date(self, mock_request):
+    def test_put_event(self, mock_request):
         # Given
         mock_request.get(url_get_survey, json=survey)
         mock_request.get(url_get_collection_exercises_for_survey, json=collection_exercise_list)
-        mock_request.put(url_put_update_event, status_code=201)
+        mock_request.put(url_go_live_event, status_code=201)
 
         # When
-        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{period}/update-events/go_live'
+        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{period}/events/go_live'
         response = self.app.put(url, headers=self.headers,
                                 data=json.dumps({"timestamp": '2018-05-22T00:00:00.000+0000'}))
 
@@ -127,13 +127,14 @@ class TestUpdateEventDate(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
 
     @requests_mock.mock()
-    def test_put_update_event_date_no_ce(self, mock_request):
+    def test_put_event_no_ce(self, mock_request):
         # Given
         mock_request.get(url_get_survey, json=survey)
         mock_request.get(url_get_collection_exercises_for_survey, json=collection_exercise_list)
+        invalid_ce_period = 201813
 
         # When
-        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/201813/update-events/go_live'
+        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{invalid_ce_period}/events/go_live'
         response = self.app.put(url, headers=self.headers,
                                 data=json.dumps({"timestamp": '2018-05-22T00:00:00.000+0000'}))
         response_data = json.loads(response.data)
@@ -143,14 +144,14 @@ class TestUpdateEventDate(unittest.TestCase):
         self.assertEqual(response_data['message'], "Collection exercise not found")
 
     @requests_mock.mock()
-    def test_put_update_event_date_fail(self, mock_request):
+    def test_put_event_fail(self, mock_request):
         # Given
         mock_request.get(url_get_survey, json=survey)
         mock_request.get(url_get_collection_exercises_for_survey, json=collection_exercise_list)
-        mock_request.put(url_put_update_event, status_code=500)
+        mock_request.put(url_go_live_event, status_code=500)
 
         # When
-        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{period}/update-events/go_live'
+        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{period}/events/go_live'
         response = self.app.put(url, headers=self.headers,
                                 data=json.dumps({"timestamp": '2018-05-22T00:00:00.000+0000'}))
         response_data = json.loads(response.data)
@@ -158,3 +159,52 @@ class TestUpdateEventDate(unittest.TestCase):
         # Then
         self.assertEqual(response.status_code, 500)
         self.assertEqual(response_data['error']['status_code'], 500)
+
+    @requests_mock.mock()
+    def test_create_event(self, mock_request):
+        # Given
+        mock_request.get(url_get_survey, json=survey)
+        mock_request.get(url_get_collection_exercises_for_survey, json=collection_exercise_list)
+        mock_request.post(url_events, json=events[1])
+
+        # When
+        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{period}/events/go_live'
+        response = self.app.post(url, headers=self.headers,
+                                data=json.dumps({"timestamp": '2018-05-22T00:00:00.000+0000'}))
+
+        # Then
+        self.assertEqual(response.status_code, 201)
+
+    @requests_mock.mock()
+    def test_create_event_no_ce(self, mock_request):
+        # Given
+        mock_request.get(url_get_survey, json=survey)
+        mock_request.get(url_get_collection_exercises_for_survey, json=collection_exercise_list)
+        invalid_ce_period = 201813
+
+        # When
+        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{invalid_ce_period}/events/go_live'
+        response = self.app.post(url, headers=self.headers,
+                                data=json.dumps({"timestamp": '2018-05-22T00:00:00.000+0000'}))
+        response_data = json.loads(response.data)
+
+        # Then
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response_data['message'], "Collection exercise not found")
+
+    @requests_mock.mock()
+    def test_create_event_events_fail(self, mock_request):
+        # Given
+        mock_request.get(url_get_survey, json=survey)
+        mock_request.get(url_get_collection_exercises_for_survey, json=collection_exercise_list)
+        mock_request.post(url_go_live_event, status_code=500)
+
+        # When
+        url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{period}/events/go_live'
+        response = self.app.post(url, headers=self.headers,
+                                data=json.dumps({"timestamp": '2018-05-22T00:00:00.000+0000'}))
+        response_data = json.loads(response.data)
+
+        # Then
+        self.assertEqual(response.status_code, 500)
+
