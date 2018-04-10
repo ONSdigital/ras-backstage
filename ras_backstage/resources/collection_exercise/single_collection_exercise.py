@@ -7,7 +7,8 @@ from structlog import wrap_logger
 from ras_backstage import collection_exercise_api
 from ras_backstage.common.filters import get_collection_exercise_by_period
 from ras_backstage.common.mappers import format_short_name
-from ras_backstage.controllers import collection_exercise_controller, sample_controller, survey_controller
+from ras_backstage.controllers import collection_exercise_controller, sample_controller
+from ras_backstage.controllers import survey_controller, reporting_controller
 from ras_backstage.controllers.collection_instrument_controller import get_collection_instruments_by_classifier
 
 
@@ -76,3 +77,14 @@ class ExecuteSingleCollectionExercise(Resource):
 
         logger.info('Successfully executed collection exercise', shortname=short_name, period=period)
         return Response(status=200)
+
+
+@collection_exercise_api.route('/download-report/<collection_exercise_id>')
+class DownLoadCollectionExerciseReport(Resource):
+
+    @staticmethod
+    def get(collection_exercise_id):
+        logger.info('Download report for collection exercise', collection_exercise_id=collection_exercise_id)
+        report, headers = reporting_controller.download_collection_exercise_report(collection_exercise_id)
+        logger.info('Successfully downloaded collection exercise report', collection_exercise_id=collection_exercise_id)
+        return Response(report, headers=headers)

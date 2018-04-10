@@ -47,6 +47,11 @@ class Config(object):
                                                           RM_COLLECTION_EXERCISE_SERVICE_HOST,
                                                           RM_COLLECTION_EXERCISE_SERVICE_PORT)
 
+    RM_REPORT_SERVICE_HOST = os.getenv('RM_REPORT_SERVICE_HOST', 'localhost')
+    RM_REPORT_SERVICE_PORT = os.getenv('RM_REPORT_SERVICE_PORT', 8084)
+    RM_REPORT_SERVICE_PROTOCOL = os.getenv('RM_REPORT_SERVICE_PROTOCOL', 'http')
+    RM_REPORT_SERVICE = '{}://{}:{}/'.format(RM_REPORT_SERVICE_PROTOCOL, RM_REPORT_SERVICE_HOST, RM_REPORT_SERVICE_PORT)
+
     RAS_COLLECTION_INSTRUMENT_SERVICE_HOST = os.getenv(
         'RAS_COLLECTION_INSTRUMENT_SERVICE_HOST', 'localhost')
     RAS_COLLECTION_INSTRUMENT_SERVICE_PORT = os.getenv(
