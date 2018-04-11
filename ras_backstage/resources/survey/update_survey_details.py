@@ -15,18 +15,16 @@ survey_details = survey_api.model('SurveyDetails', {
 })
 
 
-@survey_api.route('/update-survey-details/<survey_id>')
+@survey_api.route('/update-survey-details/<survey_ref>')
 class UpdateSurveyDetails(Resource):
     @staticmethod
     @survey_api.expect(survey_details, validate=True)
-    def put(survey_id):
+    def put(survey_ref):
 
-        logger.info('Retrieving updated survey details', survey_id=survey_id)
-        short_name = request.json["short_name"]
-        long_name = request.json["long_name"]
+        logger.info('Retrieving updated survey details', survey_ref=survey_ref)
+        updated_survey_details = request.get_json()
+        survey_controller.update_survey_details(survey_ref, updated_survey_details)
 
-        survey_controller.update_survey_details(survey_id, short_name, long_name)
-
-        logger.info('Successfully updated survey details', survey_id=survey_id)
+        logger.info('Successfully updated survey details', survey_ref=survey_ref)
 
         return 200
