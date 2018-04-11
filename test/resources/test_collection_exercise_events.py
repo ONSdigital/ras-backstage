@@ -235,7 +235,6 @@ class TestCollectionExerciseEvents(unittest.TestCase):
         url = f'/backstage-api/v1/collection-exercise/{survey_short_name}/{period}/events'
         response = self.app.post(url, headers=self.headers,
                                 data=json.dumps({"timestamp": '2018-05-22T00:00:00.000+0000', "tag": "go_live"}))
-        response_data = json.loads(response.data)
 
         # Then
         self.assertEqual(response.status_code, 500)
