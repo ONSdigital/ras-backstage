@@ -14,8 +14,7 @@ enrolment_details = party_api.model('EnrolmentDetails', {
     'business_id': fields.String(required=True),
     'survey_id': fields.String(required=True),
     'change_flag': fields.String(required=True)
-}
-)
+})
 
 
 @party_api.route('/change-enrolment-status')
