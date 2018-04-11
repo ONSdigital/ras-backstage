@@ -4,7 +4,7 @@ import os
 class Config(object):
     DEBUG = False
     TESTING = False
-    VERSION = '0.1.1'
+    VERSION = '0.2.0'
     PORT = os.getenv('PORT', 8001)
     LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'INFO')
     SECURITY_USER_NAME = os.getenv('SECURITY_USER_NAME')
@@ -46,6 +46,11 @@ class Config(object):
     RM_COLLECTION_EXERCISE_SERVICE = '{}://{}:{}/'.format(RM_COLLECTION_EXERCISE_SERVICE_PROTOCOL,
                                                           RM_COLLECTION_EXERCISE_SERVICE_HOST,
                                                           RM_COLLECTION_EXERCISE_SERVICE_PORT)
+
+    RM_REPORT_SERVICE_HOST = os.getenv('RM_REPORT_SERVICE_HOST', 'localhost')
+    RM_REPORT_SERVICE_PORT = os.getenv('RM_REPORT_SERVICE_PORT', 8084)
+    RM_REPORT_SERVICE_PROTOCOL = os.getenv('RM_REPORT_SERVICE_PROTOCOL', 'http')
+    RM_REPORT_SERVICE = '{}://{}:{}/'.format(RM_REPORT_SERVICE_PROTOCOL, RM_REPORT_SERVICE_HOST, RM_REPORT_SERVICE_PORT)
 
     RAS_COLLECTION_INSTRUMENT_SERVICE_HOST = os.getenv(
         'RAS_COLLECTION_INSTRUMENT_SERVICE_HOST', 'localhost')
