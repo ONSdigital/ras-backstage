@@ -90,8 +90,8 @@ def update_survey_details(survey_ref, updated_survey_details):
     logger.debug('Updating survey details', surveyRef=surveyRef)
     url = f'{app.config["RM_SURVEY_SERVICE"]}surveys/ref/{surveyRef}'
     payload = {
-        "short_name": updated_survey_details['short_name'],
-        "long_name": updated_survey_details['long_name']
+        "ShortName": updated_survey_details['short_name'],
+        "LongName": updated_survey_details['long_name']
     }
 
     response = request_handler('PUT', url, auth=app.config['BASIC_AUTH'], json=payload)
