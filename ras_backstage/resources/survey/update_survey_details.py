@@ -15,7 +15,7 @@ survey_details = survey_api.model('SurveyDetails', {
 })
 
 
-@survey_api.route('/update-survey-details/<survey_ref>')
+@survey_api.route('/edit-survey-details/<survey_ref>')
 class UpdateSurveyDetails(Resource):
     @staticmethod
     @survey_api.expect(survey_details, validate=True)
