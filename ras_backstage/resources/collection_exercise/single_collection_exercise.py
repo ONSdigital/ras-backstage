@@ -77,12 +77,12 @@ class ExecuteSingleCollectionExercise(Resource):
         return Response(status=200)
 
 
-@collection_exercise_api.route('/download-report/<collection_exercise_id>')
+@collection_exercise_api.route('/download-report/<collection_exercise_id>/<survey_id>')
 class DownLoadCollectionExerciseReport(Resource):
 
     @staticmethod
-    def get(collection_exercise_id):
-        logger.info('Download report for collection exercise', collection_exercise_id=collection_exercise_id)
-        report, headers = reporting_controller.download_collection_exercise_report(collection_exercise_id)
-        logger.info('Successfully downloaded collection exercise report', collection_exercise_id=collection_exercise_id)
+    def get(collection_exercise_id, survey_id):
+        logger.info('Download report for collection exercise', collection_exercise_id=collection_exercise_id, survey_id=survey_id)
+        report, headers = reporting_controller.download_collection_exercise_report(collection_exercise_id, survey_id)
+        logger.info('Successfully downloaded collection exercise report', collection_exercise_id=collection_exercise_id, survey_id=survey_id)
         return Response(report, headers=headers)
