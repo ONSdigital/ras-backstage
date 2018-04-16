@@ -79,13 +79,13 @@ def survey_ids_for_respondent(respondent):
 
 
 def get_respondent_with_enrolment_status(respondent, ru_ref, survey_id):
-    associations = next(association
-                        for association in respondent.get('associations')
-                        if association['sampleUnitRef'] == ru_ref)
-    enrolment = next(enrolment
-                     for enrolment in associations.get('enrolments')
-                     if enrolment['surveyId'] == survey_id)
-    return {**respondent, 'enrolmentStatus': enrolment['enrolmentStatus']}
+    association = next(association
+                       for association in respondent.get('associations')
+                       if association['sampleUnitRef'] == ru_ref)
+    enrolment_status = next(enrolment['enrolmentStatus']
+                            for enrolment in association.get('enrolments')
+                            if enrolment['surveyId'] == survey_id)
+    return {**respondent, 'enrolmentStatus': enrolment_status}
 
 
 def add_collection_exercise_details(collection_exercises, reporting_unit, case_groups):
