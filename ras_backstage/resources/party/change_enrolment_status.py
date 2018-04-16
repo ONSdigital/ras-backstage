@@ -26,7 +26,7 @@ class ChangeEnrolmentStatus(Resource):
         enrolment_json = request.get_json()
         logger.info('Changing respondent enrolment status')
 
-        response = party_controller.put_respondent_enrolment_status(enrolment_json)
+        party_controller.put_respondent_enrolment_status(enrolment_json)
 
         logger.info('Successfully changed enrolment status')
-        return make_response(jsonify(response), 200)
+        return 200
