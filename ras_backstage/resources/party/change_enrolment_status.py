@@ -1,6 +1,6 @@
 import logging
 
-from flask import jsonify, make_response, request
+from flask import request
 from flask_restplus import fields, Resource
 from structlog import wrap_logger
 
