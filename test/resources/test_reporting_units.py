@@ -10,7 +10,7 @@ party_id = "b3ba864b-7cbc-4f44-84fe-88dc018a1a4c"
 url_search_businesses = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/businesses/search'
 with open('test/test_data/party/reporting_unit_search.json') as json_data:
     business_search = json.load(json_data)
-url_get_party_by_ru_ref = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/parties/type/B/ref/12345'
+url_get_party_by_ru_ref = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/parties/type/B/ref/50012345678'
 url_get_party_by_business_id = f'{app.config["RAS_PARTY_SERVICE"]}' \
                                f'party-api/v1/businesses/id/{party_id}'
 with open('test/test_data/party/business_party.json') as json_data:
@@ -78,7 +78,7 @@ class TestReportingUnits(unittest.TestCase):
         mock_request.get(url_get_party_by_respondent_id, json=party_respondent)
         mock_request.get(url_get_iac_by_code, json=iac_details)
 
-        response = self.app.get("/backstage-api/v1/reporting-unit/12345")
+        response = self.app.get("/backstage-api/v1/reporting-unit/50012345678")
         response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
@@ -96,7 +96,7 @@ class TestReportingUnits(unittest.TestCase):
         mock_request.get(url_get_survey_by_id, json=survey_list[0])
         mock_request.get(url_get_party_by_respondent_id, json=party_respondent)
 
-        response = self.app.get("/backstage-api/v1/reporting-unit/12345")
+        response = self.app.get("/backstage-api/v1/reporting-unit/50012345678")
         response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
@@ -112,7 +112,7 @@ class TestReportingUnits(unittest.TestCase):
         mock_request.get(url_get_survey_by_id, json=survey_list[0])
         mock_request.get(url_get_party_by_respondent_id, json=party_respondent)
 
-        response = self.app.get("/backstage-api/v1/reporting-unit/12345")
+        response = self.app.get("/backstage-api/v1/reporting-unit/50012345678")
         response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
@@ -122,7 +122,7 @@ class TestReportingUnits(unittest.TestCase):
     def test_get_reporting_unit_party_ru_fail(self, mock_request):
         mock_request.get(url_get_party_by_ru_ref, status_code=500)
 
-        response = self.app.get("/backstage-api/v1/reporting-unit/12345")
+        response = self.app.get("/backstage-api/v1/reporting-unit/50012345678")
         response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
@@ -133,7 +133,7 @@ class TestReportingUnits(unittest.TestCase):
         mock_request.get(url_get_party_by_ru_ref, json=party_business)
         mock_request.get(url_get_collection_exercises_by_party, status_code=500)
 
-        response = self.app.get("/backstage-api/v1/reporting-unit/12345")
+        response = self.app.get("/backstage-api/v1/reporting-unit/50012345678")
         response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
@@ -149,7 +149,7 @@ class TestReportingUnits(unittest.TestCase):
         mock_request.get(url_get_party_by_respondent_id, json=party_respondent)
         mock_request.get(url_get_cases_by_business_id, status_code=500)
 
-        response = self.app.get("/backstage-api/v1/reporting-unit/12345")
+        response = self.app.get("/backstage-api/v1/reporting-unit/50012345678")
         response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
@@ -163,7 +163,7 @@ class TestReportingUnits(unittest.TestCase):
         mock_request.get(url_get_case_groups_by_business_id, json=case_group_list)
         mock_request.get(url_get_party_by_business_id, status_code=500)
 
-        response = self.app.get("/backstage-api/v1/reporting-unit/12345")
+        response = self.app.get("/backstage-api/v1/reporting-unit/50012345678")
         response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
@@ -178,7 +178,7 @@ class TestReportingUnits(unittest.TestCase):
         mock_request.get(url_get_party_by_business_id, json=party_business)
         mock_request.get(url_get_survey_by_id, status_code=500)
 
-        response = self.app.get("/backstage-api/v1/reporting-unit/12345")
+        response = self.app.get("/backstage-api/v1/reporting-unit/50012345678")
         response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
@@ -194,7 +194,7 @@ class TestReportingUnits(unittest.TestCase):
         mock_request.get(url_get_survey_by_id, json=survey_list[0])
         mock_request.get(url_get_party_by_respondent_id, status_code=500)
 
-        response = self.app.get("/backstage-api/v1/reporting-unit/12345")
+        response = self.app.get("/backstage-api/v1/reporting-unit/50012345678")
         response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
@@ -211,7 +211,7 @@ class TestReportingUnits(unittest.TestCase):
         mock_request.get(url_get_party_by_respondent_id, json=party_respondent)
         mock_request.get(url_get_iac_by_code, status_code=500)
 
-        response = self.app.get("/backstage-api/v1/reporting-unit/12345")
+        response = self.app.get("/backstage-api/v1/reporting-unit/50012345678")
         response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)

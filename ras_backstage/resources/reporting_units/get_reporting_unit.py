@@ -44,19 +44,13 @@ class GetReportingUnit(Resource):
         # Get all respondents for the given ru
         respondents = [party_controller.get_party_by_respondent_id(respondent['partyId'])
                        for respondent in reporting_unit.get('associations')]
-        respondents_in_business = [respondent
-                                   for respondent in respondents
-                                   if ru_ref in
-                                   [association['sampleUnitRef']
-                                    for association in respondent['associations']]
-                                   ]
 
         # Link collection exercises and respondents to surveys
         cases = case_controller.get_cases_by_business_party_id(reporting_unit['id'])
         for survey in surveys:
             respondents_in_survey = [respondent
-                                     for respondent in respondents_in_business
-                                     if survey['id'] in survey_ids_for_respondent(respondent)]
+                                     for respondent in respondents
+                                     if survey['id'] in survey_ids_for_respondent(respondent, ru_ref)]
             survey['respondents'] = [get_respondent_with_enrolment_status(respondent, ru_ref, survey['id'])
                                      for respondent in respondents_in_survey]
             survey['collection_exercises'] = [collection_exercise
@@ -72,20 +66,21 @@ class GetReportingUnit(Resource):
         return make_response(jsonify(response_json), 200)
 
 
-def survey_ids_for_respondent(respondent):
+def survey_ids_for_respondent(respondent, ru_ref):
     return [enrolment.get('surveyId')
             for enrolment in [association.get('enrolments')
-                              for association in respondent.get('associations')][0]]
+                              for association in respondent.get('associations')
+                              if association['sampleUnitRef'] == ru_ref][0]]
 
 
 def get_respondent_with_enrolment_status(respondent, ru_ref, survey_id):
     association = next(association
                        for association in respondent.get('associations')
                        if association['sampleUnitRef'] == ru_ref)
-    enrolment_status = next(enrolment['enrolmentStatus']
-                            for enrolment in association.get('enrolments')
-                            if enrolment['surveyId'] == survey_id)
-    return {**respondent, 'enrolmentStatus': enrolment_status}
+    enrolment_status = next((enrolment['enrolmentStatus']
+                             for enrolment in association.get('enrolments')
+                             if enrolment['surveyId'] == survey_id), None)
+    return {**respondent, 'enrolmentStatus': enrolment_status} if enrolment_status else None
 
 
 def add_collection_exercise_details(collection_exercises, reporting_unit, case_groups):
