@@ -77,9 +77,9 @@ def get_respondent_with_enrolment_status(respondent, ru_ref, survey_id):
     association = next(association
                        for association in respondent.get('associations')
                        if association['sampleUnitRef'] == ru_ref)
-    enrolment_status = next((enrolment['enrolmentStatus']
-                             for enrolment in association.get('enrolments')
-                             if enrolment['surveyId'] == survey_id), None)
+    enrolment_status = next(enrolment['enrolmentStatus']
+                            for enrolment in association.get('enrolments')
+                            if enrolment['surveyId'] == survey_id)
     return {**respondent, 'enrolmentStatus': enrolment_status}
 
 
@@ -95,17 +95,13 @@ def add_collection_exercise_details(collection_exercises, reporting_unit, case_g
 
 
 def get_latest_active_iac_code(survey_id, cases, ces_for_survey):
-    cases_for_survey = []
-
     ces_ids = [ce['id'] for ce in ces_for_survey if survey_id == ce['surveyId']]
+    cases_for_survey = [case
+                        for case in cases
+                        if case.get('caseGroup', {}).get('collectionExerciseId') in ces_ids]
+    cases_for_survey_ordered = sorted(cases_for_survey, key=lambda c: c['createdDateTime'], reverse=True)
 
-    for case in cases:
-        if case.get('caseGroup', {}).get('collectionExerciseId') in ces_ids:
-            cases_for_survey.append(case)
-
-    cases_for_survey = sorted(cases_for_survey, key=lambda c: c['createdDateTime'], reverse=True)
-
-    for case in cases_for_survey:
+    for case in cases_for_survey_ordered:
         iac_details = iac_controller.get_iac(case.get('iac'))
         if iac_details.get('active'):
             return case.get('iac')
