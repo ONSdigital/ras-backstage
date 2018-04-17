@@ -67,10 +67,10 @@ class GetReportingUnit(Resource):
 
 
 def survey_ids_for_respondent(respondent, ru_ref):
-    return [enrolment.get('surveyId')
-            for enrolment in [association.get('enrolments')
-                              for association in respondent.get('associations')
-                              if association['sampleUnitRef'] == ru_ref][0]]
+    enrolments = [association.get('enrolments')
+                  for association in respondent.get('associations')
+                  if association['sampleUnitRef'] == ru_ref][0]
+    return [enrolment.get('surveyId') for enrolment in enrolments]
 
 
 def get_respondent_with_enrolment_status(respondent, ru_ref, survey_id):
@@ -80,7 +80,7 @@ def get_respondent_with_enrolment_status(respondent, ru_ref, survey_id):
     enrolment_status = next((enrolment['enrolmentStatus']
                              for enrolment in association.get('enrolments')
                              if enrolment['surveyId'] == survey_id), None)
-    return {**respondent, 'enrolmentStatus': enrolment_status} if enrolment_status else None
+    return {**respondent, 'enrolmentStatus': enrolment_status}
 
 
 def add_collection_exercise_details(collection_exercises, reporting_unit, case_groups):
