@@ -102,5 +102,10 @@ def get_latest_active_iac_code(survey_id, cases, ces_for_survey):
     cases_for_survey_ordered = sorted(cases_for_survey, key=lambda c: c['createdDateTime'], reverse=True)
     iac = next((case.get('iac')
                 for case in cases_for_survey_ordered
-                if iac_controller.get_iac(case.get('iac', {})).get('active')), None)
+                if _is_iac_active(case.get('iac'))), None)
     return iac
+
+
+def _is_iac_active(iac):
+    iac = iac_controller.get_iac(iac)
+    return iac.get('active') if iac else None
