@@ -59,6 +59,7 @@ from ras_backstage.resources.collection_exercise.collection_exercise_events impo
 from ras_backstage.resources.collection_exercise.collection_exercise_events import CollectionExerciseEvent  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.collection_instrument.collection_instrument import CollectionInstrument  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.collection_instrument.link_exercise import LinkExercise  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.resources.collection_instrument.unlink_exercise import UnlinkExercise # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.info import Info  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.party.get_party_details import PartyDetails  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.party.get_respondent_by_email import RespondentByEmail  # NOQA # pylint: disable=wrong-import-position

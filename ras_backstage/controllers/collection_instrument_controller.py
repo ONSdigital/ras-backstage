@@ -43,6 +43,23 @@ def link_collection_instrument_to_exercise(collection_instrument_id, collection_
                  collection_instrument_id=collection_instrument_id, collection_exercise_id=collection_exercise_id)
 
 
+def unlink_collection_instrument_and_exercise(collection_instrument_id, collection_exercise_id):
+    logger.debug('unlinking collection instrument and exercise',
+                 collection_instrument_id=collection_instrument_id, collection_exercise_id=collection_exercise_id)
+    url = f'{app.config["RAS_COLLECTION_INSTRUMENT_SERVICE"]}' \
+          f'collection-instrument-api/1.0.2/unlink-exercise/{collection_instrument_id}/{collection_exercise_id}'
+
+    response = request_handler(url=url, method='PUT', auth=app.config['BASIC_AUTH'])
+
+    if response.status_code != 200:
+        logger.error('Failed to unlink collection instrument and exercise',
+                     collection_instrument_id=collection_instrument_id, collection_exercise_id=collection_exercise_id)
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully unlinked collection instrument and exercise',
+                 collection_instrument_id=collection_instrument_id, collection_exercise_id=collection_exercise_id)
+
+
 def get_collection_instruments_by_classifier(survey_id=None, collection_exercise_id=None, ci_type=None):
     logger.debug('Retrieving collection instruments', survey_id=survey_id,
                  collection_exercise_id=collection_exercise_id, ci_type=ci_type)
