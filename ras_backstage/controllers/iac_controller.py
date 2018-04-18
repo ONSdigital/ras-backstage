@@ -12,6 +12,10 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 def get_iac(iac):
     logger.debug('Retrieving iac')
+    if not iac:
+        logger.warning('No iac provided')
+        return None
+
     url = f'{app.config["RM_IAC_SERVICE"]}iacs/{iac}'
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 

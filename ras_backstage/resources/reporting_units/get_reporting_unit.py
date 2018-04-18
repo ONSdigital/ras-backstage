@@ -107,5 +107,5 @@ def get_latest_active_iac_code(survey_id, cases, ces_for_survey):
 
 
 def _is_iac_active(iac):
-    iac = iac_controller.get_iac(iac)
-    return iac.get('active') if iac else None
+    iac_response = iac_controller.get_iac(iac)
+    return iac_response.get('active') if iac_response else None
