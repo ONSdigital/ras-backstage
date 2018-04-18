@@ -89,9 +89,7 @@ def add_collection_exercise_details(collection_exercises, reporting_unit, case_g
         reporting_unit_ce = party_controller.get_party_by_business_id(reporting_unit['id'], exercise['id'])
         exercise['companyName'] = reporting_unit_ce['name']
         exercise['companyRegion'] = reporting_unit_ce['region']
-        exercise['tradingAs'] = (f"{reporting_unit_ce['tradstyle1']} "
-                                 f"{reporting_unit_ce['tradstyle2']} "
-                                 f"{reporting_unit_ce['tradstyle3']}")
+        exercise['trading_as'] = reporting_unit_ce['trading_as']
 
 
 def get_latest_active_iac_code(survey_id, cases, ces_for_survey):
