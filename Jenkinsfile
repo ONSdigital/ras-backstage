@@ -35,9 +35,6 @@ pipeline {
                 sh "cf set-env ras-backstage-service-dev RAS_OAUTH_SERVICE_HOST ras-django-dev.${env.CF_DOMAIN}"
                 sh "cf set-env ras-backstage-service-dev RAS_OAUTH_SERVICE_PORT 80"
 
-                sh "cf set-env ras-backstage-service-dev RAS_SECURE_MESSAGING_SERVICE_HOST ras-secure-messaging-dev.${env.CF_DOMAIN}"
-                sh "cf set-env ras-backstage-service-dev RAS_SECURE_MESSAGING_SERVICE_PORT 80"
-
                 sh "cf set-env ras-backstage-service-dev RM_COLLECTION_EXERCISE_SERVICE_HOST collectionexercisesvc-dev.${env.CF_DOMAIN}"
                 sh "cf set-env ras-backstage-service-dev RM_COLLECTION_EXERCISE_SERVICE_PORT 80"
 
@@ -101,9 +98,6 @@ pipeline {
 
                 sh "cf set-env ras-backstage-service-ci RAS_OAUTH_SERVICE_HOST ras-django-ci.${env.CF_DOMAIN}"
                 sh "cf set-env ras-backstage-service-ci RAS_OAUTH_SERVICE_PORT 80"
-
-                sh "cf set-env ras-backstage-service-ci RAS_SECURE_MESSAGING_SERVICE_HOST ras-secure-messaging-ci.${env.CF_DOMAIN}"
-                sh "cf set-env ras-backstage-service-ci RAS_SECURE_MESSAGING_SERVICE_PORT 80"
 
                 sh "cf set-env ras-backstage-service-ci RM_COLLECTION_EXERCISE_SERVICE_HOST collectionexercisesvc-ci.${env.CF_DOMAIN}"
                 sh "cf set-env ras-backstage-service-ci RM_COLLECTION_EXERCISE_SERVICE_PORT 80"
@@ -190,9 +184,6 @@ pipeline {
 
                 sh "cf set-env ras-backstage-service-test RAS_OAUTH_SERVICE_HOST ras-django-test.${env.CF_DOMAIN}"
                 sh "cf set-env ras-backstage-service-test RAS_OAUTH_SERVICE_PORT 80"
-
-                sh "cf set-env ras-backstage-service-test RAS_SECURE_MESSAGING_SERVICE_HOST ras-secure-messaging-test.${env.CF_DOMAIN}"
-                sh "cf set-env ras-backstage-service-test RAS_SECURE_MESSAGING_SERVICE_PORT 80"
 
                 sh "cf set-env ras-backstage-service-test RM_COLLECTION_EXERCISE_SERVICE_HOST collectionexercisesvc-test.${env.CF_DOMAIN}"
                 sh "cf set-env ras-backstage-service-test RM_COLLECTION_EXERCISE_SERVICE_PORT 80"

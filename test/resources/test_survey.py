@@ -20,6 +20,7 @@ url_get_collection_exercises_link = f'{app.config["RM_COLLECTION_EXERCISE_SERVIC
 url_get_sample_summary = f'{app.config["RM_SAMPLE_SERVICE"]}' \
                             'samples/samplesummary/b9487b59-2ac7-4fbf-b734-5a4c260ff235'
 
+
 class TestSurvey(unittest.TestCase):
 
     def setUp(self):
@@ -33,9 +34,9 @@ class TestSurvey(unittest.TestCase):
 
         self.collection_exercises = [
             {
-            "id": "c6467711-21eb-4e78-804c-1db8392f93fb",
-            "name": "201601",
-            "scheduledExecutionDateTime": "2017-05-15T00:00:00Z"
+                "id": "c6467711-21eb-4e78-804c-1db8392f93fb",
+                "name": "201601",
+                "scheduledExecutionDateTime": "2017-05-15T00:00:00Z"
             }
         ]
 
