@@ -40,9 +40,9 @@ class TestSurvey(unittest.TestCase):
 
         self.collection_exercises = [
             {
-            "id": "c6467711-21eb-4e78-804c-1db8392f93fb",
-            "name": "201601",
-            "scheduledExecutionDateTime": "2017-05-15T00:00:00Z"
+                "id": "c6467711-21eb-4e78-804c-1db8392f93fb",
+                "name": "201601",
+                "scheduledExecutionDateTime": "2017-05-15T00:00:00Z"
             }
         ]
 
