@@ -110,3 +110,15 @@ def get_respondent_by_email(email):
         raise ApiError(url, response.status_code)
     logger.debug("Successfully retrieved respondent")
     return response.json()
+
+
+def put_respondent_enrolment_status(enrolment):
+    logger.debug('Changing enrolment status', enrolment=enrolment)
+    url = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/respondents/change_enrolment_status'
+    response = request_handler('PUT', url, auth=app.config['BASIC_AUTH'], json=enrolment)
+
+    if response.status_code != 200:
+        logger.error('Failed to change enrolment status', enrolment=enrolment)
+        raise ApiError(url=url, status_code=response.status_code)
+
+    logger.debug('Successfully changed enrolment status')
