@@ -17,13 +17,14 @@ account_change_details = party_api.model('AccountDetails', {
 
 @party_api.route('/change-respondent-account-status')
 class ChangeAccountStatus(Resource):
+
     @staticmethod
     @party_api.expect(account_change_details, validate=True)
     def put():
         request_json = request.get_json()
         logger.info('Changing respondent account status')
 
-        party_controller.change_respondent_account_status(request_json)
+        party_controller.put_respondent_account_status(request_json)
 
         logger.info('Successfully changed respondent account status', party_id=request_json['party_id'])
         return make_response(jsonify('OK'), 200)

@@ -24,6 +24,7 @@ class GetReportingUnit(Resource):
         # Get all collection exercises for ru_ref
         reporting_unit = party_controller.get_party_by_ru_ref(ru_ref)
         collection_exercises = collection_exercise_controller.get_collection_exercises_by_party_id(reporting_unit['id'])
+
         # We only want collection exercises which are live
         now = datetime.now(timezone.utc)
         collection_exercises = [collection_exercise
@@ -47,10 +48,14 @@ class GetReportingUnit(Resource):
         # Link collection exercises and respondents to surveys
         cases = case_controller.get_cases_by_business_party_id(reporting_unit['id'])
         for survey in surveys:
+            respondents_in_survey = [respondent
+                                     for respondent in respondents
+                                     if survey['id'] in survey_ids_for_respondent(respondent, ru_ref)]
+            survey['respondents'] = [get_respondent_with_enrolment_status(respondent, ru_ref, survey['id'])
+                                     for respondent in respondents_in_survey]
             survey['collection_exercises'] = [collection_exercise
                                               for collection_exercise in collection_exercises
                                               if survey['id'] == collection_exercise['surveyId']]
-            link_respondents_to_survey(respondents, survey, ru_ref)
             survey['activeIacCode'] = get_latest_active_iac_code(survey['id'], cases, collection_exercises)
 
         response_json = {
@@ -61,37 +66,44 @@ class GetReportingUnit(Resource):
         return make_response(jsonify(response_json), 200)
 
 
+def survey_ids_for_respondent(respondent, ru_ref):
+    enrolments = [association.get('enrolments')
+                  for association in respondent.get('associations')
+                  if association['sampleUnitRef'] == ru_ref][0]
+    return [enrolment.get('surveyId') for enrolment in enrolments]
+
+
+def get_respondent_with_enrolment_status(respondent, ru_ref, survey_id):
+    association = next(association
+                       for association in respondent.get('associations')
+                       if association['sampleUnitRef'] == ru_ref)
+    enrolment_status = next(enrolment['enrolmentStatus']
+                            for enrolment in association.get('enrolments')
+                            if enrolment['surveyId'] == survey_id)
+    return {**respondent, 'enrolmentStatus': enrolment_status}
+
+
 def add_collection_exercise_details(collection_exercises, reporting_unit, case_groups):
     for exercise in collection_exercises:
         exercise['responseStatus'] = get_case_group_status_by_collection_exercise(case_groups, exercise['id'])
         reporting_unit_ce = party_controller.get_party_by_business_id(reporting_unit['id'], exercise['id'])
         exercise['companyName'] = reporting_unit_ce['name']
         exercise['companyRegion'] = reporting_unit_ce['region']
-
-
-def link_respondents_to_survey(respondents, survey, ru_ref):
-    survey['respondents'] = []
-    for respondent in respondents:
-        for association in respondent.get('associations'):
-            if association['sampleUnitRef'] == ru_ref:
-                for enrolment in association.get('enrolments'):
-                    respondent['enrolmentStatus'] = enrolment.get('enrolmentStatus')
-                    if survey['id'] == enrolment['surveyId'] and respondent not in survey['respondents']:
-                        survey['respondents'].append(respondent)
+        exercise['trading_as'] = reporting_unit_ce['trading_as']
 
 
 def get_latest_active_iac_code(survey_id, cases, ces_for_survey):
-    cases_for_survey = []
-
     ces_ids = [ce['id'] for ce in ces_for_survey if survey_id == ce['surveyId']]
+    cases_for_survey = [case
+                        for case in cases
+                        if case.get('caseGroup', {}).get('collectionExerciseId') in ces_ids]
+    cases_for_survey_ordered = sorted(cases_for_survey, key=lambda c: c['createdDateTime'], reverse=True)
+    iac = next((case.get('iac')
+                for case in cases_for_survey_ordered
+                if _is_iac_active(case.get('iac'))), None)
+    return iac
 
-    for case in cases:
-        if case.get('caseGroup', {}).get('collectionExerciseId') in ces_ids:
-            cases_for_survey.append(case)
 
-    cases_for_survey = sorted(cases_for_survey, key=lambda c: c['createdDateTime'], reverse=True)
-
-    for case in cases_for_survey:
-        iac_details = iac_controller.get_iac(case.get('iac'))
-        if iac_details.get('active'):
-            return case.get('iac')
+def _is_iac_active(iac):
+    iac_response = iac_controller.get_iac(iac)
+    return iac_response.get('active') if iac_response else None

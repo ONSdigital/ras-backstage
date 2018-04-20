@@ -13,17 +13,25 @@ sample_summary_id = '08c191b8-e8b8-4920-b8de-87f85e536463'
 survey_id = 'cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87'
 test_period = '000000'
 test_short_name = 'test'
+ci_selector_id = 'efa868fb-fb80-44c7-9f33-d6800a17c4da'
 
 url_sample_summary = f'{app.config["RM_SAMPLE_SERVICE"]}samples/samplesummary/{sample_summary_id}'
 url_link_sample = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
                   f'collectionexercises/link/{collection_exercise_id}'
 url_get_survey_by_short_name = f'{app.config["RM_SURVEY_SERVICE"]}surveys/shortname/test'
+url_get_classifier_type_selectors = f'{app.config["RM_SURVEY_SERVICE"]}surveys/{survey_id}/classifiertypeselectors'
+url_get_classifier_type = f'{app.config["RM_SURVEY_SERVICE"]}' \
+                          f'surveys/{survey_id}/classifiertypeselectors/{ci_selector_id}'
 url_ces = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
           f'collectionexercises/survey/{survey_id}'
 url_ce = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
          f'collectionexercises/{collection_exercise_id}'
 url_ce_execute = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
          f'collectionexerciseexecution/{collection_exercise_id}'
+url_update_ce_details_user_description = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
+                        f'collectionexercises/{collection_exercise_id}/userDescription'
+url_update_ce_details_period = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
+                        f'collectionexercises/{collection_exercise_id}/exerciseRef'
 url_get_collection_instrument = f'{app.config["RAS_COLLECTION_INSTRUMENT_SERVICE"]}' \
                                    f'collection-instrument-api/1.0.2/collectioninstrument'
 
@@ -33,6 +41,11 @@ url_ce_events = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
                 f'collectionexercises/e33daf0e-6a27-40cd-98dc-c6231f50e84a/events'
 with open('test/test_data/collection_exercise/collection_exercise_events.json') as json_data:
     events = json.load(json_data)
+
+with open('test/test_data/survey/classifier_type_selectors.json') as json_data:
+    classifier_type_selectors = json.load(json_data)
+with open('test/test_data/survey/classifier_types.json') as json_data:
+    classifier_types = json.load(json_data)
 
 
 def _build_search_string():
@@ -55,6 +68,9 @@ class TestCollectionExercise(unittest.TestCase):
 
     def setUp(self):
         self.app = app.test_client()
+        self.headers = {
+            'Content-Type': 'application/json',
+        }
         self.survey = {
             "id": survey_id,
             "longName": "Business Register and Employment Survey",
@@ -122,11 +138,13 @@ class TestCollectionExercise(unittest.TestCase):
         mock_request.get(url_ce_events, json=events)
         mock_request.get(url_link_sample, json=[sample_summary_id])
         mock_request.get(url_sample_summary, json=self.sample_summary)
+        mock_request.get(url_get_classifier_type, json=classifier_types)
+        mock_request.get(url_get_classifier_type_selectors, json=classifier_type_selectors)
         search_string = _build_search_string()
         mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
                          complete_qs=True)
         search_string = _build_ci_type_search_string()
-        mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
+        mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.eq_ci_selectors,
                          complete_qs=True)
 
         # When
@@ -139,7 +157,7 @@ class TestCollectionExercise(unittest.TestCase):
                          'Business Register and Employment Survey')
         self.assertEqual(response_data['collection_exercise']['name'], '000000')
         self.assertEqual(response_data['events'][0]['tag'], "mps")
-        self.assertEqual(response_data['eq_ci_selectors'], self.collection_instruments)
+        self.assertEqual(response_data['eq_ci_selectors'], self.eq_ci_selectors)
 
     @requests_mock.mock()
     def test_single_collection_exercise_survey_fail(self, mock_request):
@@ -207,6 +225,8 @@ class TestCollectionExercise(unittest.TestCase):
         mock_request.get(url_ce_events, json=events)
         mock_request.get(url_link_sample, json=[sample_summary_id])
         mock_request.get(url_sample_summary, json=self.sample_summary)
+        mock_request.get(url_get_classifier_type, json=classifier_types)
+        mock_request.get(url_get_classifier_type_selectors, json=classifier_type_selectors)
         search_string = _build_search_string()
         mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
                          complete_qs=True)
@@ -251,6 +271,8 @@ class TestCollectionExercise(unittest.TestCase):
         mock_request.get(url_ce_events, json=events)
         mock_request.get(url_link_sample, json=[sample_summary_id])
         mock_request.get(url_sample_summary, json=self.sample_summary)
+        mock_request.get(url_get_classifier_type, json=classifier_types)
+        mock_request.get(url_get_classifier_type_selectors, json=classifier_type_selectors)
         search_string = _build_search_string()
         mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
                          complete_qs=True)
@@ -273,6 +295,8 @@ class TestCollectionExercise(unittest.TestCase):
         mock_request.get(url_ces, json=self.collection_exercises)
         mock_request.get(url_ce, json=collection_exercise)
         mock_request.get(url_ce_events, json=events)
+        mock_request.get(url_get_classifier_type, json=classifier_types)
+        mock_request.get(url_get_classifier_type_selectors, json=classifier_type_selectors)
         search_string = _build_search_string()
         mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
                          complete_qs=True)
@@ -400,3 +424,120 @@ class TestCollectionExercise(unittest.TestCase):
         # Then
         self.assertEqual(response.status_code, 500)
         self.assertEqual(response_data['error']['status_code'], 500)
+
+    @requests_mock.mock()
+    def test_single_collection_exercise_classifier_type_selector_fail(self, mock_request):
+        # Given
+        mock_request.get(url_get_survey_by_short_name, json=self.survey)
+        mock_request.get(url_ces, json=self.collection_exercises)
+        mock_request.get(url_ce, json=collection_exercise)
+        mock_request.get(url_ce_events, json=events)
+        mock_request.get(url_link_sample, json=[sample_summary_id])
+        mock_request.get(url_sample_summary, json=self.sample_summary)
+        search_string = _build_search_string()
+        mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
+                         complete_qs=True)
+        search_string = _build_ci_type_search_string()
+        mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
+                         complete_qs=True)
+        mock_request.get(url_get_classifier_type_selectors, status_code=500)
+
+        # When
+        response = self.app.get(f'/backstage-api/v1/collection-exercise/{test_short_name}/{test_period}')
+        response_data = json.loads(response.data)
+
+        # Then
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response_data['error']['status_code'], 500)
+
+    @requests_mock.mock()
+    def test_single_collection_exercise_classifier_type_fail(self, mock_request):
+        # Given
+        mock_request.get(url_get_survey_by_short_name, json=self.survey)
+        mock_request.get(url_ces, json=self.collection_exercises)
+        mock_request.get(url_ce, json=collection_exercise)
+        mock_request.get(url_ce_events, json=events)
+        mock_request.get(url_link_sample, json=[sample_summary_id])
+        mock_request.get(url_sample_summary, json=self.sample_summary)
+        search_string = _build_search_string()
+        mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
+                         complete_qs=True)
+        search_string = _build_ci_type_search_string()
+        mock_request.get(f'{url_get_collection_instrument}?{search_string}', json=self.collection_instruments,
+                         complete_qs=True)
+        mock_request.get(url_get_classifier_type_selectors, json=classifier_type_selectors)
+        mock_request.get(url_get_classifier_type, status_code=500)
+
+        # When
+        response = self.app.get(f'/backstage-api/v1/collection-exercise/{test_short_name}/{test_period}')
+        response_data = json.loads(response.data)
+
+        # Then
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response_data['error']['status_code'], 500)
+
+    @requests_mock.mock()
+    def test_update_collection_exercise_details_success(self, mock_request):
+        mock_request.put(url_update_ce_details_user_description, status_code=200)
+        mock_request.put(url_update_ce_details_period, status_code=200)
+        url = f'backstage-api/v1/collection-exercise/update-collection-exercise-details/{collection_exercise_id}'
+        response = self.app.put(url, headers=self.headers, data=json.dumps({
+            "user_description": 'June 2018',
+            "period": '201806'
+        }))
+        self.assertEqual(response.status_code, 200)
+
+    @requests_mock.mock()
+    def test_update_collection_exercise_details_fail(self, mock_request):
+        mock_request.put(url_update_ce_details_user_description, status_code=500)
+        mock_request.put(url_update_ce_details_period, status_code=500)
+        url = f'backstage-api/v1/collection-exercise/update-collection-exercise-details/{collection_exercise_id}'
+        response = self.app.put(url, headers=self.headers, data=json.dumps({
+            "user_description": 'June 2018',
+            "period": '201806'
+        }))
+        self.assertEqual(response.status_code, 500)
+
+    @requests_mock.mock()
+    def test_update_collection_exercise_details_not_found(self, mock_request):
+        mock_request.put(url_update_ce_details_user_description, status_code=404)
+        mock_request.put(url_update_ce_details_period, status_code=404)
+        url = f'backstage-api/v1/collection-exercise/update-collection-exercise-details/{collection_exercise_id}'
+        response = self.app.put(url, headers=self.headers, data=json.dumps({
+            "user_description": 'June 2018',
+            "period": '201806'
+        }))
+        self.assertEqual(response.status_code, 404)
+
+    @requests_mock.mock()
+    def test_update_collection_exercise_details_no_user_description(self, mock_request):
+        mock_request.put(url_update_ce_details_user_description, status_code=404)
+        mock_request.put(url_update_ce_details_period, status_code=200)
+        url = f'backstage-api/v1/collection-exercise/update-collection-exercise-details/{collection_exercise_id}'
+        response = self.app.put(url, headers=self.headers, data=json.dumps({
+            "user_description": '',
+            "period": '201806'
+        }))
+        self.assertEqual(response.status_code, 404)
+
+    @requests_mock.mock()
+    def test_update_collection_exercise_details_no_period(self, mock_request):
+        mock_request.put(url_update_ce_details_user_description, status_code=200)
+        mock_request.put(url_update_ce_details_period, status_code=404)
+        url = f'backstage-api/v1/collection-exercise/update-collection-exercise-details/{collection_exercise_id}'
+        response = self.app.put(url, headers=self.headers, data=json.dumps({
+            "user_description": 'June 2018',
+            "period": ''
+        }))
+        self.assertEqual(response.status_code, 404)
+
+    @requests_mock.mock()
+    def test_update_collection_exercise_details_no_data(self, mock_request):
+        mock_request.put(url_update_ce_details_user_description, status_code=404)
+        mock_request.put(url_update_ce_details_period, status_code=404)
+        url = f'backstage-api/v1/collection-exercise/update-collection-exercise-details/{collection_exercise_id}'
+        response = self.app.put(url, headers=self.headers, data=json.dumps({
+            "user_description": '',
+            "period": ''
+        }))
+        self.assertEqual(response.status_code, 404)

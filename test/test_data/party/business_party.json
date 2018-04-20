@@ -16,5 +16,9 @@
   "id": "b3ba864b-7cbc-4f44-84fe-88dc018a1a4c",
   "sampleUnitRef": "50012345678",
   "sampleUnitType": "B",
-  "region": "YY"
+  "region": "YY",
+  "trading_as": "tradingAs1tradingAs2tradingAs3",
+  "tradstyle1": "tradingAs1",
+  "tradstyle2": "tradingAs2",
+  "tradstyle3": "tradingAs3"
 }

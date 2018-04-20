@@ -13,6 +13,12 @@ with open('test/test_data/survey/survey_list.json') as json_data:
 url_get_survey_by_short_name = f'{app.config["RM_SURVEY_SERVICE"]}surveys/shortname/bres'
 url_get_collection_exercises = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
                                'collectionexercises/survey/cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87'
+url_get_collection_exercise_events = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
+                                'collectionexercises/c6467711-21eb-4e78-804c-1db8392f93fb/events'
+url_get_collection_exercises_link = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
+                                'collectionexercises/link/c6467711-21eb-4e78-804c-1db8392f93fb'
+url_get_sample_summary = f'{app.config["RM_SAMPLE_SERVICE"]}' \
+                            'samples/samplesummary/b9487b59-2ac7-4fbf-b734-5a4c260ff235'
 
 
 class TestSurvey(unittest.TestCase):
@@ -25,6 +31,7 @@ class TestSurvey(unittest.TestCase):
             "shortName": "BRES",
             "surveyRef": "221"
         }
+
         self.collection_exercises = [
             {
                 "id": "c6467711-21eb-4e78-804c-1db8392f93fb",
@@ -32,6 +39,28 @@ class TestSurvey(unittest.TestCase):
                 "scheduledExecutionDateTime": "2017-05-15T00:00:00Z"
             }
         ]
+
+        self.collection_exercises_events = [
+            {
+                "id": "b4a36392-a21f-485b-9dc4-d151a8fcd565",
+                "collectionExerciseId": "92d436aa-1251-4ae3-bad1-f3ae950f87be",
+                "tag": "mps",
+                "timestamp": "2018-03-16T00:00:00.000Z"
+            }
+        ]
+
+        self.collection_exercises_link = ["b9487b59-2ac7-4fbf-b734-5a4c260ff235"]
+
+        self.sample_summary = {
+            "id": "b9487b59-2ac7-4fbf-b734-5a4c260ff235",
+            "effectiveStartDateTime": "",
+            "effectiveEndDateTime": "",
+            "surveyRef": "",
+            "ingestDateTime": "2018-03-14T14:29:51.325Z",
+            "state": "ACTIVE",
+            "totalSampleUnits": 5,
+            "expectedCollectionInstruments": 1
+        }
 
     @requests_mock.mock()
     def test_get_survey_list(self, mock_request):
@@ -80,6 +109,9 @@ class TestSurvey(unittest.TestCase):
     def test_get_survey_by_short_name(self, mock_request):
         mock_request.get(url_get_survey_by_short_name, json=self.survey)
         mock_request.get(url_get_collection_exercises, json=self.collection_exercises)
+        mock_request.get(url_get_collection_exercise_events, json=self.collection_exercises_events)
+        mock_request.get(url_get_collection_exercises_link, json=self.collection_exercises_link)
+        mock_request.get(url_get_sample_summary, json=self.sample_summary)
 
         response = self.app.get('/backstage-api/v1/survey/shortname/bres')
         response_data = json.loads(response.data)

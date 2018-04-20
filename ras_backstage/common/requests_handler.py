@@ -19,7 +19,7 @@ def request_handler(method, url, params=None, auth=None, headers=None, json=None
             response = requests.put(url, params=params, auth=auth, headers=headers,
                                     json=json, data=data, files=files)
         else:
-            response = requests.get(url, params=params, auth=auth, headers=headers)
+            response = requests.get(url, params=params, auth=auth, headers=headers, json=json)
     except RequestException as e:
         logger.exception('Failed to connect to external service',
                          method=method, url=url, exception=str(e))

@@ -2,9 +2,9 @@ import os
 
 
 class Config(object):
-    DEBUG = os.getenv('DEBUG', False)
+    DEBUG = False
     TESTING = False
-    VERSION = os.getenv('VERSION', '0.0.3')
+    VERSION = '0.3.0'
     PORT = os.getenv('PORT', 8001)
     LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'INFO')
     SECURITY_USER_NAME = os.getenv('SECURITY_USER_NAME')
@@ -20,18 +20,6 @@ class Config(object):
     RAS_OAUTH_SERVICE_PROTOCOL = os.getenv('RAS_OAUTH_SERVICE_PROTOCOL', 'http')
     RAS_OAUTH_SERVICE = f"{RAS_OAUTH_SERVICE_PROTOCOL}://{RAS_OAUTH_SERVICE_HOST}:{RAS_OAUTH_SERVICE_PORT}/"
 
-    RAS_SECURE_MESSAGING_SERVICE_HOST = os.getenv(
-        'RAS_SECURE_MESSAGING_SERVICE_HOST', 'localhost')
-    RAS_SECURE_MESSAGING_SERVICE_PORT = os.getenv(
-        'RAS_SECURE_MESSAGING_SERVICE_PORT', 5050)
-    RAS_SECURE_MESSAGING_SERVICE_PROTOCOL = os.getenv(
-        'RAS_SECURE_MESSAGING_SERVICE_PROTOCOL', 'http')
-    RAS_SECURE_MESSAGING_SERVICE = '{}://{}:{}/'.format(
-        RAS_SECURE_MESSAGING_SERVICE_PROTOCOL,
-        RAS_SECURE_MESSAGING_SERVICE_HOST, RAS_SECURE_MESSAGING_SERVICE_PORT)
-
-    RAS_SECURE_MESSAGING_JWT_SECRET = os.getenv('RAS_SECURE_MESSAGING_JWT_SECRET')
-
     RM_CASE_SERVICE_HOST = os.getenv('RM_CASE_SERVICE_HOST', 'localhost')
     RM_CASE_SERVICE_PORT = os.getenv('RM_CASE_SERVICE_PORT', 8171)
     RM_CASE_SERVICE_PROTOCOL = os.getenv('RM_CASE_SERVICE_PROTOCOL', 'http')
@@ -46,6 +34,11 @@ class Config(object):
     RM_COLLECTION_EXERCISE_SERVICE = '{}://{}:{}/'.format(RM_COLLECTION_EXERCISE_SERVICE_PROTOCOL,
                                                           RM_COLLECTION_EXERCISE_SERVICE_HOST,
                                                           RM_COLLECTION_EXERCISE_SERVICE_PORT)
+
+    RM_REPORT_SERVICE_HOST = os.getenv('RM_REPORT_SERVICE_HOST', 'localhost')
+    RM_REPORT_SERVICE_PORT = os.getenv('RM_REPORT_SERVICE_PORT', 8084)
+    RM_REPORT_SERVICE_PROTOCOL = os.getenv('RM_REPORT_SERVICE_PROTOCOL', 'http')
+    RM_REPORT_SERVICE = '{}://{}:{}/'.format(RM_REPORT_SERVICE_PROTOCOL, RM_REPORT_SERVICE_HOST, RM_REPORT_SERVICE_PORT)
 
     RAS_COLLECTION_INSTRUMENT_SERVICE_HOST = os.getenv(
         'RAS_COLLECTION_INSTRUMENT_SERVICE_HOST', 'localhost')
@@ -85,7 +78,7 @@ class Config(object):
 
 
 class DevelopmentConfig(Config):
-    DEBUG = os.getenv('DEBUG', True)
+    DEBUG = True
     LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'DEBUG')
     SECURITY_USER_NAME = os.getenv('SECURITY_USER_NAME', 'admin')
     SECURITY_USER_PASSWORD = os.getenv('SECURITY_USER_PASSWORD', 'secret')
@@ -96,7 +89,6 @@ class DevelopmentConfig(Config):
     UAA_SERVICE_URL = os.getenv('UAA_SERVICE_URL', 'http://localhost:9080')
     UAA_CLIENT_ID = os.getenv('UAA_CLIENT_ID', 'ras_backstage')
     UAA_CLIENT_SECRET = os.getenv('UAA_CLIENT_SECRET', 'password')
-    RAS_SECURE_MESSAGING_JWT_SECRET = os.getenv('RAS_SECURE_MESSAGING_JWT_SECRET', 'testsecret')
 
 
 class TestingConfig(DevelopmentConfig):
