@@ -44,7 +44,7 @@ def link_collection_instrument_to_exercise(collection_instrument_id, collection_
 
 
 def unlink_collection_instrument_and_exercise(collection_instrument_id, collection_exercise_id):
-    logger.debug('unlinking collection instrument and exercise',
+    logger.debug('Unlinking collection instrument and exercise',
                  collection_instrument_id=collection_instrument_id, collection_exercise_id=collection_exercise_id)
     url = f'{app.config["RAS_COLLECTION_INSTRUMENT_SERVICE"]}' \
           f'collection-instrument-api/1.0.2/unlink-exercise/{collection_instrument_id}/{collection_exercise_id}'
