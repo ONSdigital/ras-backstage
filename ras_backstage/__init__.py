@@ -52,6 +52,7 @@ api.add_namespace(survey_api)
 import ras_backstage.error_handlers  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.collection_exercise.single_collection_exercise import GetSingleCollectionExercise, ExecuteSingleCollectionExercise  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.collection_exercise.update_collection_exercise_details import UpdateCollectionExerciseDetails  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.resources.collection_exercise.create_collection_exercise import CreateCollectionExercise # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.collection_exercise.collection_exercise_events import CollectionExerciseEvents  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.collection_exercise.collection_exercise_events import CollectionExerciseEvent  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.collection_instrument.collection_instrument import CollectionInstrument  # NOQA # pylint: disable=wrong-import-position
