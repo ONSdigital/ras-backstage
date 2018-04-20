@@ -96,6 +96,18 @@ def resend_verification_email(party_id):
     logger.debug('Successfully resent verification email')
 
 
+def put_respondent_account_status(change_data):
+    logger.debug('Changing respondent account status', party_id=change_data['party_id'], account_status=change_data['status_change'])
+    url = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/respondents/edit-account-status'
+    response = request_handler('PUT', url, auth=app.config['BASIC_AUTH'], json=change_data)
+
+    if response.status_code != 200:
+        logger.error('Error updating respondent account status', party_id=change_data['party_id'])
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully changed respondent account status', party_id=change_data['party_id'], account_status=change_data['status_change'])
+
+
 def get_respondent_by_email(email):
     logger.debug('Getting respondent by email')
     url = f'{app.config["RAS_PARTY_SERVICE"]}party-api/v1/respondents/email'
