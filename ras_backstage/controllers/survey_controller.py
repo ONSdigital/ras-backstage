@@ -86,9 +86,8 @@ def get_survey_ci_classifier(survey_id):
 
 
 def update_survey_details(survey_ref, updated_survey_details):
-    surveyRef = survey_ref
-    logger.debug('Updating survey details', surveyRef=surveyRef)
-    url = f'{app.config["RM_SURVEY_SERVICE"]}surveys/ref/{surveyRef}'
+    logger.debug('Updating survey details', survey_ref=survey_ref)
+    url = f'{app.config["RM_SURVEY_SERVICE"]}surveys/ref/{survey_ref}'
     payload = {
         "ShortName": updated_survey_details['short_name'],
         "LongName": updated_survey_details['long_name']
@@ -97,10 +96,10 @@ def update_survey_details(survey_ref, updated_survey_details):
     response = request_handler('PUT', url, auth=app.config['BASIC_AUTH'], json=payload)
 
     if response.status_code == 404:
-        logger.error('Error retrieving survey details', surveyRef=surveyRef)
+        logger.error('Error retrieving survey details', survey_ref=survey_ref)
         raise ApiError(url, response.status_code)
-    if response.status_code not in (200, 201, 202):
-        logger.error('Error updating survey details', surveyRef=surveyRef)
+    if not response.ok:
+        logger.error('Error updating survey details', survey_ref=survey_ref)
         raise ApiError(url, response.status_code)
 
-    logger.debug('Successfully updated survey details', surveyRef=surveyRef)
+    logger.debug('Successfully updated survey details', survey_ref=survey_ref)
