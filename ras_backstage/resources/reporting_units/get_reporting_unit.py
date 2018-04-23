@@ -1,15 +1,14 @@
-from datetime import datetime, timezone
 import logging
 
 from flask import jsonify, make_response
 from flask_restplus import Resource
-from iso8601 import parse_date
 from structlog import wrap_logger
 
 from ras_backstage import reporting_unit_api
 from ras_backstage.common.filters import get_case_group_status_by_collection_exercise
-from ras_backstage.controllers import (case_controller, collection_exercise_controller, party_controller,
+from ras_backstage.controllers import (case_controller, party_controller,
                                        survey_controller, iac_controller)
+from ras_backstage.controllers.collection_exercise_controller import get_collection_exercise_by_id
 
 logger = wrap_logger(logging.getLogger(__name__))
 
@@ -23,17 +22,17 @@ class GetReportingUnit(Resource):
 
         # Get all collection exercises for ru_ref
         reporting_unit = party_controller.get_party_by_ru_ref(ru_ref)
-        collection_exercises = collection_exercise_controller.get_collection_exercises_by_party_id(reporting_unit['id'])
-
-        # We only want collection exercises which are live
-        now = datetime.now(timezone.utc)
-        collection_exercises = [collection_exercise
-                                for collection_exercise in collection_exercises
-                                if parse_date(collection_exercise['scheduledStartDateTime']) < now]
+        case_groups = case_controller.get_case_groups_by_business_party_id(reporting_unit['id'])
+        collection_exercise_ids = [case_group['collectionExerciseId'] for case_group in case_groups]
+        collection_exercises = [get_collection_exercise_by_id(ce_id) for ce_id in collection_exercise_ids]
 
         # Add extra collection exercise details using data from case service
-        case_groups = case_controller.get_case_groups_by_business_party_id(reporting_unit['id'])
         add_collection_exercise_details(collection_exercises, reporting_unit, case_groups)
+
+        # We only want collection exercises which are live
+        collection_exercises = [collection_exercise
+                                for collection_exercise in collection_exercises
+                                if collection_exercise['state'] == 'LIVE']
 
         # Get all surveys for gathered collection exercises
         survey_ids = {collection_exercise['surveyId']

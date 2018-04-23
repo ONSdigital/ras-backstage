@@ -51,22 +51,6 @@ def get_collection_exercise_and_survey(short_name, period):
     }
 
 
-def get_collection_exercises_by_party_id(party_id):
-    logger.debug('Retrieving collection exercises', party_id=party_id)
-    url = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}collectionexercises/party/{party_id}'
-    response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
-
-    if response.status_code == 204 or response.status_code == 404:
-        logger.debug('No collection exercises', party_id=party_id)
-        return []
-    if response.status_code != 200:
-        logger.error('Error retrieving collection exercises', party_id=party_id)
-        raise ApiError(url, response.status_code)
-
-    logger.debug('Successfully retrieved collection exercises', party_id=party_id)
-    return response.json()
-
-
 def get_collection_exercise_events(collection_exercise_id):
     logger.debug('Retrieving collection exercise events', collection_exercise_id=collection_exercise_id)
     url = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}collectionexercises/{collection_exercise_id}/events'
