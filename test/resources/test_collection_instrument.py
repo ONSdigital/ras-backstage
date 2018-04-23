@@ -13,6 +13,8 @@ url_upload_collection_instrument = f'{app.config["RAS_COLLECTION_INSTRUMENT_SERV
     f'collection-instrument-api/1.0.2/upload/e33daf0e-6a27-40cd-98dc-c6231f50e84a'
 url_link_collection_instrument = f'{app.config["RAS_COLLECTION_INSTRUMENT_SERVICE"]}collection-instrument-api/1.0.2/' \
     f'link-exercise/14fb3e68-4dca-46db-bf49-04b84e07e77c/14fb3e68-4dca-46db-bf49-04b84e07e77c'
+url_unlink_collection_instrument = f'{app.config["RAS_COLLECTION_INSTRUMENT_SERVICE"]}collection-instrument-api/1.0.2/'\
+    f'unlink-exercise/14fb3e68-4dca-46db-bf49-04b84e07e77c/14fb3e68-4dca-46db-bf49-04b84e07e77c'
 
 
 class TestCollectionExercise(unittest.TestCase):
@@ -103,6 +105,25 @@ class TestCollectionExercise(unittest.TestCase):
               '14fb3e68-4dca-46db-bf49-04b84e07e77c/14fb3e68-4dca-46db-bf49-04b84e07e77c'
 
         response = self.app.post(url)
+
+        self.assertEqual(response.status_code, 500)
+
+    @requests_mock.mock()
+    def test_unlink_collection_instrument(self, mock_request):
+        mock_request.put(url_unlink_collection_instrument)
+        url = '/backstage-api/v1/collection-instrument/unlink/' \
+              '14fb3e68-4dca-46db-bf49-04b84e07e77c/14fb3e68-4dca-46db-bf49-04b84e07e77c'
+        response = self.app.put(url)
+
+        self.assertEqual(response.status_code, 200)
+
+    @requests_mock.mock()
+    def test_unlink_collection_instrument_fail(self, mock_request):
+        mock_request.put(url_unlink_collection_instrument, status_code=500)
+        url = '/backstage-api/v1/collection-instrument/unlink/' \
+              '14fb3e68-4dca-46db-bf49-04b84e07e77c/14fb3e68-4dca-46db-bf49-04b84e07e77c'
+
+        response = self.app.put(url)
 
         self.assertEqual(response.status_code, 500)
 
