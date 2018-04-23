@@ -1,7 +1,9 @@
+from datetime import datetime, timezone
 import logging
 
 from flask import jsonify, make_response
 from flask_restplus import Resource
+from iso8601 import parse_date
 from structlog import wrap_logger
 
 from ras_backstage import reporting_unit_api
@@ -30,9 +32,10 @@ class GetReportingUnit(Resource):
         add_collection_exercise_details(collection_exercises, reporting_unit, case_groups)
 
         # We only want collection exercises which are live
+        now = datetime.now(timezone.utc)
         collection_exercises = [collection_exercise
                                 for collection_exercise in collection_exercises
-                                if collection_exercise['state'] == 'LIVE']
+                                if parse_date(collection_exercise['scheduledStartDateTime']) < now]
 
         # Get all surveys for gathered collection exercises
         survey_ids = {collection_exercise['surveyId']

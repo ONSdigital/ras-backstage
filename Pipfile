@@ -7,18 +7,19 @@ name = "pypi"
 
 [packages]
 
-Flask = "==0.12.2"
-Flask-Cors = "==3.0.3"
-Flask-JWT-Extended = "==3.2.0"
+flask = "==0.12.2"
+flask-cors = "==3.0.3"
+flask-jwt-extended = "==3.2.0"
 gunicorn = "==19.7.1"
 python-dateutil = "==2.6.0"
 requests = "==2.18.4"
 structlog = "==17.2.0"
-Flask-HTTPAuth = "==3.2.3"
-PyYAML = "==3.12"
+flask-httpauth = "==3.2.3"
+pyyaml = "==3.12"
 flask-restplus = "==0.10.1"
 cryptography = "==2.1.4"
 python-jose = "==2.0.2"
+"iso8601" = "==0.1.12"
 
 
 [dev-packages]
