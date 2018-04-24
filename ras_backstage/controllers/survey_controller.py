@@ -96,7 +96,7 @@ def update_survey_details(survey_ref, updated_survey_details):
     response = request_handler('PUT', url, auth=app.config['BASIC_AUTH'], json=payload)
 
     if response.status_code == 404:
-        logger.error('Error retrieving survey details', survey_ref=survey_ref)
+        logger.warning('Error retrieving survey details', survey_ref=survey_ref)
         raise ApiError(url, response.status_code)
     if not response.ok:
         logger.error('Error updating survey details', survey_ref=survey_ref)
