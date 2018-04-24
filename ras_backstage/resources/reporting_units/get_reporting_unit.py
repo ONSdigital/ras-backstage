@@ -28,14 +28,14 @@ class GetReportingUnit(Resource):
         collection_exercise_ids = [case_group['collectionExerciseId'] for case_group in case_groups]
         collection_exercises = [get_collection_exercise_by_id(ce_id) for ce_id in collection_exercise_ids]
 
-        # Add extra collection exercise details using data from case service
-        add_collection_exercise_details(collection_exercises, reporting_unit, case_groups)
-
         # We only want collection exercises which are live
         now = datetime.now(timezone.utc)
         collection_exercises = [collection_exercise
                                 for collection_exercise in collection_exercises
                                 if parse_date(collection_exercise['scheduledStartDateTime']) < now]
+
+        # Add extra collection exercise details using data from case service
+        add_collection_exercise_details(collection_exercises, reporting_unit, case_groups)
 
         # Get all surveys for gathered collection exercises
         survey_ids = {collection_exercise['surveyId']
