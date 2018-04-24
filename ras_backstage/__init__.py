@@ -71,6 +71,7 @@ from ras_backstage.resources.sample.sample import Sample  # NOQA # pylint: disab
 from ras_backstage.resources.sign_in.sign_in import SignInV2  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.survey.get_survey_list import GetSurveyList  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.survey.get_survey_by_short_name import GetSurveyByShortName  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.resources.survey.update_survey_details import UpdateSurveyDetails # NOQA # pylint: disable=wrong-import-position
 
 
 api.init_app(app)
