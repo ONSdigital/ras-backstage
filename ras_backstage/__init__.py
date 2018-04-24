@@ -57,6 +57,7 @@ from ras_backstage.resources.collection_exercise.collection_exercise_events impo
 from ras_backstage.resources.collection_exercise.collection_exercise_events import CollectionExerciseEvent  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.collection_instrument.collection_instrument import CollectionInstrument  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.collection_instrument.link_exercise import LinkExercise  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.resources.collection_instrument.unlink_exercise import UnlinkExercise # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.info import Info  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.party.change_enrolment_status import ChangeEnrolmentStatus  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.party.get_party_details import PartyDetails  # NOQA # pylint: disable=wrong-import-position
@@ -71,6 +72,7 @@ from ras_backstage.resources.sample.sample import Sample  # NOQA # pylint: disab
 from ras_backstage.resources.sign_in.sign_in import SignInV2  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.survey.get_survey_list import GetSurveyList  # NOQA # pylint: disable=wrong-import-position
 from ras_backstage.resources.survey.get_survey_by_short_name import GetSurveyByShortName  # NOQA # pylint: disable=wrong-import-position
+from ras_backstage.resources.survey.update_survey_details import UpdateSurveyDetails # NOQA # pylint: disable=wrong-import-position
 
 
 api.init_app(app)

@@ -6,6 +6,7 @@ import requests_mock
 
 from ras_backstage import app
 
+survey_ref = '023'
 
 url_get_survey_list = f'{app.config["RM_SURVEY_SERVICE"]}surveys'
 with open('test/test_data/survey/survey_list.json') as json_data:
@@ -13,6 +14,7 @@ with open('test/test_data/survey/survey_list.json') as json_data:
 url_get_survey_by_short_name = f'{app.config["RM_SURVEY_SERVICE"]}surveys/shortname/bres'
 url_get_collection_exercises = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
                                'collectionexercises/survey/cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87'
+url_update_survey_details = f'{app.config["RM_SURVEY_SERVICE"]}surveys/ref/{survey_ref}'
 url_get_collection_exercise_events = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
                                 'collectionexercises/c6467711-21eb-4e78-804c-1db8392f93fb/events'
 url_get_collection_exercises_link = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
@@ -25,6 +27,9 @@ class TestSurvey(unittest.TestCase):
 
     def setUp(self):
         self.app = app.test_client()
+        self.headers = {
+            'Content-Type': 'application/json',
+        }
         self.survey = {
             "id": "cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87",
             "longName": "Business Register and Employment Survey",
@@ -165,3 +170,42 @@ class TestSurvey(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response_data['collection_exercises'], [])
         self.assertEqual(response_data['survey']['id'], "cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87")
+
+    @requests_mock.mock()
+    def test_edit_survey_details_success(self, mock_request):
+        mock_request.put(url_update_survey_details, status_code=200)
+        url = f'backstage-api/v1/survey/edit-survey-details/{survey_ref}'
+        response = self.app.put(url, headers=self.headers, data=json.dumps({
+            "long_name": 'Survey Test Name',
+            "short_name": 'QBZ'
+        }))
+        self.assertEqual(response.status_code, 200)
+
+    @requests_mock.mock()
+    def test_edit_survey_details_failure(self, mock_request):
+        mock_request.put(url_update_survey_details, status_code=500)
+        url = f'backstage-api/v1/survey/edit-survey-details/{survey_ref}'
+        response = self.app.put(url, headers=self.headers, data=json.dumps({
+            "long_name": 'Survey Test Name',
+            "short_name": 'QBZ'
+        }))
+        self.assertEqual(response.status_code, 500)
+
+    @requests_mock.mock()
+    def test_edit_survey_details_not_found(self, mock_request):
+        mock_request.put(url_update_survey_details, status_code=404)
+        url = f'backstage-api/v1/survey/edit-survey-details/{survey_ref}'
+        response = self.app.put(url, headers=self.headers, data=json.dumps({
+            "long_name": 'Survey Test Name',
+            "short_name": 'QBZ'
+        }))
+        self.assertEqual(response.status_code, 404)
+
+    @requests_mock.mock()
+    def test_edit_survey_details_no_data(self, mock_request):
+        url = f'backstage-api/v1/survey/edit-survey-details/{survey_ref}'
+        response = self.app.put(url, headers=self.headers, data=json.dumps({
+            "long_name_error": '',
+            "short_name_error": ''
+        }))
+        self.assertEqual(response.status_code, 400)
