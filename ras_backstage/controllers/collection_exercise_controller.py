@@ -191,19 +191,25 @@ def update_collection_exercise_period(collection_exercise_id, period):
     logger.debug('Successfully updated collection exercise period', collection_exercise_id=collection_exercise_id)
 
 
-def create_collection_exercise(collection_exercise_id, user_description, period):
-    logger.debug('Creating new collection exercise', collection_exercise_id=collection_exercise_id,
-                 period=period, user_description=user_description)
-    header = {'Content-Type': "text/plain"}
-    url = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}' \
-          f'collectionexercises/{collection_exercise_id}/create-collection-exercise'
-    response = request_handler('POST', url, headers=header, data=period, auth=app.config['BASIC_AUTH'])
+def create_collection_exercise(created_collection_exercise_details):
+    logger.debug('Creating new collection exercise')
+    header = {'Content-Type': "application/json"}
+    url = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}collectionexercises'
+
+    payload = {
+        "surveyId": created_collection_exercise_details['survey_id'],
+        "name": created_collection_exercise_details['survey_name'],
+        "userDescription": created_collection_exercise_details['user_description'],
+        "exerciseRef": created_collection_exercise_details['period']
+    }
+
+    response = request_handler('POST', url, json=payload, headers=header, auth=app.config['BASIC_AUTH'])
 
     if response.status_code == 404:
-        logger.error('Error retrieving new collection exercise data', collection_exercise_id=collection_exercise_id)
+        logger.error('Error retrieving new collection exercise data')
         raise ApiError(url, response.status_code)
     if response.status_code not in (200, 201, 202):
-        logger.error('Error creating new collection exercise', collection_exercise_id=collection_exercise_id)
+        logger.error('Error creating new collection exercise')
         raise ApiError(url, response.status_code)
 
-    logger.debug('Successfully created a new collection exercise', collection_exercise_id=collection_exercise_id)
+    logger.debug('Successfully created a new collection exercise')
