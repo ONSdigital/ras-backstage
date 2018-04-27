@@ -34,6 +34,7 @@ url_update_ce_details_period = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}'
                         f'collectionexercises/{collection_exercise_id}/exerciseRef'
 url_get_collection_instrument = f'{app.config["RAS_COLLECTION_INSTRUMENT_SERVICE"]}' \
                                    f'collection-instrument-api/1.0.2/collectioninstrument'
+url_create_ce = f'{app.config["RM_COLLECTION_EXERCISE_SERVICE"]}collectionexercises'
 
 with open('test/test_data/collection_exercise/collection_exercise.json') as json_data:
     collection_exercise = json.load(json_data)
@@ -537,6 +538,42 @@ class TestCollectionExercise(unittest.TestCase):
         mock_request.put(url_update_ce_details_period, status_code=404)
         url = f'backstage-api/v1/collection-exercise/update-collection-exercise-details/{collection_exercise_id}'
         response = self.app.put(url, headers=self.headers, data=json.dumps({
+            "user_description": '',
+            "period": ''
+        }))
+        self.assertEqual(response.status_code, 404)
+
+    @requests_mock.mock()
+    def test_create_collection_exercise_success(self, mock_request):
+        mock_request.post(url_create_ce, status_code=200)
+        url = f'backstage-api/v1/collection-exercise/create-collection-exercise'
+        response = self.app.post(url, headers=self.headers, data=json.dumps({
+            "survey_id": 'cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87',
+            "survey_name": 'BRES',
+            "user_description": 'June 2018',
+            "period": '201806'
+        }))
+        self.assertEqual(response.status_code, 200)
+
+    @requests_mock.mock()
+    def test_create_collection_exercise_failure(self, mock_request):
+        mock_request.post(url_create_ce, status_code=500)
+        url = f'backstage-api/v1/collection-exercise/create-collection-exercise'
+        response = self.app.post(url, headers=self.headers, data=json.dumps({
+            "survey_id": 'cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87',
+            "survey_name": 'BRES',
+            "user_description": 'June 2018',
+            "period": '201806'
+        }))
+        self.assertEqual(response.status_code, 500)
+
+    @requests_mock.mock()
+    def test_create_collection_exercise_no_data(self, mock_request):
+        mock_request.post(url_create_ce, status_code=404)
+        url = f'backstage-api/v1/collection-exercise/create-collection-exercise'
+        response = self.app.post(url, headers=self.headers, data=json.dumps({
+            "survey_id": 'cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87',
+            "survey_name": 'BRES',
             "user_description": '',
             "period": ''
         }))
