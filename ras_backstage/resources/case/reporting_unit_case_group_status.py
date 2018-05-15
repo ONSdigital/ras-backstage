@@ -46,6 +46,7 @@ class ReportingUnitCaseGroupStatus(Resource):
 
         response = {
             'ru_ref': ru_ref,
+            'name': reporting_unit_details['name'],
             'trading_as': reporting_unit_details['trading_as'],
             'survey_id': survey['surveyRef'],
             'short_name': short_name,
