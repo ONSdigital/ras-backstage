@@ -195,3 +195,25 @@ class TestReportingUnits(unittest.TestCase):
         self.assertEqual(filtered_statuses['COMPLETEDBYPHONE'], 'COMPLETEDBYPHONE')
         self.assertNotIn('COMPLETED', filtered_statuses.values())
         self.assertNotIn('SOMETHING', filtered_statuses.values())
+
+    @requests_mock.mock()
+    def test_get_reporting_unit_statuses_survey_and_ru_details(self, mock_request):
+        mock_request.get(url_get_party_by_ru_ref, json=party_business)
+        mock_request.get(url_get_case_groups_by_business_id, json=case_group_list)
+        mock_request.get(url_get_survey_by_short_name, json=self.survey)
+        mock_request.get(url_get_collection_exercises_by_survey, json=collection_exercises)
+        self.statuses = {
+            "UPLOADED": "COMPLETE",
+            "COMPLETEDBYPHONE": "COMPLETEDBYPHONE"
+        }
+        mock_request.get(url_get_statuses_for_ru_ref, json=self.statuses)
+
+        response = self.app.get("/backstage-api/v1/case/status/BRES/201801/12345")
+        response_data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_data['ru_name'], 'Bolts and Ratchets Ltd')
+        self.assertEqual(response_data['ru_ref'], '12345')
+        self.assertEqual(response_data['trading_as'], 'tradingAs1tradingAs2tradingAs3')
+        self.assertEqual(response_data['survey_id'], '221')
+        self.assertEqual(response_data['short_name'], 'BRES')
