@@ -19,6 +19,7 @@ def download_collection_exercise_report(collection_exercise_id, survey_id):
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
     if response.status_code != 200:
         logger.error('Error retrieving collection exercise',
+                     status=response.status_code,
                      collection_exercise_id=collection_exercise_id,
                      survey_id=survey_id)
         raise ApiError(url, response.status_code)
